@@ -1,2 +1,4 @@
 # TinSpin
-Testing in-memory spatial indexes
+
+TinSpin is a framework for benchmarking in-memory spatial indexes.
+
