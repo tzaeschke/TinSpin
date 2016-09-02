@@ -49,8 +49,9 @@ import ch.ethz.globis.phtree.util.BitTools;
 import ch.ethz.globis.phtree.util.JmxTools;
 import ch.ethz.globis.phtree.util.TestPerf;
 import ch.ethz.globis.phtree.util.Tools;
-import ch.ethz.globis.tinspin.data.points.TestPoint;
-import ch.ethz.globis.tinspin.data.rectangles.TestRectangle;
+import ch.ethz.globis.tinspin.data.AbstractTest;
+import ch.ethz.globis.tinspin.data.TestPoint;
+import ch.ethz.globis.tinspin.data.TestRectangle;
 
 
 /**
@@ -754,7 +755,7 @@ public class MainTest {
 			test.queryCuboid(S.paramWQSize, min, max);
 			return;
 		} else if (test.getTestType() == TestStats.TST.TIGER) {
-			if (test.S.isRangeData) {
+			if (test.getTestStats().isRangeData) {
 				test.queryCuboid(S.paramWQSize, min, max);
 			}
 			return;

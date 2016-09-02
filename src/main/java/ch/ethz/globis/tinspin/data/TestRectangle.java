@@ -4,67 +4,62 @@
  * This software is the proprietary information of ETH Zurich.
  * Use is subject to license terms.
  */
-package ch.ethz.globis.tinspin.data.points;
+package ch.ethz.globis.tinspin.data;
 
 import java.util.HashSet;
 import java.util.Random;
 
-import ch.ethz.globis.phtree.demo.TestPointSky;
-import ch.ethz.globis.tinspin.AbstractTest;
 import ch.ethz.globis.tinspin.TestStats;
 
-public abstract class TestPoint extends AbstractTest {
+public abstract class TestRectangle extends AbstractTest {
 	
-	
-	protected TestPoint(Random R, TestStats S) {
+	protected TestRectangle(Random R, TestStats S) {
 		super(R, S);
 	}
 	
-	public static TestPoint create(Random R, TestStats S) {
+	public static TestRectangle create(Random R, TestStats S) {
 		switch (S.TEST) {
-		case CUBE: return new TestPointCube(R, S);
-		case CLUSTER: return new TestPointCluster(R, S);
-		case CSV: return new TestPointCSV(R, S);
-		case SKYLINE: return new TestPointSky(R, S);
-		case TIGER: return new TestPointTiger(R, S);
+		case CUBE: return new TestRectangleCube(R, S);
+		case CLUSTER: return new TestRectangleCluster(R, S);
+		case TIGER: return new TestRectangleTiger(R, S);
+		case TOUCH: return new TestRectangleTOUCH(R, S);
 		default:
 			break;
 		}
 		return null;
 	}
 	
-	/**
-	 * 
-	 * @return Maximum distance for each update().
-	 */
-	@Override
-	public double maxUpdateDistance() {
-		return 0.00001;
-	}
-
 	@Override
 	public final double[][] generateUpdates(int n, double[] data, double[][] ups) {
 		double maxD = maxUpdateDistance();
 		if (ups == null) {
-			ups = new double[n*2][DIM]; //2 points, 2 versions
+			ups = new double[n*4][DIM]; //2 points, 2 versions
 		}
 		HashSet<Integer> idxSet = new HashSet<>(n);
 		for (int i = 0; i < ups.length; ) {
-			double[] pOld = ups[i++];
-			double[] pNew = ups[i++];
+			double[] lo1 = ups[i++];
+			double[] up1 = ups[i++];
+			double[] lo2 = ups[i++];
+			double[] up2 = ups[i++];
 			int pos = R.nextInt(N);
 			while (idxSet.contains(pos)) {
 				pos = R.nextInt(N);
 			}
 			idxSet.add(pos);
 			for (int d = 0; d < DIM; d++) {
-				pOld[d] = data[pos*DIM+d];
+				lo1[d] = data[pos*DIM*2+d];
+				up1[d] = data[pos*DIM*2+DIM+d];
 				//move different for each dimension
 				//can be positive or negative
 				//allow reshaping of rectangle (but up>lo). 
 				double mvL = R.nextDouble()*2*maxD-maxD;
-				pNew[d] = pOld[d] + mvL;
-				data[pos*DIM+d] = pNew[d];
+				lo2[d] = lo1[d] + mvL;
+				do {
+					double mvU = R.nextDouble()*2*maxD-maxD;
+					up2[d] = up1[d] + mvU;
+				} while (up2[d] <= lo2[d]);
+				data[pos*DIM*2+d] = lo2[d];
+				data[pos*DIM*2+DIM+d] = up2[d];
 			}
 		}
 		return ups;

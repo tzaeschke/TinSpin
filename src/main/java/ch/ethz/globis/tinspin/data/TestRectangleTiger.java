@@ -4,14 +4,12 @@
  * This software is the proprietary information of ETH Zurich.
  * Use is subject to license terms.
  */
-package ch.ethz.globis.tinspin.data.rectangles;
+package ch.ethz.globis.tinspin.data;
 
 import java.util.Random;
 
-import ch.ethz.globis.phtree.demo.TigerKmlIO;
-import ch.ethz.globis.tinspin.MainTest;
-import ch.ethz.globis.tinspin.MainTestManager;
 import ch.ethz.globis.tinspin.TestStats;
+import ch.ethz.globis.tinspin.data.tiger.TigerKmlIO;
 
 /**
  * Data from Tiger/LINE: http://www2.census.gov/geo/tiger/KML/2010_Proto/2010tract_dt/
@@ -20,7 +18,7 @@ import ch.ethz.globis.tinspin.TestStats;
  */
 public class TestRectangleTiger extends TestRectangle {
 
-	private static final String dbName = "TigerKmlArrayND-4D-new2";
+	private static final String dbName = "TigerKmlArrayND-4D";
 
 	private double[] data; 
 	
@@ -85,6 +83,7 @@ public class TestRectangleTiger extends TestRectangle {
 	 * 
 	 * @return Maximum distance for each update().
 	 */
+	@Override
 	public double maxUpdateDistance() {
 		return 0.1;
 	}

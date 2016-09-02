@@ -14,6 +14,7 @@ public class TestConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int k;
 	
+	@SuppressWarnings("unused")
 	public TestConfig(int i, int j, int k) {
 		this.k = k;
 	}

@@ -9,7 +9,7 @@ package ch.ethz.globis.tinspin;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.ethz.globis.tinspin.data.points.TestPoint;
+import ch.ethz.globis.tinspin.data.TestPoint;
 import ch.ethz.globis.tinspin.util.rmi.TestManagerRMI;
 import ch.ethz.globis.tinspin.util.rmi.TestProcessLauncher;
 

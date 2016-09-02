@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>ch.ethz.globis.tinspin</groupId>
+  <artifactId>TinSpin</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+  	<name>TinSpin</name>
+	<description>The TinSpin framework for benchmarking in-memory spatial indexes</description>
+	<url>https://github.com/tzaeschke/TinSpin</url>
+	<scm>
+  		<connection>scm:git:git@github.com:tzaeschke/tinspin.git</connection>
+  		<developerConnection>scm:git:git@github.com:tzaeschke/tinspin.git</developerConnection>
+  		<url>https://github.com/tzaeschke/tinspin</url>
+	</scm>	
+	<licenses>
+	  <license>
+        <name>Apache License, Version 2.0</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        <distribution>repo</distribution>
+        <comments>A business-friendly OSS license</comments>
+      </license>
+    </licenses>
+ 
+	<organization>
+		<name>ETH Zurich</name>
+		<url>https://globis.ethz.ch/</url>
+	</organization>
+    
+	<developers>
+		<developer>
+			<name>Tilmann Zäschke</name>
+			<id>tzaeschke</id>
+			<email>zoodb@gmx.de</email>
+		</developer>
+	</developers>
+
+	<issueManagement>
+		<system>github</system>
+		<url>https://github.com/tzaeschke/tinspin/issues</url>
+	</issueManagement>
+  
+  	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.10</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.ethz.globis.phtree</groupId>
+			<artifactId>phtree</artifactId>
+			<version>0.3.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+    		<groupId>org.zoodb</groupId>
+    		<artifactId>zoodb</artifactId>
+    		<version>0.4.8</version>
+		</dependency>
+	</dependencies>
+  
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<compilerArgument>-Xlint:all</compilerArgument>
+					<showWarnings>true</showWarnings>
+					<showDeprecation>true</showDeprecation>
+					<!-- 
+	                <compilerArgument>-Werror </compilerArgument>
+	                 -->
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>  
+</project>

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import ch.ethz.globis.phtree.util.PhTreeStats;
-import ch.ethz.globis.tinspin.data.points.TestPoint;
+import ch.ethz.globis.tinspin.data.TestPoint;
 
 public class TestStats implements Serializable, Cloneable {
 		
@@ -81,11 +81,11 @@ public class TestStats implements Serializable, Cloneable {
 		public final TestStats.IDX INDEX;
 		public final TestStats.TST TEST;
 		public String SEEDmsg;
-		long seed;
+		public long seed;
 		public final double param1;
-		double param2;
+		public double param2;
 		public String paramStr;
-		final boolean isRangeData;
+		public final boolean isRangeData;
 		int paramWQSize = DEFAULT_W_QUERY_SIZE;
 		
 		Class<? extends TestPoint> testClass;

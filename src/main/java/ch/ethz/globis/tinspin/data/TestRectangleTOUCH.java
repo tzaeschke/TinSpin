@@ -4,7 +4,7 @@
  * This software is the proprietary information of ETH Zurich.
  * Use is subject to license terms.
  */
-package ch.ethz.globis.tinspin.data.rectangles;
+package ch.ethz.globis.tinspin.data;
 
 import java.io.BufferedReader;
 import java.io.File;

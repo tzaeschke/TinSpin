@@ -19,14 +19,21 @@ import ch.ethz.globis.tinspin.TestStats;
 public class TestRunner implements TestRunnerAPI {
 
 	static class NoSecurityManager extends SecurityManager {
-	    public void checkConnect (String host, int port) {}
-	    public void checkConnect (String host, int port, Object context) {}
-	    public void checkPropertyAccess(String key) {};
-	    public void checkPermission(Permission perm) {};
-	    public void checkPermission(Permission perm, Object context) {};
-	    public void checkAccept(String host, int port) {};   
+	    @Override
+		public void checkConnect (String host, int port) {}
+	    @Override
+		public void checkConnect (String host, int port, Object context) {}
+	    @Override
+		public void checkPropertyAccess(String key) {};
+	    @Override
+		public void checkPermission(Permission perm) {};
+	    @Override
+		public void checkPermission(Permission perm, Object context) {};
+	    @Override
+		public void checkAccept(String host, int port) {};   
 	}
 	
+	@Override
 	public TestStats executeTask(TestStats stats0) {
         return test(stats0);
     }

@@ -4,14 +4,12 @@
  * This software is the proprietary information of ETH Zurich.
  * Use is subject to license terms.
  */
-package ch.ethz.globis.tinspin.data.points;
+package ch.ethz.globis.tinspin.data;
 
 import java.util.Random;
 
-import ch.ethz.globis.phtree.demo.TigerKmlIO;
-import ch.ethz.globis.tinspin.MainTest;
-import ch.ethz.globis.tinspin.MainTestManager;
 import ch.ethz.globis.tinspin.TestStats;
+import ch.ethz.globis.tinspin.data.tiger.TigerKmlIO;
 
 /**
  * Data from Tiger/LINE: http://www2.census.gov/geo/tiger/KML/2010_Proto/2010tract_dt/
@@ -20,7 +18,7 @@ import ch.ethz.globis.tinspin.TestStats;
  */
 public class TestPointTiger extends TestPoint {
 
-	private static final String dbName = "TigerKmlArrayND-2D-new";
+	private static final String dbName = "TigerKmlArrayND-2D";
 
 	protected TestPointTiger(Random R, TestStats S) {
 		super(R, S);

@@ -4,13 +4,13 @@
  * This software is the proprietary information of ETH Zurich.
  * Use is subject to license terms.
  */
-package ch.ethz.globis.tinspin;
+package ch.ethz.globis.tinspin.data;
 
 import java.util.Arrays;
 import java.util.Random;
 
 import ch.ethz.globis.phtree.pre.ColumnType;
-import ch.ethz.globis.tinspin.TestStats.TST;
+import ch.ethz.globis.tinspin.TestStats;
 
 public abstract class AbstractTest {
 
@@ -55,5 +55,9 @@ public abstract class AbstractTest {
 	
 	public void log(String str) {
 		System.out.println(str);
+	}
+	
+	public TestStats getTestStats() {
+		return S;
 	}
 }
