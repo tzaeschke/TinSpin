@@ -13,10 +13,10 @@ import java.security.Permission;
 import java.util.Date;
 
 import ch.ethz.globis.phtree.util.Tools;
-import ch.ethz.globis.tinspin.MainTest;
+import ch.ethz.globis.tinspin.TestRunner;
 import ch.ethz.globis.tinspin.TestStats;
 
-public class TestRunner implements TestRunnerAPI {
+public class TestRunnerLocal implements TestRunnerAPI {
 
 	static class NoSecurityManager extends SecurityManager {
 	    @Override
@@ -39,23 +39,23 @@ public class TestRunner implements TestRunnerAPI {
     }
 	
 	public static void main(String[] args) {
-		System.out.println("TestRunner: started: " + args[0] + " " + args[1] + " " + args[2]);
-		//System.out.println("TestRunner time: " + new Date());
+		System.out.println("TestRunnerLocal: started: " + args[0] + " " + args[1] + " " + args[2]);
+		//System.out.println("TestRunnerLocal time: " + new Date());
 		
 		System.setSecurityManager (new NoSecurityManager());
         try {
-            TestRunner engine = new TestRunner();
+            TestRunnerLocal engine = new TestRunnerLocal();
             TestRunnerAPI stub =
                 (TestRunnerAPI) UnicastRemoteObject.exportObject(engine, 0);
             Registry registry = LocateRegistry.getRegistry();
             registry.rebind(TestManagerRMI.RMI_NAME, stub);
-            //System.out.println("TestRunner bound");
+            //System.out.println("TestRunnerLocal bound");
         } catch (Exception e) {
-            System.err.println("TestRunner exception:");
+            System.err.println("TestRunnerLocal exception:");
             e.printStackTrace();
         }
 		
-		//System.out.println("TestRunner finished: " + args[0]);
+		//System.out.println("TestRunnerLocal finished: " + args[0]);
 	}
 	
 	static TestStats test(TestStats stats) {
@@ -76,7 +76,7 @@ public class TestRunner implements TestRunnerAPI {
 
 		System.out.println("Testrunner: starting task: " + new Date());
 		TestStats s;
-		MainTest test = new MainTest(stats);
+		TestRunner test = new TestRunner(stats);
 		try {
 			s = test.run();
 		} catch (Throwable t) {

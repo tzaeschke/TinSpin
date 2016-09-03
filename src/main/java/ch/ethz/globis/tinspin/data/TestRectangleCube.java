@@ -29,8 +29,8 @@ public class TestRectangleCube extends TestRectangle {
 		double RECT_LEN = S.param1;
 		log("Running: TestCube (" + RECT_LEN + ")");
 		
-		int dims = S.statNDims;
-		int nEntries = S.statNEntries;
+		int dims = S.cfgNDims;
+		int nEntries = S.cfgNEntries;
 		double[] data = new double[nEntries*dims*2];
 		
 		//query create cube

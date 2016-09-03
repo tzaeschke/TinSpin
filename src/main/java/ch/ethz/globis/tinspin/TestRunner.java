@@ -13,55 +13,26 @@ import java.util.Date;
 import java.util.Random;
 
 import ch.ethz.globis.phtree.PhTreeHelper;
-import ch.ethz.globis.phtree.demo.PointCBF;
-import ch.ethz.globis.phtree.demo.PointCBR;
-import ch.ethz.globis.phtree.demo.PointCompactHilbert;
-import ch.ethz.globis.phtree.demo.PointCritBitZ;
-import ch.ethz.globis.phtree.demo.PointKDL;
-import ch.ethz.globis.phtree.demo.PointKDRed;
-import ch.ethz.globis.phtree.demo.PointKDS;
-import ch.ethz.globis.phtree.demo.PointMXCIFKD;
-import ch.ethz.globis.phtree.demo.PointPHC;
-import ch.ethz.globis.phtree.demo.PointPHC2;
-import ch.ethz.globis.phtree.demo.PointPHC2_IPP;
-import ch.ethz.globis.phtree.demo.PointPHCCTree;
-import ch.ethz.globis.phtree.demo.PointPHCF;
-import ch.ethz.globis.phtree.demo.PointPHCRectangle;
-import ch.ethz.globis.phtree.demo.PointPHC_IPP;
-import ch.ethz.globis.phtree.demo.PointPHC_PHE;
-import ch.ethz.globis.phtree.demo.PointPHC_v1;
-import ch.ethz.globis.phtree.demo.PointPRTree;
-import ch.ethz.globis.phtree.demo.PointQuadZ;
-import ch.ethz.globis.phtree.demo.PointRSLokeshj;
-import ch.ethz.globis.phtree.demo.PointRStarSeeger;
-import ch.ethz.globis.phtree.demo.PointXtree;
-import ch.ethz.globis.phtree.demo.RectangleMXCIF2D;
-import ch.ethz.globis.phtree.demo.RectangleMXCIF3D;
-import ch.ethz.globis.phtree.demo.RectanglePHC;
-import ch.ethz.globis.phtree.demo.RectanglePHC2;
-import ch.ethz.globis.phtree.demo.RectanglePHCF;
-import ch.ethz.globis.phtree.demo.RectanglePHC_IPP;
-import ch.ethz.globis.phtree.demo.RectanglePRT;
-import ch.ethz.globis.phtree.demo.RectangleQuadZ;
-import ch.ethz.globis.phtree.demo.RectangleRStarSeeger;
-import ch.ethz.globis.phtree.demo.RectangleXtree;
-import ch.ethz.globis.phtree.util.BitTools;
-import ch.ethz.globis.phtree.util.JmxTools;
-import ch.ethz.globis.phtree.util.TestPerf;
-import ch.ethz.globis.phtree.util.Tools;
+import ch.ethz.globis.tinspin.TestStats.IDX;
+import ch.ethz.globis.tinspin.TestStats.TST;
 import ch.ethz.globis.tinspin.data.AbstractTest;
 import ch.ethz.globis.tinspin.data.TestPoint;
 import ch.ethz.globis.tinspin.data.TestRectangle;
+import ch.ethz.globis.tinspin.util.JmxTools;
+import ch.ethz.globis.tinspin.util.TestPerf;
+import ch.ethz.globis.tinspin.util.MemTools;
+import ch.ethz.globis.tinspin.wrappers.Candidate;
+import ch.ethz.globis.tinspin.wrappers.PointPHCCTree;
 
 
 /**
- * Performs tests as described in:
- * [1] L. Arge, M. de Berg, H. J. Haverkort and K. Yi: 
- * "The Priority R-Tree: A Practically Efficient and Worst-Case Optimal R-Tree"
+ * Main test runner class.
+ * The test runner can be executed directly or remotely in a separete
+ * process via the TestManager.
  *
  * @author Tilmann Zaschke
  */
-public class MainTest {
+public class TestRunner {
 	
 	private static final SimpleDateFormat FT = new SimpleDateFormat ("yyyy-MM-dd' 'HH:mm:ss");
 
@@ -105,15 +76,14 @@ public class MainTest {
 		}
 		
 		final int DIM = 3;
-		final int DEPTH = 64;
 		final int N = 1*10*1000;
 						
 		System.err.println("KNN count = " + N_KNN_QUERY); //TODO
-		TestStats s0 = new TestStats(TestStats.TST.CUBE, TestStats.IDX.QKDZ, N, DIM, DEPTH, true, 0.00001);
+		TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 0.00001);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, DEPTH, false, 3.4);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, DEPTH, false, 1.0);
 		s0.setSeed(0);
-		MainTest test = new MainTest(s0);
+		TestRunner test = new TestRunner(s0);
 		TestStats s = test.run();
 		System.out.println(s);
 		//System.out.println(BitsLong.POOL.print());
@@ -124,32 +94,32 @@ public class MainTest {
 	
 	private static void runWithArgs(String[] args) {
 		if (args.length < 4) {
-			System.out.println("ERROR: At least 4 arguemnts required, found: " + args.length);
-			System.out.println("Example: MainTest CUBE PHC 1000000 3 <64/32/...> <true/false> "
+			System.out.println("ERROR: At least 4 arguments required, found: " + args.length);
+			System.out.println("Example: TestRunner CUBE PHC 1000000 3 <true/false> "
 					+ "<1.0/3.4/3.5/...> <0/1/2/...>");
-			System.out.println("Example: MainTest [TEST] [INDEX] [SIZE] [DIM] [BITS=64] "
+			System.out.println("Example: TestRunner [TEST] [INDEX] [SIZE] [DIM] "
 					+ "[BOXES=false] [param=1.0] [random seed=0]");
 			return;
 		}
-		TestStats.TST tst;
+		TST tst;
 		try {
-			tst = TestStats.TST.valueOf(args[0]);
+			tst = TST.valueOf(args[0]);
 		} catch (IllegalArgumentException e) {
 			System.out.println("Test not recognised: " + args[0]);
 			System.out.print("Please choose one of: ");
-			for (TestStats.TST t: TestStats.TST.values()) {
+			for (TST t: TST.values()) {
 				System.out.print(t.name() + ", ");
 			}
 			return;
 		}
 		
-		TestStats.IDX idx;
+		IDX idx;
 		try {
-			idx = TestStats.IDX.valueOf(args[1]);
+			idx = IDX.valueOf(args[1]);
 		} catch (IllegalArgumentException e) {
 			System.out.println("Index not recognised: " + args[0]);
 			System.out.print("Please choose one of: ");
-			for (TestStats.IDX t: TestStats.IDX.values()) {
+			for (IDX t: IDX.values()) {
 				System.out.print(t.name() + ", ");
 			}
 			return;
@@ -157,29 +127,25 @@ public class MainTest {
 		
 		int n = Integer.parseInt(args[2]);
 		int dim = Integer.parseInt(args[3]);
-		int depth = args.length > 4 ? Integer.parseInt(args[4]) : 64;
-		boolean box = args.length > 5 ? Boolean.parseBoolean(args[5]) : false;
-		double param0 = args.length > 6 ? Double.parseDouble(args[6]) : 1.0;
-		int seed = args.length > 7 ? Integer.parseInt(args[7]) : 0;
+		boolean box = args.length > 4 ? Boolean.parseBoolean(args[4]) : false;
+		double param0 = args.length > 5 ? Double.parseDouble(args[5]) : 1.0;
+		int seed = args.length > 6 ? Integer.parseInt(args[6]) : 0;
 
-		TestStats s0 = new TestStats(tst, idx, n, dim, depth, box, param0);
+		TestStats s0 = new TestStats(tst, idx, n, dim, box, param0);
 		s0.setSeed(seed);
-		MainTest test = new MainTest(s0);
+		TestRunner test = new TestRunner(s0);
 		TestStats s = test.run();
 		System.out.println(s);
 		return;
 	}
 
-	public MainTest(TestStats S) { 
+	public TestRunner(TestStats S) { 
 		this.S = S;
 		this.R = new Random(S.seed);
 	}
 	
 	public TestStats run() {
-		
-		final boolean useDB = false; 
-		
-		openDB(useDB);
+
 		JmxTools.startUp();
 
 		load(S);
@@ -203,7 +169,7 @@ public class MainTest {
 		repeatPointQuery(N_POINT_QUERY);
 		
 		if (tree.supportsKNN()) {
-			int repeat = getKnnRepeat(S.statNDims);
+			int repeat = getKnnRepeat(S.cfgNDims);
 			S.assortedInfo += " KNN_REPEAT=" + repeat;
 			repeatKnnQuery(repeat, 1);
 			repeatKnnQuery(repeat, 1);
@@ -296,36 +262,31 @@ public class MainTest {
 		log("data generation finished in: " + (t2g-t1g));
 		S.statTGen = t2g-t1g;
 		
-		int dims = S.statNDims;
-		int N = S.statNEntries;
+		int dims = S.cfgNDims;
+		int N = S.cfgNEntries;
 		
-        long memTree = Tools.getMemUsed();
-		Tools.cleanMem(N, memTree);
+        long memTree = MemTools.getMemUsed();
+		MemTools.cleanMem(N, memTree);
 
 		
 		//load index
 		log(time() + "loading index ...");
-        memTree = Tools.getMemUsed();
+        memTree = MemTools.getMemUsed();
         JmxTools.reset();
 		long t1 = System.currentTimeMillis();
 		
-		if (S.isRangeData) {
-			tree = createRangeTree(ts);
-		} else {
-			tree = createPointTree(ts);
-		}
-		tree.setIndexType(ts.INDEX);
+		tree = ts.createTree();
 		tree.load(data, dims);
 
 		long t2 = System.currentTimeMillis();
 		S.statGcDiffL = JmxTools.getDiff();
 		S.statGcTimeL = JmxTools.getTime();
 		log("loading finished in: " + (t2-t1));
-		S.statSjvmF = Tools.cleanMem(N, memTree);
+		S.statSjvmF = MemTools.cleanMem(N, memTree);
 		S.statSjvmE = S.statSjvmF / N;
 		S.statTLoad = t2-t1;
 		
-		if (ts.INDEX == TestStats.IDX.PHCC) {
+		if (ts.INDEX == IDX.PHCC) {
 			// TODO: add pht-cpp statistics collection
 			
 			// memory usage
@@ -339,179 +300,10 @@ public class MainTest {
 		//This avoid premature garbage collection...
 		log("loaded objects: " + N + " " + data[0]);
 	}
-
-	private Candidate createPointTree(TestStats ts) {
-		int nEntries = ts.statNEntries;
-		int dims = ts.statNDims;
-		switch (ts.INDEX) {
-		case HIL: return PointCompactHilbert.create(nEntries, dims);
-		case PHCv1: return new PointPHC_v1(nEntries, dims);
-		case PHC: return new PointPHC(ts);
-		case PHC2: return new PointPHC2(nEntries, dims);
-		case PHCF: return new PointPHCF(nEntries, dims);
-		case PHC_PHE: return new PointPHC_PHE(nEntries, dims);
-		case PHC_IPP: return new PointPHC_IPP(nEntries, dims);
-		case PHC2_IPP: return new PointPHC2_IPP(nEntries, dims);
-		case PHCC: return new PointPHCCTree(nEntries, dims);
-		case PHC_RECTANGLE: return new PointPHCRectangle(ts);
-//		case MX_CIF: 
-//			if (dims == 3) {
-//				return new PointMXCIF3D(nEntries, dims);
-//			} else {
-//				throw new UnsupportedOperationException();
-//			}
-		case MX_CIF: return new PointMXCIFKD(nEntries, dims);
-		case CBZ: return PointCritBitZ.create(dims, nEntries);
-		case PRT: return PointPRTree.create(dims, nEntries);
-		case KD_SAVA: return PointKDS.create(dims, nEntries);
-		case KD_LEVY: return PointKDL.create(dims, nEntries);
-		case KD_RED: return PointKDRed.create(dims, nEntries);
-		case RSL: return PointRSLokeshj.create(dims, nEntries);
-		case RSS: return PointRStarSeeger.create(dims, nEntries);
-		case XTR: return PointXtree.create(dims, nEntries);
-		case CB: return PointCBR.create(dims, nEntries);
-		case CBF: return PointCBF.create(dims, nEntries);
-		case QKDZ: return new PointQuadZ(nEntries, dims);
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
-	
-	private Candidate createRangeTree(TestStats ts) {
-		int nEntries = ts.statNEntries;
-		int dims = ts.statNDims;
-		switch (ts.INDEX) {
-		case PHC: return new RectanglePHC(nEntries, dims);
-		case PHC2: return new RectanglePHC2(nEntries, dims);
-		case PHCF: return new RectanglePHCF(nEntries, dims);
-		case QKDZ: return new RectangleQuadZ(nEntries, dims);
-		case MX_CIF: 
-			if (dims == 2) {
-				return new RectangleMXCIF2D(nEntries, dims);
-			} else if (dims == 3) {
-				return new RectangleMXCIF3D(nEntries, dims);
-			} else {
-				throw new UnsupportedOperationException();
-			}
-		case PHC_IPP: return new RectanglePHC_IPP(nEntries, dims);
-		case PRT: return RectanglePRT.create(dims, nEntries);
-		case RSS: return RectangleRStarSeeger.create(dims, nEntries);
-		case XTR: return RectangleXtree.create(dims, nEntries);
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
-	
-	private void openDB(boolean useDB) {
-		if (!useDB) {
-			return;
-		}
 		
-//		//enabled statistics
-//		DBStatistics.enable(true);
-//		
-//		ZooConfig.setFileManager(ZooConfig.FILE_MGR_IN_MEMORY);
-//		String dbName = "pr_main";
-//		if (!ZooHelper.getDataStoreManager().dbExists(dbName)) {
-//			log("Creating database");
-//			ZooHelper.getDataStoreManager().createDb(dbName);
-//		} else {
-//			log("Removing database");
-//			ZooHelper.getDataStoreManager().removeDb(dbName);
-//			log("Creating database");
-//			ZooHelper.getDataStoreManager().createDb(dbName);
-//		}
-//		ZooJdoProperties props = new ZooJdoProperties(dbName);
-//		//props.setRetainValues(true);
-//		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(props);
-//		pm = pmf.getPersistenceManager();
-//		pm.currentTransaction().begin();
-	}
-	
-	
-//	private void commitDB() {
-//		if (pm == null) {
-//			return;
-//		}
-//		
-//		if (phc != null) {
-//			pm.makePersistent(phc);
-//		} else if (prt != null) {
-//			pm.makePersistent(prt);
-//		} else {
-//			throw new IllegalStateException();
-//		}
-//		pm.currentTransaction().commit();
-//		pm.currentTransaction().begin();
-//		pm.evictAll(true, LeafNode.class);
-//
-//		//		Object oid = JDOHelper.getObjectId(idx);
-////		//pm.evictAll();
-////		
-////		PersistenceManagerFactory pmf = pm.getPersistenceManagerFactory();
-////		pm.currentTransaction().rollback();
-////		pm.close();
-////		pm = pmf.getPersistenceManager();
-////		pm.currentTransaction().begin();
-////		return (PhTree) pm.getObjectById(oid);
-//		
-//		
-//		if (INDEX == IDX.PRT) {
-//			Extent<LeafNode> ext1 = pm.getExtent(LeafNode.class);
-//			int nL = 0;
-//			Iterator<LeafNode> it1 = ext1.iterator();
-//			while (it1.hasNext()) {
-//				nL++;
-//				it1.next();
-//			}
-//			Extent<InternalNode> ext2 = pm.getExtent(InternalNode.class);
-//			int nI = 0;
-//			Iterator<InternalNode> it2 = ext2.iterator();
-//			while (it2.hasNext()) {
-//				nI++;
-//				it2.next();
-//			}
-//			log("Leaves: " + nL);
-//			log("Inner: " + nI);
-//			pm.currentTransaction().commit();
-//			pm.currentTransaction().begin();
-//			pm.evictAll(true, LeafNode.class);
-//		}
-//	}
-//	
-//	private void reportDB() {
-//		if (pm == null) {
-//			log("No DB was used.");
-//			return;
-//		}
-//		DBStatistics stats = ZooJdoHelper.getStatistics(pm);
-//		int rc = stats.getStoragePageReadCount();
-//		int urc = stats.getStoragePageReadCountUnique();
-//		int drc = stats.getStorageDataPageReadCount();
-//		int udrc = stats.getStorageDataPageReadCountUnique();
-//		int wc = stats.getStoragePageWriteCount();
-//		log("Page size: " + ZooConfig.getFilePageSize());
-//		log("Page read count: " + rc);
-//		log("Page read count unique: " + urc);
-//		log("Data page read count: " + drc);
-//		log("Data page read count unique: " + udrc);
-//		log("Page write count: " + wc);
-//		log("Data pages: " + stats.getStat(STATS.DB_PAGE_CNT_DATA));
-//	}
-//	
-//	private void closeDB() {
-//		if (pm == null) {
-//			return;
-//		}
-//		pm.currentTransaction().rollback();
-//		pm.close();
-//		pm.getPersistenceManagerFactory().close();
-//		pm = null;
-//	}
-	
 	private void repeatQuery(int repeat) {
-		int dims = S.statNDims;
-		log("N=" + S.statNEntries);
+		int dims = S.cfgNDims;
+		log("N=" + S.cfgNEntries);
 		log(time() + "querying index ... repeat = " + repeat);
 		double[][] lower = new double[repeat][dims]; 
 		double[][] upper = new double[repeat][dims];
@@ -519,7 +311,7 @@ public class MainTest {
 		JmxTools.reset();
 		long t1 = System.currentTimeMillis();
 		int n = 0;
-		if (S.statNEntries < 10000 || !(tree.isOfType(TestStats.IDX.CB, TestStats.IDX.CBF))) {
+		if (tree.supportsWindowQuery()) {
 			n = repeatQueries(lower, upper);
 		} else {
 			n = -1;
@@ -576,19 +368,19 @@ public class MainTest {
 	}
 	
 	private double[][] preparePointQuery(int repeat) {
-		int dims = S.statNDims;
+		int dims = S.cfgNDims;
 		double[][] qA;
 		if (!S.isRangeData) {
 			qA = new double[repeat][];
 			for (int i = 0; i < repeat; i++) {
-				qA[i] = generateQueryPointD(S.statNEntries, dims);
+				qA[i] = generateQueryPointD(S.cfgNEntries, dims);
 			}
 		} else {
 			qA = new double[repeat*2][];
 			for (int i = 0; i < repeat; i++) {
 				double[] lo = new double[dims];
 				double[] hi = new double[dims];
-				generateQueryPointDRect(lo, hi, S.statNEntries, dims);
+				generateQueryPointDRect(lo, hi, S.cfgNEntries, dims);
 				qA[2*i] = lo;
 				qA[2*i+1] = hi;
 			}
@@ -641,7 +433,7 @@ public class MainTest {
 	}
 	
 	private double[][] prepareKnnQuery(int repeat) {
-		int dims = S.statNDims;
+		int dims = S.cfgNDims;
 		double[][] qA;
 		if (!S.isRangeData) {
 			qA = new double[repeat][];
@@ -732,7 +524,7 @@ public class MainTest {
 			if (i%10 == 0) System.out.print('.');
 		}
 		System.out.println();
-		MainTest.log("n=" + n/(double)lower.length);
+		TestRunner.log("n=" + n/(double)lower.length);
 		if (DEBUG) {
 			log(TestPerf.toStringOut());
 			TestPerf.resetStats();
@@ -751,15 +543,15 @@ public class MainTest {
 	 * @param len lengths of edges
 	 */
 	private void generateQueryCorners(double[] min, double[] max) {
-		if (test.getTestType() == TestStats.TST.CLUSTER) {
+		if (test.getTestType() == TST.CLUSTER) {
 			test.queryCuboid(S.paramWQSize, min, max);
 			return;
-		} else if (test.getTestType() == TestStats.TST.TIGER) {
+		} else if (test.getTestType() == TST.TIGER) {
 			if (test.getTestStats().isRangeData) {
 				test.queryCuboid(S.paramWQSize, min, max);
 			}
 			return;
-		} else if (test.getTestType() == TestStats.TST.CUSTOM) {
+		} else if (test.getTestType() == TST.CUSTOM) {
 			customTest.queryCuboid(S.paramWQSize, min, max);
 			return;
 		}
@@ -774,7 +566,7 @@ public class MainTest {
 	private void generateQueryCornersNew(double[] min, double[] max) {
 		int dims = min.length;
 		
-		int nEntries = S.statNEntries;
+		int nEntries = S.cfgNEntries;
 		if (nEntries < S.paramWQSize*10) {
 			//N < 10*000 ? -> N = 100
 			nEntries = S.paramWQSize*10;
@@ -804,7 +596,7 @@ public class MainTest {
 			len[dims-1] = avgVolume/vol;  //now the new len creates a rectangle/box of SIZE.
 			if (nTries++ > 100) {
 				System.out.println(Arrays.toString(len) + " vol=" + vol + " aVol=" + avgVolume);
-				throw new IllegalStateException("dims=" + dims + "  N=" + S.statNEntries);
+				throw new IllegalStateException("dims=" + dims + "  N=" + S.cfgNEntries);
 			}
 		} while (len[dims-1] >= LEN); //drop bad rectangles
 		
@@ -836,7 +628,7 @@ public class MainTest {
 		int dims = min.length;
 		//Here is a fixed size version, returning 1% of the space.
 		//final double qVolume = 0.01 * Math.pow(LEN, DIM);//(float) Math.pow(0.1, DIM); //0.01 for DIM=2
-		final double qVolume = S.paramWQSize/(double)S.statNEntries * Math.pow(LEN, dims);
+		final double qVolume = S.paramWQSize/(double)S.cfgNEntries * Math.pow(LEN, dims);
 		
 		int dDrop = R.nextInt(dims);
 		//query create cube
@@ -919,7 +711,7 @@ public class MainTest {
 		int n = 0;
 		long t = 0;
 		double[][] u = null; //2 points, 2 versions
-		int nUpdates = N_UPDATES > S.statNEntries/4 ? S.statNEntries/4 : N_UPDATES;
+		int nUpdates = N_UPDATES > S.cfgNEntries/4 ? S.cfgNEntries/4 : N_UPDATES;
 		for (int i = 0; i < N_UPDATE_CYCLES; i++) {
 			//prepare query
 			u = test.generateUpdates(nUpdates, data, u);
@@ -955,58 +747,13 @@ public class MainTest {
 		long t2 = System.currentTimeMillis();
 		
 		log("Deletion time: " + (t2-t1) + " ms -> " + 
-		(t2-t1)*1000*1000/(double)S.statNEntries + " ns/q/r");
+		(t2-t1)*1000*1000/(double)S.cfgNEntries + " ns/q/r");
 		S.statTUnload = t2-t1;
 		S.statGcDiffUl = JmxTools.getDiff();
 		S.statGcTimeUl = JmxTools.getTime();
-		if (S.statNEntries != n) {
-			throw new IllegalStateException("N/n: " + S.statNEntries + "/" + n);
+		if (S.cfgNEntries != n) {
+			throw new IllegalStateException("N/n: " + S.cfgNEntries + "/" + n);
 		}
-	}
-	
-
-	/**
-	 * Float to long.
-	 * @param f
-	 * @return long.
-	 */
-	static long f2l(double f) {
-		return BitTools.toSortableLong(f);
-	}
-
-	static void f2l(double[] f, long[] l) {
-		BitTools.toSortableLong(f, l);
-	}
-
-	/**
-	 * Float to long.
-	 * @param f
-	 * @return long.
-	 */
-	static double l2f(long l) {
-		return BitTools.toDouble(l);
-	}
-
-	static void l2f(long[] l, double[] f) {
-		BitTools.toDouble(l, f);
-	}
-
-	static double dist(double[] a, double[] b) {
-		double dist = 0;
-		for (int i = 0; i < a.length; i++) {
-			double d =  a[i]-b[i];
-			dist += d*d;
-		}
-		return Math.sqrt(dist);
-	}
-	
-	static double distR(double[] center, double[] rLower, double[] rUpper) {
-		double dist = 0;
-		for (int i = 0; i < center.length; i++) {
-			double d =  center[i]-(rUpper[i]-rLower[i])/2;
-			dist += d*d;
-		}
-		return Math.sqrt(dist);
 	}
 	
 	public TestStats getTestStats() {

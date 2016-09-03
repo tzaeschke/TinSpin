@@ -25,8 +25,8 @@ public abstract class AbstractTest {
 	protected AbstractTest(Random R, TestStats S) {
 		this.R = R;
 		this.S = S;
-		this.N = S.statNEntries;
-		this.DIM = S.statNDims;
+		this.N = S.cfgNEntries;
+		this.DIM = S.cfgNDims;
 		this.param1 = S.param1;
 		this.param2 = S.param2;
 		this.paramStr = S.paramStr;

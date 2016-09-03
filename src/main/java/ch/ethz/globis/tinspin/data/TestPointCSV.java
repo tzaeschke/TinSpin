@@ -70,11 +70,11 @@ public class TestPointCSV extends TestPoint {
 		for (int i = 0; i < dataA.size(); i++) {
 			System.arraycopy(dataA.get(i), 0, data, i*dim, dim);
 		}
-		S.statNDims = dim;
-		S.statNEntries = dataA.size();
+		S.cfgNDims = dim;
+		S.cfgNEntries = dataA.size();
 		S.paramStr = paramStr;
-		N = S.statNEntries;
-		DIM = S.statNDims;
+		N = S.cfgNEntries;
+		DIM = S.cfgNDims;
 		return data;
 	}
 	

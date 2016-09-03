@@ -21,16 +21,11 @@ import java.util.Random;
 import java.util.Scanner;
 
 import ch.ethz.globis.phtree.PhTreeSolidF;
-import ch.ethz.globis.phtree.demo.RectanglePHC;
 import ch.ethz.globis.phtree.nv.PhTreeNVSolidF.PHREntry;
-import ch.ethz.globis.phtree.pre.ColumnType;
-import ch.ethz.globis.phtree.util.TestPerf;
-import ch.ethz.globis.tinspin.Candidate;
-import ch.ethz.globis.tinspin.MainTest;
-import ch.ethz.globis.tinspin.MainTestManager;
 import ch.ethz.globis.tinspin.TestStats;
-import ch.ethz.globis.tinspin.TestStats.IDX;
-import ch.ethz.globis.tinspin.TestStats.TST;
+import ch.ethz.globis.tinspin.util.TestPerf;
+import ch.ethz.globis.tinspin.wrappers.Candidate;
+import ch.ethz.globis.tinspin.wrappers.RectanglePHC;
 
 /**
  * Data generation according to the data used in:
@@ -184,8 +179,8 @@ public class TestRectangleTOUCH extends TestRectangle {
 	private static void runWithArgs(String[] args) {
 		if (args.length < 5) {
 			System.out.println("ERROR: At least 5 arguemnts required, found: " + args.length);
-			System.out.println("Example: MainTest 1 PHC 1000 10000 3 5");
-			System.out.println("Example: MainTest 1 PHC 1000 10000 3 10 0 3 myData.csv");
+			System.out.println("Example: TestRunner 1 PHC 1000 10000 3 5");
+			System.out.println("Example: TestRunner 1 PHC 1000 10000 3 10 0 3 myData.csv");
 			System.out.println("Args: TestRectangleTOUCH [TEST] [INDEX] [SIZE_A] [SIZE_B] [DIM] "
 					+ "[EPS] [SEED default=0] [REPEAT default=3] [optional: <exportFilename>]");
 			System.out.println("Args: ");
@@ -227,17 +222,17 @@ public class TestRectangleTOUCH extends TestRectangle {
 		int seed = (args.length > 6 ? Integer.parseInt(args[6]) : 0);
 		int repeat = (args.length > 7 ? Integer.parseInt(args[7]) : 3);
 		
-		TestStats S = new TestStats(TestStats.TST.TOUCH, idx, n_b, dim, 64, true, param0, eps);
+		TestStats S = new TestStats(TestStats.TST.TOUCH, idx, n_b, dim, true, param0, eps);
 
 		if (args.length>8) {
 			Path path = FileSystems.getDefault().getPath(args[8]);
 			TestRectangleTOUCH t = new TestRectangleTOUCH(new Random(seed), S);
-			t.run(n_a, path);
+			t.run(n_a, path, S);
 		}
 
 		for (int i = 0; i < repeat; i++) {
 			TestRectangleTOUCH t = new TestRectangleTOUCH(new Random(seed), S);
-			t.run(n_a, null);
+			t.run(n_a, null, S);
 			//System.out.println(S);
 		}
 		//System.out.println(S);
@@ -279,18 +274,18 @@ public class TestRectangleTOUCH extends TestRectangle {
 
 		// param1: 0=even, 1=gauss, >1= gauss spots
 		// param2: EPSILON, usually 5 or 10
-		TestStats S = new TestStats(TestStats.TST.TOUCH, TestStats.IDX.DUMMY, N_B, 3, 64, true, 1, EPS[2]);
+		TestStats S = new TestStats(TestStats.TST.TOUCH, TestStats.IDX.DUMMY, N_B, 3, true, 1, EPS[2]);
 		for (int i = 0; i < 3; i++) {
 			S.setSeed(0);;
 			System.out.println("SEED: " + S.SEEDmsg);
 			TestRectangleTOUCH t = new TestRectangleTOUCH(new Random(S.seed), S);
-			t.run(N_A, null);
+			t.run(N_A, null, S);
 			//System.out.println(S);
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void run(int N_A, Path exportFile) {
+	private void run(int N_A, Path exportFile, TestStats ts) {
 		
 		//load
 		System.out.println("Create data...");
@@ -298,14 +293,14 @@ public class TestRectangleTOUCH extends TestRectangle {
 		System.out.println("mem=" + (Runtime.getRuntime().totalMemory()/1000000) + "MB");
 
 		System.out.println("Load data...");
-		Candidate tree = new RectanglePHC(N, DIM);
-		//Candidate tree = new RectanglePHC2(N, DIM);
-		//Candidate tree = new RectanglePHC_IPP(N, DIM);
-		//Candidate tree = new RectanglePHCRect(N, DIM);
+		Candidate tree = new RectanglePHC(ts);
+		//Candidate tree = new RectanglePHC2(ts);
+		//Candidate tree = new RectanglePHC_IPP(ts);
+		//Candidate tree = new RectanglePHCRect(ts);
 		//Node.AHC_LHC_BIAS=2.0;
-		//Candidate tree = new RectangleDUMMY(N, DIM);
-		//Candidate tree = RectangleXtree.create(DIM, N);
-		//Candidate tree = new RectangleMXCIF3D(N, DIM);
+		//Candidate tree = new RectangleDUMMY(ts);
+		//Candidate tree = RectangleXtree.create(ts);
+		//Candidate tree = new RectangleMXCIF3D(ts);
 		tree.load(data, DIM);
 		System.out.println("mem=" + (Runtime.getRuntime().totalMemory()/1000000) + "MB");
 		

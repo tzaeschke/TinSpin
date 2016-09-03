@@ -4,14 +4,15 @@
  * This software is the proprietary information of ETH Zurich.
  * Use is subject to license terms.
  */
-package ch.ethz.globis.tinspin;
+package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.List;
 import java.util.Random;
 
+import ch.ethz.globis.phtree.util.BitTools;
+import ch.ethz.globis.tinspin.TestStats;
+
 public abstract class Candidate {
-	
-	private TestStats.IDX indexType;
 	
 	/**
 	 * This method is invoked at the end of the test run
@@ -207,22 +208,57 @@ public abstract class Candidate {
 		return false;
 	}
 	
-	public void setIndexType(TestStats.IDX indexType) {
-		this.indexType = indexType;
+	public boolean supportsWindowQuery() {
+		return true;
 	}
-	
+
 	/**
-	 * 
-	 * @param types
-	 * @return Whether this Candidate is one of the supplied index types
+	 * Float to long.
+	 * @param f
+	 * @return long.
 	 */
-	public boolean isOfType(TestStats.IDX ... types) {
-		for (TestStats.IDX t: types) {
-			if (t == indexType) {
-				return true;
-			}
+	static long f2l(double f) {
+		return BitTools.toSortableLong(f);
+	}
+
+	static void f2l(double[] f, long[] l) {
+		BitTools.toSortableLong(f, l);
+	}
+
+	/**
+	 * Float to long.
+	 * @param f
+	 * @return long.
+	 */
+	static double l2f(long l) {
+		return BitTools.toDouble(l);
+	}
+
+	static void l2f(long[] l, double[] f) {
+		BitTools.toDouble(l, f);
+	}
+
+	static double dist(double[] a, double[] b) {
+		double dist = 0;
+		for (int i = 0; i < a.length; i++) {
+			double d =  a[i]-b[i];
+			dist += d*d;
 		}
-		return false;
+		return Math.sqrt(dist);
 	}
 	
+	static double distR(double[] center, double[] rLower, double[] rUpper) {
+		double dist = 0;
+		for (int i = 0; i < center.length; i++) {
+			double d =  center[i]-(rUpper[i]-rLower[i])/2;
+			dist += d*d;
+		}
+		return Math.sqrt(dist);
+	}
+	
+	@Override
+	public String toString() {
+		return "Please provide configuration information for "
+				+ " every test candidate class in the toString() method.";
+	}
 }

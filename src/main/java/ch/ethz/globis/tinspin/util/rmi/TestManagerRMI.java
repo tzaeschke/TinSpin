@@ -10,7 +10,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import ch.ethz.globis.tinspin.TestStats;
-import ch.ethz.globis.tinspin.util.rmi.TestRunner.NoSecurityManager;
+import ch.ethz.globis.tinspin.util.rmi.TestRunnerLocal.NoSecurityManager;
 
 
 public class TestManagerRMI {
@@ -26,7 +26,7 @@ public class TestManagerRMI {
 		//TestProcessLauncher.launchProcess("rmigegistry", new String[]{});
 		System.setSecurityManager (new NoSecurityManager());
 		Process p = TestProcessLauncher.launchProcess("-Xmx28G -XX:+UseConcMarkSweepGC", 
-				TestRunner.class, new String[]{
+				TestRunnerLocal.class, new String[]{
 			stats0.INDEX.name(), stats0.TEST.name(), Integer.toString(stats0.getN())});
 		try {
 			Thread.sleep(2000);
@@ -64,7 +64,7 @@ public class TestManagerRMI {
 		if (USE_RMI) {
 			return runRmiTest(s1);
 		} else {
-			return TestRunner.test(s1);
+			return TestRunnerLocal.test(s1);
 		}
 	}
 	

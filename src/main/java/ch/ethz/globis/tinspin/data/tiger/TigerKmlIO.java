@@ -25,7 +25,6 @@ import org.zoodb.tools.ZooHelper;
 import ch.ethz.globis.phtree.PhTree;
 import ch.ethz.globis.phtree.PhTree.PhExtent;
 import ch.ethz.globis.phtree.util.BitTools;
-import ch.ethz.globis.phtree.util.TestPerf;
 import ch.ethz.globis.phtree.util.Tools;
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -70,7 +69,7 @@ public class TigerKmlIO {
 			if (!ts.isRangeData) {
 				data = TigerKmlIO.readFolder(TIGER_PATH, Integer.MAX_VALUE);
 			} else {
-				data = TigerKmlIO.readFolderRectangle(TIGER_PATH, ts.statNDims, Integer.MAX_VALUE);
+				data = TigerKmlIO.readFolderRectangle(TIGER_PATH, ts.cfgNDims, Integer.MAX_VALUE);
 			}
 			idx = buildIndexPHT(data, ts, Integer.MAX_VALUE); 
 			System.out.println("min/max X= " + TigerKmlIO.minX + "/"+ TigerKmlIO.maxX + "   Y=" + 
@@ -92,7 +91,7 @@ public class TigerKmlIO {
 	private static PhTree<Object> buildIndexPHT(double[] data, 
 			TestStats ts, int MAX_ENTRIES) {
 		log("Building index");
-		int dims = ts.statNDims;
+		int dims = ts.cfgNDims;
 		int idxDims = dims * 2;
 		int N = data.length/(dims);
         long memTree = Tools.getMemUsed();
@@ -137,9 +136,8 @@ public class TigerKmlIO {
 			}
 		}
 		System.out.println();
-		TestPerf.printStats();
 		long t2 = System.currentTimeMillis();
-		ts.statNEntries = n;
+		ts.cfgNEntries = n;
 		//ts.statTLoad = t2-t1;
 		System.out.println("Duplicates: " + nDupl);
 		System.out.println("Entries (max): " + (N-nDupl));
