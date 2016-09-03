@@ -9,7 +9,6 @@ package ch.ethz.globis.tinspin.data;
 import java.util.HashSet;
 import java.util.Random;
 
-import ch.ethz.globis.phtree.demo.TestPointSky;
 import ch.ethz.globis.tinspin.TestStats;
 
 public abstract class TestPoint extends AbstractTest {
@@ -21,8 +20,8 @@ public abstract class TestPoint extends AbstractTest {
 	
 	public static TestPoint create(Random R, TestStats S) {
 		switch (S.TEST) {
-		case CUBE: return new TestPointCube(R, S);
 		case CLUSTER: return new TestPointCluster(R, S);
+		case CUBE: return new TestPointCube(R, S);
 		case CSV: return new TestPointCSV(R, S);
 		case SKYLINE: return new TestPointSky(R, S);
 		case TIGER: return new TestPointTiger(R, S);

@@ -67,9 +67,9 @@ public class TigerKmlIO {
 			//read from file
 			System.out.println("Creating buffer file for TIGER data: " + dbName);
 			if (!ts.isRangeData) {
-				data = TigerKmlIO.readFolder(TIGER_PATH, Integer.MAX_VALUE);
+				data = TigerKmlIO.readFolder(TIGER_PATH, ts.cfgNEntries);
 			} else {
-				data = TigerKmlIO.readFolderRectangle(TIGER_PATH, ts.cfgNDims, Integer.MAX_VALUE);
+				data = TigerKmlIO.readFolderRectangle(TIGER_PATH, ts.cfgNDims, ts.cfgNEntries);
 			}
 			idx = buildIndexPHT(data, ts, Integer.MAX_VALUE); 
 			System.out.println("min/max X= " + TigerKmlIO.minX + "/"+ TigerKmlIO.maxX + "   Y=" + 
@@ -135,7 +135,6 @@ public class TigerKmlIO {
 				break;
 			}
 		}
-		System.out.println();
 		long t2 = System.currentTimeMillis();
 		ts.cfgNEntries = n;
 		//ts.statTLoad = t2-t1;

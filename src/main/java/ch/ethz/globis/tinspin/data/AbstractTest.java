@@ -6,10 +6,8 @@
  */
 package ch.ethz.globis.tinspin.data;
 
-import java.util.Arrays;
 import java.util.Random;
 
-import ch.ethz.globis.phtree.pre.ColumnType;
 import ch.ethz.globis.tinspin.TestStats;
 
 public abstract class AbstractTest {
@@ -46,12 +44,6 @@ public abstract class AbstractTest {
 	public abstract void queryCuboid(int resultsPerQuery, double[] min, double[] max);
 	public abstract double[] generate();
 	public abstract double[][] generateUpdates(int n, double[] data, double[][] ups);
-	
-	public ColumnType[] getColumnTypes() {
-		ColumnType[] types = new ColumnType[DIM];
-		Arrays.fill(types, new ColumnType.DoubleColumn(15));
-		return types;
-	}
 	
 	public void log(String str) {
 		System.out.println(str);

@@ -142,7 +142,7 @@ public class TestManager {
 		suiteDims(TST.CUBE, IDX.PHC);
 		suiteDims(TST.CUBE, IDX.KD_LEVY);
 		suiteDims(TST.CUBE, IDX.KD_SAVA);
-		suiteDims(TST.CUBE, IDX.CB);
+		suiteDims(TST.CUBE, IDX.CBR);
 		suiteDims(TST.CUBE, IDX.CBF);
 	}
 	
@@ -157,7 +157,7 @@ public class TestManager {
 		testSeries(tst, IDX.PHC, 	 DIM, DEPTH, p1, 1, 2, 5, 10, 15, 25, 50, 75, 100);//, 150, 200);//, 250);
 		testSeries(tst, IDX.KD_LEVY, DIM, DEPTH, p1, 1, 2, 5, 10, 15, 25, 50, 75, 100);//, 150, 200);
 		testSeries(tst, IDX.KD_SAVA, DIM, DEPTH, p1, 1, 2, 5, 10, 15, 25, 50, 75, 100);//, 150, 200);
-		testSeries(tst, IDX.CB, 	 DIM, DEPTH, p1, 1, 2, 5, 10, 15, 25, 50, 75, 100);//, 150, 200);
+		testSeries(tst, IDX.CBR, 	 DIM, DEPTH, p1, 1, 2, 5, 10, 15, 25, 50, 75, 100);//, 150, 200);
 		testSeries(tst, IDX.CBF, 	 DIM, DEPTH, p1, 1, 2, 5, 10, 15, 25, 50, 75, 100);//, 150, 200);
 	}
 		
@@ -234,8 +234,8 @@ public class TestManager {
 //		test(3, TST.CUBE, IDX.KD_LEVY, 3, 1*1000*1000, 1.0);
 		test(2, TST.CUBE, IDX.KD_SAVA, 3, 1*1000*1000, 1.0);
 //		test(3, TST.CUBE, IDX.KD_SAVA, 3, 1*1000*1000, 1.0);
-		test(2, TST.CUBE, IDX.CB, 3, 1*1000*1000, 1.0);
-//		test(3, TST.CUBE, IDX.CB, 3, 1*1000*1000, 1.0);
+		test(2, TST.CUBE, IDX.CBR, 3, 1*1000*1000, 1.0);
+//		test(3, TST.CUBE, IDX.CBR, 3, 1*1000*1000, 1.0);
 		test(2, TST.CUBE, IDX.CBF, 3, 1*1000*1000, 1.0);
 //		test(3, TST.CUBE, IDX.CBF, 3, 1*1000*1000, 1.0);
 
@@ -246,8 +246,8 @@ public class TestManager {
 //		test(3, TST.CLUSTER, IDX.KD_LEVY, 3, 64, 1*1000*1000, 1.0);
 //		test(2, TST.CLUSTER, IDX.KD_SAVA, 3, 64, 1*1000*1000, 1.0);
 //		test(3, TST.CLUSTER, IDX.KD_SAVA, 3, 64, 1*1000*1000, 1.0);
-//		test(2, TST.CLUSTER, IDX.CB, 3, 64, 1*1000*1000, 1.0);
-//		test(3, TST.CLUSTER, IDX.CB, 3, 64, 1*1000*1000, 1.0);
+//		test(2, TST.CLUSTER, IDX.CBR, 3, 64, 1*1000*1000, 1.0);
+//		test(3, TST.CLUSTER, IDX.CBR, 3, 64, 1*1000*1000, 1.0);
 //		test(2, TST.CLUSTER, IDX.CBF, 3, 64, 1*1000*1000, 1.0);
 //		test(3, TST.CLUSTER, IDX.CBF, 3, 64, 1*1000*1000, 1.0);
 
@@ -262,17 +262,17 @@ public class TestManager {
 //		testSeries(TST.CUBE, IDX.PHC,     D, 64, 1.0, 1, 2, 5, 10, 15, 25, 50);//, 75, 100);//, 150, 200);//, 250);
 //		testSeries(TST.CUBE, IDX.KD_LEVY, D, 64, 1.0, 1, 2, 5, 10, 15, 25, 50);//, 75, 100);//, 150, 200);
 //		testSeries(TST.CUBE, IDX.KD_SAVA, D, 64, 1.0, 1, 2, 5, 10, 15, 25, 50);//, 75, 100);//, 150, 200);
-//		testSeries(TST.CUBE, IDX.CB,      D, 64, 1.0, 1, 2, 5, 10, 15, 25, 50);//, 75, 100);//, 150, 200);
+//		testSeries(TST.CUBE, IDX.CBR,      D, 64, 1.0, 1, 2, 5, 10, 15, 25, 50);//, 75, 100);//, 150, 200);
 //		testSeries(TST.CUBE, IDX.CBF,     D, 64, 1.0, 1, 2, 5, 10, 15, 25, 50);//, 75, 100);//, 150, 200);
 		testSeries(TST.CUBE, IDX.KD_LEVY, D, 64, 1.0, 100);//, 75, 100);//, 150, 200);
-		testSeries(TST.CUBE, IDX.CB,      D, 64, 1.0, 100);//, 150, 200);
+		testSeries(TST.CUBE, IDX.CBR,      D, 64, 1.0, 100);//, 150, 200);
 //		testSeries(TST.CUBE, IDX.KD_LEVY, D, 64, 1.0, 200);//, 75, 100);//, 150, 200);
 //		testSeries(TST.CUBE, IDX.KD_SAVA, D, 64, 1.0, 200);//, 75, 100);//, 150, 200);
-//		testSeries(TST.CUBE, IDX.CB,      D, 64, 1.0, 200);//, 150, 200);
+//		testSeries(TST.CUBE, IDX.CBR,      D, 64, 1.0, 200);//, 150, 200);
 //		testSeries(TST.CUBE, IDX.CBF,     D, 64, 1.0, 200);//, 150, 200);
 //		test(1, TST.CUBE, IDX.PHC, D, 64, 75*1000*1000, 1.0);
 //		testSeries(TST.CUBE, IDX.PHC,     D, 64, 1.0, 75, 100);//, 150, 200);//, 250);
-//		testSeries(TST.CUBE, IDX.CB,      D, 64, 1.0, 75, 100);//, 150, 200);
+//		testSeries(TST.CUBE, IDX.CBR,      D, 64, 1.0, 75, 100);//, 150, 200);
 //		testSeries(TST.CUBE, IDX.CBF,     D, 64, 1.0, 75, 100);//, 150, 200);
 //		testSeries(TST.CUBE, IDX.KD_LEVY, D, 64, 1.0, 75);//, 150, 200);
 //		testSeries(TST.CUBE, IDX.KD_SAVA, D, 64, 1.0, 75);//, 150, 200);
@@ -285,11 +285,11 @@ public class TestManager {
 //		testSeries(TST.CLUSTER, IDX.KD_LEVY, 3, 64, p1, 10, 15, 25);//, 50, 75, 100, 150);
 //		//testSeries(TST.CLUSTER, IDX.KD_LEVY, 3, 64, p1, 1, 2, 5, 10, 15, 25);//, 50, 75, 100, 150);
 //		testSeries(TST.CLUSTER, IDX.KD_SAVA, 3, 64, p1, 1, 2, 5, 10, 15, 25);//, 50, 75, 100, 150);
-//		testSeries(TST.CLUSTER, IDX.CB, 	3, 64, p1, 1, 2, 5, 10, 15, 25);//, 50, 75, 100, 150);
+//		testSeries(TST.CLUSTER, IDX.CBR, 	3, 64, p1, 1, 2, 5, 10, 15, 25);//, 50, 75, 100, 150);
 //		testSeries(TST.CLUSTER, IDX.CBF, 	3, 64, p1, 1, 2, 5, 10, 15, 25);//, 50, 75, 100, 150);
 //		testSeries(TST.CLUSTER, IDX.KD_LEVY, 3, 64, p1, 10, 15, 25);
 //		testSeries(TST.CLUSTER, IDX.KD_SAVA, 3, 64, p1, 1, 5, 10, 15, 25, 50);
-//		testSeries(TST.CLUSTER, IDX.CB, 	3, 64, p1, 50);
+//		testSeries(TST.CLUSTER, IDX.CBR, 	3, 64, p1, 50);
 //		testSeries(TST.CLUSTER, IDX.CBF, 	3, 64, p1, 50);
 //		p1 = 3.5;
 //		testSeries(TST.CLUSTER, IDX.KD_LEVY, 3, 64, p1, 15);
@@ -305,7 +305,7 @@ public class TestManager {
 //		testSeries(TST.VORTEX, IDX.PHC, 	3, 64, 5.0, 1, 2, 5, 10, 15, 25, 50, 75, 100, 150, 200);//, 250);
 //		testSeries(TST.VORTEX, IDX.KD_LEVY, 3, 64, 5.0, 1, 2, 5, 10, 15, 25, 50, 75, 100, 150, 200);
 //		testSeries(TST.VORTEX, IDX.KD_SAVA, 3, 64, 5.0, 1, 2, 5, 10, 15, 25, 50, 75, 100, 150, 200);
-//		testSeries(TST.VORTEX, IDX.CB, 		3, 64, 5.0, 1, 2, 5, 10, 15, 25, 50, 75, 100, 150, 200);
+//		testSeries(TST.VORTEX, IDX.CBR, 		3, 64, 5.0, 1, 2, 5, 10, 15, 25, 50, 75, 100, 150, 200);
 //		testSeries(TST.VORTEX, IDX.CBF, 	3, 64, 5.0, 1, 2, 5, 10, 15, 25, 50, 75, 100, 150, 200);
 	}
 
@@ -324,7 +324,7 @@ public class TestManager {
 	private static void suiteTigerPoint() {
 		//50 = max = ~14.2
 		testSeries(TST.TIGER, IDX.PHC, 2, 64, 0.0f, 1, 5, 10, 15, 20);
-//		testSeries(TST.TIGER, IDX.CB, 2, 64, 0.0f, 1, 5, 10, 15, 20);
+//		testSeries(TST.TIGER, IDX.CBR, 2, 64, 0.0f, 1, 5, 10, 15, 20);
 //		testSeries(TST.TIGER, IDX.CBF, 2, 64, 0.0f, 1, 5, 10, 15, 20);
 //		testSeries(TST.TIGER, IDX.KD_LEVY, 2, 64, 0.0f, 1, 5, 10, 15, 20);
 //		testSeries(TST.TIGER, IDX.KD_SAVA, 2, 64, 0.0f, 1, 5, 10, 15, 20);

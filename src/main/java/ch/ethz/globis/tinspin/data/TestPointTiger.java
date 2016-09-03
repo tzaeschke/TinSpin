@@ -30,7 +30,7 @@ public class TestPointTiger extends TestPoint {
 	@Override
 	public double[] generate() {
 		log("Running: TestTiger(" + N + ")");
-		double[] data = TigerKmlIO.readFromDB_Array(dbName);
+		double[] data = TigerKmlIO.readAndBuffer(dbName, S);
 		return data;
 	}
 

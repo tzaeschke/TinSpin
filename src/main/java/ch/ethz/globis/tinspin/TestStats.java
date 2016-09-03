@@ -36,11 +36,8 @@ public class TestStats implements Serializable, Cloneable {
 	 * The class names can be overridden in the TestStats class.
 	 */
 	public enum IDX {
-		XTR("", ""),
-		OCT("", ""),
-		KD_LEVY("", ""),
-		KD_SAVA("", ""),
-		KD_RED("", ""),
+		//Our implementations
+		//===================
 		PHCv1("", ""),
 		PHC(PointPHC.class.getName(), RectanglePHC.class.getName()),
 		PHC2(PointPHC2.class.getName(), RectanglePHC2.class.getName()),
@@ -54,20 +51,38 @@ public class TestStats implements Serializable, Cloneable {
 		PHCC(PointPHCCTree.class.getName(), null),
 		/** Uses a region tree for points. */
 		PHC_RECTANGLE(PointPHCRectangle.class.getName(), null),
-		PRT("", ""),
-		/** R*Tree by lokeshj */
-		RSL("", ""),
-		/** R*Tree by Seeger */
-		RSS("", ""),
-		CB("", ""),
-		CBF("", ""),
 		/** CritBit by Tilman */
 		CBZ("", ""),
+		/** Quadtree by Tilman */
+		QKDZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
+
+		//3rd party implementations
+		//=========================
+		PRT("ch.ethz.globis.tinspin.wrappers.PointPRT", 
+				"ch.ethz.globis.tinspin.wrappers.RectanglePRT"),
+		/** R*Tree by lokeshj */
+		RSL("ch.ethz.globis.tinspin.wrappers.PointRSLokeshj", 
+				"ch.ethz.globis.tinspin.wrappers.Rectangle.RSLokeshj"),
+		/** R*Tree by Seeger */
+		RSS("ch.ethz.globis.tinspin.wrappers.PointRStarSeeger", 
+				"ch.ethz.globis.tinspin.wrappers.RectangleRStarSeeger"),
+		CBR("ch.ethz.globis.tinspin.wrappers.PointCBR", null),
+		CBF("ch.ethz.globis.tinspin.wrappers.PointCBF", null),
+		XTR("ch.ethz.globis.tinspin.wrappers.PointXtree", 
+				"ch.ethz.globis.tinspin.wrappers.RectangleXtree"),
+		KD_LEVY("ch.ethz.globis.tinspin.wrappers.PointKDL", null),
+		KD_SAVA("ch.ethz.globis.tinspin.wrappers.PointKDS", null),
+		KD_RED("ch.ethz.globis.tinspin.wrappers.PointKDRed", null),
+		
+		//Experimental implementations
+		//============================
 		CUSTOM("", ""), 
 		HIL("", ""), 
 		MX_CIF("", ""),
-		/** Quadtree by Tilman */
-		QKDZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
+		OCT("", ""),
+		
+		//Other
+		//=====
 		DUMMY("", ""),
 		CUSTOM1(null, null),
 		CUSTOM2(null, null),
@@ -127,6 +142,14 @@ public class TestStats implements Serializable, Cloneable {
 		this.param1 = param1;
 		this.param2 = param2;
 	}
+
+	//configuration
+	/** how often to repeat the test. */
+	int cfgNRepeat = 3;
+	int cfgNBits = 64; //default
+	public int cfgNDims;
+	public int cfgNEntries;
+
 	public final TestStats.IDX INDEX;
 	public final TestStats.TST TEST;
 	public String SEEDmsg;
@@ -140,14 +163,7 @@ public class TestStats implements Serializable, Cloneable {
 	Class<? extends TestPoint> testClass;
 	Class<? extends Candidate> indexClass;
 
-	/** how often to repeat the test. */
-	int cfgNRepeat = 3;
-	int cfgNBits = 64; //default
-	public int cfgNDims;
-	public int cfgNEntries;
-
-	
-	
+	//results
 	long statTGen;
 	long statTLoad;
 	long statTUnload;
@@ -173,7 +189,7 @@ public class TestStats implements Serializable, Cloneable {
 	long statTu2E;
 	public int statNnodes;
 	public long statNpostlen;
-	int statNNodeAHC;
+	public int statNNodeAHC;
 	int statNNodeNT;
 	int statNNodeInternalNT;
 	int statNq1;
