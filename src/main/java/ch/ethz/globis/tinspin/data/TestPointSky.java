@@ -86,26 +86,26 @@ public class TestPointSky extends TestPoint {
 	@Override
 	public double[] generate() {
 		log("Running: TestSkyline(" + param1 + ")");
-		double[] data = new double[N*DIM];
+		double[] data = new double[getN()*DIM];
 		
 		ArrayWriter f = new DoubleAW(data);
 		if (USE_TZ) {
 			if (param1 == P1_CORRELATED) {
 				generateDataCorrelatedTZ(f);
 			} else if (param1 == P1_INDEPENDENT) {
-				generateDataIndependentEqually(f, N, DIM);
+				generateDataIndependentEqually(f, getN(), DIM);
 			} else if (param1 == P1_ANTICORRELATED) {
-				generateDataAnticorrelated(f, N, DIM);
+				generateDataAnticorrelated(f, getN(), DIM);
 			} else {
 				throw new IllegalArgumentException("param1=" + param1);
 			}
 		} else {
 			if (param1 == P1_CORRELATED) {
-				generateDataCorrelated(f, N, DIM);
+				generateDataCorrelated(f, getN(), DIM);
 			} else if (param1 == P1_INDEPENDENT) {
-				generateDataIndependentEqually(f, N, DIM);
+				generateDataIndependentEqually(f, getN(), DIM);
 			} else if (param1 == P1_ANTICORRELATED) {
-				generateDataAnticorrelated(f, N, DIM);
+				generateDataAnticorrelated(f, getN(), DIM);
 			} else {
 				throw new IllegalArgumentException("param1=" + param1);
 			}
@@ -300,7 +300,7 @@ public class TestPointSky extends TestPoint {
 		double STD_DEV_WIDTH = 0.5; //compress distance from diagonal
 		double dimScale = Math.sqrt(DIM); //Stretch to diagonal of unit-cube 
 		double[] x = new double[DIM];
-		for (int n = 0; n < N; n++) {
+		for (int n = 0; n < getN(); n++) {
 			boolean ok;
 			do {
 				//shift plane along diagonal by avg 0.5

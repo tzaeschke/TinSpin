@@ -38,22 +38,16 @@ public class TestStats implements Serializable, Cloneable {
 	public enum IDX {
 		//Our implementations
 		//===================
-		PHCv1("", ""),
 		PHC(PointPHC.class.getName(), RectanglePHC.class.getName()),
 		PHC2(PointPHC2.class.getName(), RectanglePHC2.class.getName()),
 		/** based on PhTreeF */
 		PHCF(PointPHCF.class.getName(), RectanglePHCF.class.getName()), 
-		/** based on PhEntry */
-		PHC_PHE("", ""),
 		/** CUBE with Integer pre-processor. */
 		PHC_IPP(PointPHC_IPP.class.getName(), RectanglePHC_IPP.class.getName()),
 		PHC2_IPP(PointPHC2_IPP.class.getName(), null),
-		PHCC(PointPHCCTree.class.getName(), null),
-		/** Uses a region tree for points. */
-		PHC_RECTANGLE(PointPHCRectangle.class.getName(), null),
-		/** CritBit by Tilman */
+		/** CritBit by Tilmann */
 		CBZ("", ""),
-		/** Quadtree by Tilman */
+		/** Quadtree by Tilmann */
 		QKDZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
 
 		//3rd party implementations
@@ -80,6 +74,14 @@ public class TestStats implements Serializable, Cloneable {
 		HIL("", ""), 
 		MX_CIF("", ""),
 		OCT("", ""),
+		/** original PH tree */
+		PHCv1("ch.ethz.globis.tinspin.wrappers.PointPHC_v1", ""),
+		/** based on PhEntry */
+		PHC_PHE("ch.ethz.globis.tinspin.wrappers.PointPHC_PHE", null),
+		/** C++ version of PH-Tree */
+		PHCC("ch.ethz.globis.tinspin.wrappers.PointPHCCTree", null),
+		/** Uses a region tree for points. */
+		PHC_RECTANGLE("ch.ethz.globis.tinspin.wrappers.PointPHCRectangle", null),
 		
 		//Other
 		//=====
@@ -123,6 +125,11 @@ public class TestStats implements Serializable, Cloneable {
 	}
 
 	public static int DEFAULT_W_QUERY_SIZE = 1000;
+	public static int DEFAULT_N_WINDOW_QUERY = 1000; //number of range queries
+	public static int DEFAULT_N_POINT_QUERY = 1000*1000; //number of point queries
+	public static int DEFAULT_N_KNN_QUERY = 10*100;
+	public static int DEFAULT_N_UPDATES = 100*1000;
+	public static int DEFAULT_N_UPDATE_CYCLES = 10;
 
 
 	/** */
@@ -150,6 +157,15 @@ public class TestStats implements Serializable, Cloneable {
 	public int cfgNDims;
 	public int cfgNEntries;
 
+	/** How often kNN queries are repeated. This is reduced
+	 * automatically with increasing dimensionality. */
+	public int cfgKnnQueryBaseRepeat = DEFAULT_N_KNN_QUERY;
+	public int cfgPointQueryRepeat = DEFAULT_N_POINT_QUERY;
+	public int cfgUpdateRepeat = DEFAULT_N_UPDATE_CYCLES;
+	public int cfgUpdateSize = DEFAULT_N_UPDATES;
+	public int cfgWindowQueryRepeat = DEFAULT_N_WINDOW_QUERY;
+	public int cfgWindowQuerySize = DEFAULT_W_QUERY_SIZE;
+	
 	public final TestStats.IDX INDEX;
 	public final TestStats.TST TEST;
 	public String SEEDmsg;
@@ -158,7 +174,6 @@ public class TestStats implements Serializable, Cloneable {
 	public double param2;
 	public String paramStr;
 	public final boolean isRangeData;
-	int paramWQSize = DEFAULT_W_QUERY_SIZE;
 
 	Class<? extends TestPoint> testClass;
 	Class<? extends Candidate> indexClass;
@@ -302,20 +317,21 @@ public class TestStats implements Serializable, Cloneable {
 	}
 	public static TestStats aggregate(List<TestStats> stats) {
 		TestStats t1 = stats.get(0);
-		TestStats avg = new TestStats(t1.TEST, t1.INDEX, t1.cfgNEntries, t1.cfgNDims, 
-				t1.isRangeData, t1.param1);
-		avg.cfgNBits = t1.cfgNBits;
-		avg.cfgNEntries = t1.cfgNEntries;
-		avg.param2 = t1.param2;
-		avg.paramStr = t1.paramStr;
-		avg.paramWQSize = t1.paramWQSize;
+		//TestStats avg = new TestStats(t1.TEST, t1.INDEX, t1.cfgNEntries, t1.cfgNDims, 
+		//		t1.isRangeData, t1.param1);
+		TestStats avg = t1.cloneStats();
+//		avg.cfgNBits = t1.cfgNBits;
+//		avg.cfgNEntries = t1.cfgNEntries;
+//		avg.param2 = t1.param2;
+//		avg.paramStr = t1.paramStr;
+//		avg.paramWQSize = t1.paramWQSize;
 
 		int cnt = 0;
 		for (int i = 0; i < stats.size(); i++) {
 			TestStats t = stats.get(i);
 
-			avg.testClass = t.testClass;
-			avg.indexClass = t.indexClass;
+//			avg.testClass = t.testClass;
+//			avg.indexClass = t.indexClass;
 
 			if (t.exception != null) {
 				//skip failed results

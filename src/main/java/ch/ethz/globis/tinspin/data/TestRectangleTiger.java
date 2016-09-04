@@ -32,9 +32,9 @@ public class TestRectangleTiger extends TestRectangle {
 	 */
 	@Override
 	public double[] generate() {
-		log("Running: TestTiger(" + N + ")");
+		log("Running: TestTiger(" + getN() + ")");
 		data = TigerKmlIO.readFromDB_Array(dbName);
-		for (int i = 0; i < N; i++) {
+		for (int i = 0; i < getN(); i++) {
 			TigerKmlIO.minMax( data[i*4  ], data[i*4+1] );
 			TigerKmlIO.minMax( data[i*4+2], data[i*4+3] );
 			if (data[i*4  ] > data[i*4+2]) {
@@ -55,7 +55,7 @@ public class TestRectangleTiger extends TestRectangle {
 	public void queryCuboid(int resultsPerQuery, double[] min, double[] max) {
 		//queries should in average return 1000 results
 		//double ratio = 18300000.0/MAX_E * 1.0/18300;
-		double ratio = Math.sqrt(resultsPerQuery/(double)N);  //ratio for each axis
+		double ratio = Math.sqrt(resultsPerQuery/(double)getN());  //ratio for each axis
 		//double ratio = 0.001; 
 		
 		//create rectangles with 0.1% coverage

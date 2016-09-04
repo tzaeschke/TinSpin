@@ -75,7 +75,7 @@ public class TestRectangleTOUCH extends TestRectangle {
 		log("Running: TestRectangleTOUCH");
 		spotsData = generateSpots();
 		spotsQueries = generateSpots();
-		return generate(N, param1, spotsData);
+		return generate(getN(), param1, spotsData);
 	}
 		
 	public double[] generate(int N, double param1, double[][] spots) {
@@ -403,8 +403,8 @@ public class TestRectangleTOUCH extends TestRectangle {
 		System.out.println("Query result size=" + n);
 		System.out.println("Query result size consolidated =" + resultSet.size() + " dup=" + dupl);
 		System.out.println("selectivity N_A=" + n/(double)(N_A));
-		System.out.println("selectivity N_B=" + n/(double)(N));
-		System.out.println("selectivity NP/NQ=" + n/((double)N*N_A));
+		System.out.println("selectivity N_B=" + n/(double)(getN()));
+		System.out.println("selectivity NP/NQ=" + n/((double)getN()*N_A));
 		
 //		TestDraw.draw(data, 3, MODE.LINES);
 //		TestDraw.draw(qA, 3, MODE.RECTANGLES);

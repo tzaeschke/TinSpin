@@ -13,7 +13,6 @@ import ch.ethz.globis.tinspin.TestStats;
 public abstract class AbstractTest {
 
 	protected final Random R;
-	protected int N;
 	protected int DIM;
 	protected final double param1;
 	protected final double param2;
@@ -23,13 +22,17 @@ public abstract class AbstractTest {
 	protected AbstractTest(Random R, TestStats S) {
 		this.R = R;
 		this.S = S;
-		this.N = S.cfgNEntries;
 		this.DIM = S.cfgNDims;
 		this.param1 = S.param1;
 		this.param2 = S.param2;
 		this.paramStr = S.paramStr;
 	}
-	
+
+	public int getN() {
+		//This may change, for example when exceeding maximum size for
+		//CSV, Tiger, OpenStreeMap datasets
+		return S.cfgNEntries;
+	}
 
 	public final TestStats.TST getTestType() {
 		return S.TEST;

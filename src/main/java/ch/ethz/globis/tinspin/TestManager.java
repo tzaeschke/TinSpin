@@ -406,8 +406,11 @@ public class TestManager {
 
 	private static void testSeriesWQS(TST TEST, IDX INDEX, int DIM, double param1, double N, int...wqss) {
 		for (int wqs: wqss) {
-			TestStats.DEFAULT_W_QUERY_SIZE = wqs;
-			test(3, TEST, INDEX, DIM, (int)(N*1000*1000), param1);
+			TestStats ts = new TestStats(TEST, INDEX, (int)(N*1000*1000), DIM, false, param1);
+			ts.cfgWindowQuerySize = wqs;
+			runTest(ts);
+//			TestStats.DEFAULT_W_QUERY_SIZE = wqs;
+//			test(3, TEST, INDEX, DIM, (int)(N*1000*1000), param1);
 		}
 	}
 

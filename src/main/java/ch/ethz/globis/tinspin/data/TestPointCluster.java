@@ -76,9 +76,9 @@ public class TestPointCluster extends TestPoint {
 	}
 	
 	private double[] generateDiagonal(final double LEN) {
-		int N_C = N/BOX_N; //=points per cluster (10000 clusters)
+		int N_C = getN()/BOX_N; //=points per cluster (10000 clusters)
 		
-		double[] data = new double[N*DIM];
+		double[] data = new double[getN()*DIM];
 
 		//loop over clusters
 		for (int c = 0; c < BOX_N; c++) {
@@ -96,8 +96,8 @@ public class TestPointCluster extends TestPoint {
 	
 	//Proper version
 	private double[] generateHorizontal(final double LEN, double offsYZ) {
-		int N_C = N/BOX_N; //=points per cluster (10000 clusters)
-		double[] data = new double[N*DIM];
+		int N_C = getN()/BOX_N; //=points per cluster (10000 clusters)
+		double[] data = new double[getN()*DIM];
 
 		//loop over clusters
 		for (int c = 0; c < BOX_N; c++) {
@@ -126,9 +126,9 @@ public class TestPointCluster extends TestPoint {
 	
 	//old version
 	private double[] generateOriginal(final double LEN) {
-		int N_C = N/1000; //=nClusters: 1000 point per cluster
+		int N_C = getN()/1000; //=nClusters: 1000 point per cluster
 		
-		double[] data = new double[N*DIM];
+		double[] data = new double[getN()*DIM];
 
 		//loop over clusters
 		for (int c = 0; c < N_C; c++) {

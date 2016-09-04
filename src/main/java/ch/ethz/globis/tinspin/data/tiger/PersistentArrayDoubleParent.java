@@ -16,8 +16,8 @@ public class PersistentArrayDoubleParent extends PersistenceCapableImpl {
 
 	public static final int CHUNK_SIZE = 100000;
 	
-	private long totalEntryCount;
-	private int DIM;
+	private int totalEntryCount;
+	private int dims;
 	private ArrayList<PersistentArrayDouble> data;
 	
 	@SuppressWarnings("unused")
@@ -25,9 +25,9 @@ public class PersistentArrayDoubleParent extends PersistenceCapableImpl {
 		// for ZooDB
 	}
 	
-	public PersistentArrayDoubleParent(int totalEntryCount, int DIM) {
+	public PersistentArrayDoubleParent(int totalEntryCount, int dims) {
 		this.totalEntryCount = totalEntryCount;
-		this.DIM = DIM;
+		this.dims = dims;
 		data = new ArrayList<PersistentArrayDouble>();
 	}
 	
@@ -37,9 +37,9 @@ public class PersistentArrayDoubleParent extends PersistenceCapableImpl {
 		if ((data.size()+1) * CHUNK_SIZE < totalEntryCount) {
 			len = CHUNK_SIZE;
 		} else {
-			len = (int) (totalEntryCount - CHUNK_SIZE * data.size());
+			len = totalEntryCount - CHUNK_SIZE * data.size();
 		}
-		PersistentArrayDouble ret = new PersistentArrayDouble(len * DIM);
+		PersistentArrayDouble ret = new PersistentArrayDouble(len * dims);
 		data.add(ret);
 		return ret;
 	}
@@ -49,14 +49,14 @@ public class PersistentArrayDoubleParent extends PersistenceCapableImpl {
 		return Collections.unmodifiableList(data);
 	}
 	
-	public long getEntryCount() {
+	public int getEntryCount() {
 		zooActivateRead();
 		return totalEntryCount;
 	}
 
 	public int getDim() {
 		zooActivateRead();
-		return DIM;
+		return dims;
 	}
 	
 }

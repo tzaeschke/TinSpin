@@ -76,8 +76,8 @@ public class TestRectangleCluster extends TestRectangle {
 	//Proper version
 	private double[] generateHorizontal(final double LEN, double offsYZ) {
 		double MICROBOX_LEN = BOX_LEN * 0.001;
-		int N_C = N/BOX_N; //=points per cluster (10000 clusters)
-		double[] data = new double[N*DIM*2];
+		int N_C = getN()/BOX_N; //=points per cluster (10000 clusters)
+		double[] data = new double[getN()*DIM*2];
 
 		//loop over clusters
 		for (int c = 0; c < BOX_N; c++) {

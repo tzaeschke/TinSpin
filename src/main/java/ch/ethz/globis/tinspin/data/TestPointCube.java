@@ -38,8 +38,8 @@ public class TestPointCube extends TestPoint {
 	@Override
 	public double[] generate() {
 		log("Running: TestSkewed(" + param1 + ")");
-		double[] data = new double[N*DIM];
-		for (int i = 0; i < N; i++) {
+		double[] data = new double[getN()*DIM];
+		for (int i = 0; i < getN(); i++) {
 			int pos = DIM*i;
 			for (int d = 0; d < DIM; d++) {
 				data[pos+d] = R.nextDouble() * param1;

@@ -27,10 +27,10 @@ import ch.ethz.globis.tinspin.wrappers.PointPHCCTree;
 
 /**
  * Main test runner class.
- * The test runner can be executed directly or remotely in a separete
+ * The test runner can be executed directly or remotely in a separate
  * process via the TestManager.
  *
- * @author Tilmann Zaschke
+ * @author Tilmann Zaeschke
  */
 public class TestRunner {
 	
@@ -39,14 +39,7 @@ public class TestRunner {
 	private final TestStats S;
 	
 	private final Random R;
-	
-	private static final int N_RANGE_QUERY = 1000; //number of range queries
-	//private static int N_RESULT_PER_QUERY = 1000; //average expected results per range query
-	private static final int N_POINT_QUERY = 1000*1000; //number of point queries
-	private static final int N_KNN_QUERY = 10*100;
-	private static final int N_UPDATES = 100*1000;
-	private static final int N_UPDATE_CYCLES = 10;
-	
+		
 	public static boolean USE_NEW_QUERIES = true;
 	
 	//private PersistenceManager pm;
@@ -76,12 +69,13 @@ public class TestRunner {
 		}
 		
 		final int DIM = 3;
-		final int N = 1*10*1000;
+		final int N = 1*1000*1000;
 						
-		System.err.println("KNN count = " + N_KNN_QUERY); //TODO
-		TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 0.00001);
-		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, DEPTH, false, 3.4);
-		//TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, DEPTH, false, 1.0);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 0.00001);
+		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, false, 1.0);
+		TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
+		System.err.println("KNN count = " + s0.cfgKnnQueryBaseRepeat); //TODO
 		s0.setSeed(0);
 		TestRunner test = new TestRunner(s0);
 		TestStats s = test.run();
@@ -160,13 +154,13 @@ public class TestRunner {
 //		commitDB();
 //		reportDB();
 		
-		repeatQuery(N_RANGE_QUERY);
-		repeatQuery(N_RANGE_QUERY);
-		S.assortedInfo += " WINDOW_RESULTS=" + S.paramWQSize;
+		repeatQuery(S.cfgWindowQueryRepeat);
+		repeatQuery(S.cfgWindowQueryRepeat);
+		S.assortedInfo += " WINDOW_RESULTS=" + S.cfgWindowQuerySize;
 		
 		//perform point queries.
-		repeatPointQuery(N_POINT_QUERY);
-		repeatPointQuery(N_POINT_QUERY);
+		repeatPointQuery(S.cfgPointQueryRepeat);
+		repeatPointQuery(S.cfgPointQueryRepeat);
 		
 		if (tree.supportsKNN()) {
 			int repeat = getKnnRepeat(S.cfgNDims);
@@ -201,15 +195,15 @@ public class TestRunner {
 			return 20;
 		}
 		if (dims <= 3) {
-			return N_KNN_QUERY;
+			return S.cfgKnnQueryBaseRepeat;
 		}
 		if (dims <= 6) {
-			return N_KNN_QUERY/10;
+			return S.cfgKnnQueryBaseRepeat/10;
 		}
 		if (dims <= 10) {
-			return N_KNN_QUERY/10;
+			return S.cfgKnnQueryBaseRepeat/10;
 		}
-		return N_KNN_QUERY/50;
+		return S.cfgKnnQueryBaseRepeat/50;
 	}
 	
 	private void load(TestStats ts) {
@@ -226,6 +220,7 @@ public class TestRunner {
 		case CUBE:
 		case CLUSTER:
 		case CSV:
+		case OSM:
 		case TIGER:
 		case TOUCH:
 		case VORTEX: {
@@ -544,15 +539,15 @@ public class TestRunner {
 	 */
 	private void generateQueryCorners(double[] min, double[] max) {
 		if (test.getTestType() == TST.CLUSTER) {
-			test.queryCuboid(S.paramWQSize, min, max);
+			test.queryCuboid(S.cfgWindowQuerySize, min, max);
 			return;
 		} else if (test.getTestType() == TST.TIGER) {
 			if (test.getTestStats().isRangeData) {
-				test.queryCuboid(S.paramWQSize, min, max);
+				test.queryCuboid(S.cfgWindowQuerySize, min, max);
 			}
 			return;
 		} else if (test.getTestType() == TST.CUSTOM) {
-			customTest.queryCuboid(S.paramWQSize, min, max);
+			customTest.queryCuboid(S.cfgWindowQuerySize, min, max);
 			return;
 		}
 
@@ -567,14 +562,14 @@ public class TestRunner {
 		int dims = min.length;
 		
 		int nEntries = S.cfgNEntries;
-		if (nEntries < S.paramWQSize*10) {
+		if (nEntries < S.cfgWindowQuerySize*10) {
 			//N < 10*000 ? -> N = 100
-			nEntries = S.paramWQSize*10;
+			nEntries = S.cfgWindowQuerySize*10;
 		}
 		
 		//Here is a fixed size version, returning 1% of the space.
 		//final double qVolume = 0.01 * Math.pow(LEN, DIM);//(float) Math.pow(0.1, DIM); //0.01 for DIM=2
-		final double avgVolume = S.paramWQSize/(double)nEntries * Math.pow(LEN, dims);
+		final double avgVolume = S.cfgWindowQuerySize/(double)nEntries * Math.pow(LEN, dims);
 		//final double avgLen = Math.pow(avgVolume, 1./DIM);
 		//final double avgLenVar = 0.5*avgLen;
 		//final double minLen = 0.5*avgLen;
@@ -628,7 +623,7 @@ public class TestRunner {
 		int dims = min.length;
 		//Here is a fixed size version, returning 1% of the space.
 		//final double qVolume = 0.01 * Math.pow(LEN, DIM);//(float) Math.pow(0.1, DIM); //0.01 for DIM=2
-		final double qVolume = S.paramWQSize/(double)S.cfgNEntries * Math.pow(LEN, dims);
+		final double qVolume = S.cfgWindowQuerySize/(double)S.cfgNEntries * Math.pow(LEN, dims);
 		
 		int dDrop = R.nextInt(dims);
 		//query create cube
@@ -711,8 +706,8 @@ public class TestRunner {
 		int n = 0;
 		long t = 0;
 		double[][] u = null; //2 points, 2 versions
-		int nUpdates = N_UPDATES > S.cfgNEntries/4 ? S.cfgNEntries/4 : N_UPDATES;
-		for (int i = 0; i < N_UPDATE_CYCLES; i++) {
+		int nUpdates = S.cfgUpdateSize > S.cfgNEntries/4 ? S.cfgNEntries/4 : S.cfgUpdateSize;
+		for (int i = 0; i < S.cfgUpdateRepeat; i++) {
 			//prepare query
 			u = test.generateUpdates(nUpdates, data, u);
 			JmxTools.reset();

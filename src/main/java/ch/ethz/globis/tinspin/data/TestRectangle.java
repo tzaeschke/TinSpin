@@ -21,6 +21,7 @@ public abstract class TestRectangle extends AbstractTest {
 		switch (S.TEST) {
 		case CUBE: return new TestRectangleCube(R, S);
 		case CLUSTER: return new TestRectangleCluster(R, S);
+		//case OSM: return new TestRectangleOpenStreetMap(R, S);
 		case TIGER: return new TestRectangleTiger(R, S);
 		case TOUCH: return new TestRectangleTOUCH(R, S);
 		default:
@@ -41,9 +42,9 @@ public abstract class TestRectangle extends AbstractTest {
 			double[] up1 = ups[i++];
 			double[] lo2 = ups[i++];
 			double[] up2 = ups[i++];
-			int pos = R.nextInt(N);
+			int pos = R.nextInt(getN());
 			while (idxSet.contains(pos)) {
-				pos = R.nextInt(N);
+				pos = R.nextInt(getN());
 			}
 			idxSet.add(pos);
 			for (int d = 0; d < DIM; d++) {

@@ -73,7 +73,6 @@ public class TestPointCSV extends TestPoint {
 		S.cfgNDims = dim;
 		S.cfgNEntries = dataA.size();
 		S.paramStr = paramStr;
-		N = S.cfgNEntries;
 		DIM = S.cfgNDims;
 		return data;
 	}

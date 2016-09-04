@@ -26,26 +26,30 @@ import org.zoodb.tools.ZooHelper;
 
 import ch.ethz.globis.phtree.PhTree;
 import ch.ethz.globis.phtree.PhTree.PhExtent;
+import ch.ethz.globis.phtree.util.BitTools;
 import ch.ethz.globis.phtree.util.Tools;
 import ch.ethz.globis.tinspin.TestStats;
-import ch.ethz.globis.tinspin.data.tiger.PersistentArrayLong;
-import ch.ethz.globis.tinspin.data.tiger.PersistentArrayLongParent;
+import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDouble;
+import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDoubleParent;
 
-public class OsmIO {
+public class Osm2D {
 
 	private static final SimpleDateFormat FT = 
 		      new SimpleDateFormat ("yyyy-MM-dd'T'hh:mm:ss'Z'");
 
-	private long[] min, max;
+	private double[] min, max;
 
 	public static String OSM_PATH = "F:\\data\\OSM";
 	
-	public OsmIO(int DIM) {
-		min = new long[DIM];
-		max = new long[DIM];
+	public Osm2D() {
+		min = new double[2];
+		max = new double[2];
 	}
 
-	public long[] readAndBuffer(String dbName, TestStats ts) {
+	public double[] readAndBuffer(String dbName, TestStats ts) {
+		if (ts.cfgNDims != 2) {
+			throw new IllegalArgumentException();
+		}
 		PhTree<Object> idx = null;
 
 		//DB_ARRAY --> DB_ARRAY_NO_DUP
@@ -62,26 +66,25 @@ public class OsmIO {
 		//n=18967053     t=88065
 		//min/max: -178.977381/0.0  179.859681/71.441059
 
-		long[] data;
 		if (!ZooHelper.dbExists(dbName)) {
 			//read from file
 			System.out.println("Creating buffer file for OSM data: " + dbName);
 			if (!ts.isRangeData) {
-				data = readFolder(OSM_PATH, ts.cfgNDims, ts.cfgNEntries);
+				double[] data = readFolder(OSM_PATH, ts.cfgNDims, ts.cfgNEntries);
+				idx = buildIndexPHT(data, ts); 
 			} else {
 				//data = readFolderRectangle(OSM_PATH, ts.cfgNDims, Integer.MAX_VALUE);
 				throw new UnsupportedOperationException();
 			}
-			idx = buildIndexPHT(data, ts); 
-			System.out.println("min/max id= " + min[0] + "/"+ max[0] + 
-					"   X=" + min[1] + "/" + max[1] +
-					"   Y=" + min[2] + "/" + max[2]);
+			System.out.println("min/max longitude= " + min[0] + "/" + max[0] + 
+					"   latitude=" + min[1] + "/" + max[1]);
 			storeToDB(idx, dbName);
-		} else {
-			//read from DB
-			System.out.println("Reading OSM data from buffer file: " + dbName);
-			data = readFromDB_Array(dbName);
-		}
+		} 
+
+		//read from DB
+		//We always read, because the original data[] may contain duplicates 
+		System.out.println("Reading OSM data from buffer file: " + dbName);
+		double[] data = readFromDB_Array(dbName, ts);
 		
 //		if (false) {
 //			//draw output
@@ -90,7 +93,7 @@ public class OsmIO {
 		return data;
 	}
 
-	private PhTree<Object> buildIndexPHT(long[] data, TestStats ts) {
+	private PhTree<Object> buildIndexPHT(double[] data, TestStats ts) {
 		log("Building index");
 		Object O = new Object();
 		int dims = ts.cfgNDims;
@@ -105,7 +108,7 @@ public class OsmIO {
 		for (int i = 0; i < data.length; ) {
 			for (int d = 0; d < dims; d++) {
 				minMax( data[i], d );
-				l[d] = data[i++];
+				l[d] = BitTools.toSortableLong(data[i++]);
 			}
 			if (ind.put(l, O) != null) {
 				nDupl++;
@@ -175,24 +178,25 @@ public class OsmIO {
 		PersistenceManager pm = pmf.getPersistenceManager();
 		pm.currentTransaction().begin();
 		
-		PersistentArrayLongParent list = new PersistentArrayLongParent(idx.size(), idx.getDim());
+		PersistentArrayDoubleParent list = 
+				new PersistentArrayDoubleParent(idx.size(), idx.getDim());
 		pm.makePersistent(list);
 		
 		int n = 0;
 		int pos = 0;
 		final int DIM = idx.getDim(); 
 		PhExtent<Object> it = idx.queryExtent();
-		long[] data = list.getNextForWrite().getData();
+		double[] data = list.getNextForWrite().getData();
 		while (it.hasNext()) {
 			long[] v = it.nextEntryReuse().getKey();
 			for (int k = 0; k < DIM; k++) {
-				data[pos++] = v[k]; 
+				data[pos++] = BitTools.toDouble(v[k]); 
 			}
 			
 			if (++n % 100000 == 0) {
 				System.out.print(".");
 			}
-			if (n % PersistentArrayLongParent.CHUNK_SIZE == 0) {
+			if (n % PersistentArrayDoubleParent.CHUNK_SIZE == 0) {
 				pm.currentTransaction().commit();
 				pm.currentTransaction().begin();
 				data = list.getNextForWrite().getData();
@@ -208,19 +212,19 @@ public class OsmIO {
 		pmf.close();
 	}
 	
-	private static long min(long d1, long d2) {
+	private static double min(double d1, double d2) {
 		return d1<d2 ? d1 : d2;
 	}
-	private static long max(long d1, long d2) {
+	private static double max(double d1, double d2) {
 		return d1>d2 ? d1 : d2;
 	}
 	
-	void minMax(long x, int d) {
+	void minMax(double x, int d) {
 		min[d] = min(x, min[d]);
 		max[d] = max(x, max[d]);
 	}
 	
-	static long[] readFromDB_Array(String dbName) {
+	static double[] readFromDB_Array(String dbName, TestStats ts) {
 		log("Reading from database");
 		
 		ZooJdoProperties prop = new ZooJdoProperties(dbName);
@@ -229,15 +233,30 @@ public class OsmIO {
 		PersistenceManager pm = pmf.getPersistenceManager();
 		pm.currentTransaction().begin();
 		
-		Extent<PersistentArrayLongParent> ext = pm.getExtent(PersistentArrayLongParent.class);
-		PersistentArrayLongParent pa = ext.iterator().next();
+		Extent<PersistentArrayDoubleParent> ext = pm.getExtent(PersistentArrayDoubleParent.class);
+		PersistentArrayDoubleParent pa = ext.iterator().next();
 		ext.closeAll();
 		
-		long[] ret = new long[(int) (pa.getEntryCount() * pa.getDim())];
+		int maxEntries;
+		if (pa.getEntryCount() < ts.cfgNEntries) {
+			maxEntries = pa.getEntryCount();
+			ts.cfgNEntries = maxEntries;
+		} else {
+			maxEntries = ts.cfgNEntries;
+		}
+		
+		double[] ret = new double[maxEntries*2];
 		int pos = 0;
-		for (PersistentArrayLong d: pa.getData()) {
-			long[] da = d.getData();
-			System.arraycopy(da, 0, ret, pos, da.length);
+		for (PersistentArrayDouble d: pa.getData()) {
+			double[] da = d.getData();
+			if (pos+da.length <= ret.length) {
+				System.arraycopy(da, 0, ret, pos, da.length);
+			} else {
+				//special case for last 'da' if we do not read all data
+				if (ret.length-pos > 0) {
+					System.arraycopy(da, 0, ret, pos, ret.length-pos);
+				}
+			}
 			pos += da.length;
 		}
 		
@@ -249,13 +268,13 @@ public class OsmIO {
 	}
 	
 	
-	static long[] readFolder(String pathName, int DIM, int MAX_E) {
+	static double[] readFolder(String pathName, int DIM, int MAX_E) {
 		try {
 			File dir = new File(pathName);
 			if (!dir.exists()) {
 				return null;
 			}
-			long[] data = new long[DIM*MAX_E];
+			double[] data = new double[DIM*MAX_E];
 			int pos = 0;
 			for (File f: dir.listFiles()) {
 				log("Reading file: " + f.getName());
@@ -287,7 +306,7 @@ public class OsmIO {
 	 * @param b2 
 	 * @param entries2 
 	 */
-	private static final int readFile(File fFile, long[] data, int pos, int DIM, int MAX_E) {
+	private static final int readFile(File fFile, double[] data, int pos, int DIM, int MAX_E) {
 		//Note that FileReader is used, not File, since File is not Closeable
 		BufferedReader scanner;
 		try {
@@ -344,7 +363,7 @@ public class OsmIO {
 		return pos;
 	}
 
-	private static void readOSM(String line, long[] node, int pos) {
+	private static void readOSM(String line, double[] node, int pos) {
 		long id = -1;
 		double lat = 0;
 		double lon = 0;
@@ -422,13 +441,15 @@ public class OsmIO {
 //
 //		date = Date.parse(line.substring(k1+1, k2));
 
-		node[pos+0] = id;
-		node[pos+1] = (long) (lon*10000000);
-		node[pos+2] = (long) (lat*10000000);
-		node[pos+3] = uid;
-		node[pos+4] = version;
-		node[pos+5] = changeset;
-		node[pos+6] = date;
+		node[pos+0] = lon;
+		node[pos+1] = lat;
+//		node[pos+0] = id;
+//		node[pos+1] = (long) (lon*10000000);
+//		node[pos+2] = (long) (lat*10000000);
+//		node[pos+3] = uid;
+//		node[pos+4] = version;
+//		node[pos+5] = changeset;
+//		node[pos+6] = date;
 		//node[pos+4] = visible ? 1 : 0;
 	}
 

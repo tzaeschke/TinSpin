@@ -23,6 +23,7 @@ public abstract class TestPoint extends AbstractTest {
 		case CLUSTER: return new TestPointCluster(R, S);
 		case CUBE: return new TestPointCube(R, S);
 		case CSV: return new TestPointCSV(R, S);
+		case OSM: return new TestPointOpenStreetMap(R, S);
 		case SKYLINE: return new TestPointSky(R, S);
 		case TIGER: return new TestPointTiger(R, S);
 		default:
@@ -50,9 +51,9 @@ public abstract class TestPoint extends AbstractTest {
 		for (int i = 0; i < ups.length; ) {
 			double[] pOld = ups[i++];
 			double[] pNew = ups[i++];
-			int pos = R.nextInt(N);
+			int pos = R.nextInt(getN());
 			while (idxSet.contains(pos)) {
-				pos = R.nextInt(N);
+				pos = R.nextInt(getN());
 			}
 			idxSet.add(pos);
 			for (int d = 0; d < DIM; d++) {
