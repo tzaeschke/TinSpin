@@ -41,6 +41,7 @@ public class TestRectangleWrappers {
 	@Test
 	@Parameters
     public void testCube() {
+		//0.00001 is the default size of the rectangles
 		TestStats ts = new TestStats(TST.CUBE, IDX.CUSTOM, N, 3, true, 1.0);
 		ts.setCandidateClass(candidate);
 		ts.cfgNRepeat = 1;
@@ -49,21 +50,22 @@ public class TestRectangleWrappers {
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 
-		System.out.println(ts);
+		//System.out.println(ts);
 		
 		//repeat == 1; NQ = 100
-		//CUSTOM-R-0	CUBE(1.0, 0.0, null)	3	64	100000	0	8	0	0	49	188	169	
-		//152	370	260	2368	1768	187000	105000	218000	219000	45159	48	0	0	0	
-		//2353466	2413260	500038	500116	250000	250000	
-		//0.22606618565438802	0.22457583937435036	0.2283712876619878	0.21535341030428845	
-		//98	1880	980	0	0	0	0	0	0	-125	7	0	0	-134	3	0	0	
+		//CUSTOM-R-0	CUBE(1.0E-5, 0.0, null)	3	64	100000	0	8	0	0	37	170	539	
+		//492	401	314	736	652	116000	78000	150000	142000	44999	48	0	0	0	
+		//100156	99470	500038	500116	250000	250000	
+		//0.22589505297599916	0.22406998268552575	0.2277830659348768	0.215077012049881	
+		//96	1700	960	0	0	0	0	0	0	-131	6	-134	5	0	0	0	0	
 		//PhTree11 AHC/LHC=2.0 AHC-on=true HCI-on=true NtLimit=150 NtMaxDim=6 
 		//DEBUG=false WINDOW_RESULTS=1000 KNN_REPEAT=1000
 
+		
 		TestPointWrappers.checkValue(ts, tr.getCandidate(), 3, N, 
-				2353466, 2413260, 500038, 500116, 250000, 250000,
-				0.22606618565438802, 0.22457583937435036, 
-				0.2283712876619878, 0.21535341030428845);
+				100156, 99470, 500038, 500116, 250000, 250000,
+				0.22589505297599916, 0.22406998268552575, 
+				0.2277830659348768, 0.215077012049881);
 	}
 	
 	@Test

@@ -42,17 +42,8 @@ public class TestRunner {
 		
 	public static boolean USE_NEW_QUERIES = true;
 	
-	//private PersistenceManager pm;
 	private double[] data;
 	private Candidate tree;
-	
-	// Added by Adrien 06/02/2014 to support queries for CUSTOM datasets
-	private TestPoint customTest;
-	
-	/** Edge length of the populated data area. */
-	//private final double LEN = (1L<<31)-1;
-	//private final double LEN = 1000.0;
-	private final double LEN = 1.0;
 	
 	private static final boolean DEBUG = PhTreeHelper.DEBUG;
 	
@@ -69,14 +60,15 @@ public class TestRunner {
 		}
 		
 		final int DIM = 3;
-		final int N = 1*100*1000;
+		final int N = 1*1000*1000;
 						
-		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 0.00001);
+		TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 0.00001);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
-		TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
 		System.err.println("KNN count = " + s0.cfgKnnQueryBaseRepeat); //TODO
-		s0.setSeed(2);
+		s0.setSeed(0);
 		TestRunner test = new TestRunner(s0);
 		TestStats s = test.run();
 		System.out.println(s);
@@ -231,9 +223,9 @@ public class TestRunner {
 		}
 		//case ASPECT:
 		case MBR_SIZE: {
-			//IS_POINT_DATA = PR_TestSize.generate(R, LEN, N, DIM, 0.001f);
-			//IS_POINT_DATA = PR_TestSize.generate(R, LEN, N, DIM, 0.02f);
-			//data = PR_TestAspect.generate(R, LEN, N, DIM, 1e3f);//10.0f);
+			//IS_POINT_DATA = PR_TestSize.generate(R, cfgDataLen, N, DIM, 0.001f);
+			//IS_POINT_DATA = PR_TestSize.generate(R, cfgDataLen, N, DIM, 0.02f);
+			//data = PR_TestAspect.generate(R, cfgDataLen, N, DIM, 1e3f);//10.0f);
 			data = test.generate();
 			if (!ts.isRangeData) throw new IllegalStateException();
 			break;
@@ -244,9 +236,8 @@ public class TestRunner {
 			
 			try {
 				// Note: a custom Test class MUST have an empty constructor
-				customTest = S.testClass.getDeclaredConstructor().newInstance();
-				test = customTest;
-				data = customTest.generate();
+				test = S.testClass.getDeclaredConstructor().newInstance();
+				data = test.generate();
 				break;
 			} catch (Exception e) {
 				throw new RuntimeException("Failed to generate custom dataset.", e);
@@ -553,7 +544,7 @@ public class TestRunner {
 			}
 			return;
 		} else if (test.getTestType() == TST.CUSTOM) {
-			customTest.queryCuboid(S.cfgWindowQuerySize, min, max);
+			test.queryCuboid(S.cfgWindowQuerySize, min, max);
 			return;
 		}
 
@@ -574,8 +565,8 @@ public class TestRunner {
 		}
 		
 		//Here is a fixed size version, returning 1% of the space.
-		//final double qVolume = 0.01 * Math.pow(LEN, DIM);//(float) Math.pow(0.1, DIM); //0.01 for DIM=2
-		final double avgVolume = S.cfgWindowQuerySize/(double)nEntries * Math.pow(LEN, dims);
+		//final double qVolume = 0.01 * Math.pow(cfgDataLen, DIM);//(float) Math.pow(0.1, DIM); //0.01 for DIM=2
+		final double avgVolume = S.cfgWindowQuerySize/(double)nEntries * Math.pow(S.cfgDataLen, dims);
 		//final double avgLen = Math.pow(avgVolume, 1./DIM);
 		//final double avgLenVar = 0.5*avgLen;
 		//final double minLen = 0.5*avgLen;
@@ -590,7 +581,7 @@ public class TestRunner {
 				final double avgLen = Math.pow(avgVolume/vol, 1./dims);
 				//create a len between 0.5 and 1.5 of the required length
 				len[d] = (0.5*avgLen) + R.nextDouble()*(avgLen);
-				len[d] = len[d] > LEN*0.99 ? LEN*0.99 : len[d];
+				len[d] = len[d] > S.cfgDataLen*0.99 ? S.cfgDataLen*0.99 : len[d];
 				vol *= len[d];
 			}
 			//create cuboid/box of desired size by dropping random length
@@ -599,14 +590,14 @@ public class TestRunner {
 				System.out.println(Arrays.toString(len) + " vol=" + vol + " aVol=" + avgVolume);
 				throw new IllegalStateException("dims=" + dims + "  N=" + S.cfgNEntries);
 			}
-		} while (len[dims-1] >= LEN); //drop bad rectangles
+		} while (len[dims-1] >= S.cfgDataLen); //drop bad rectangles
 		
 		
 		//create location
 		for (int d = 0; d < dims; d++) {
-			min[d] = R.nextDouble()*(LEN-len[d]);
+			min[d] = R.nextDouble()*(S.cfgDataLen-len[d]);
 			max[d] = min[d]+len[d];
-			if (min[d]+len[d] >= LEN) {
+			if (min[d]+len[d] >= S.cfgDataLen) {
 				//drop bad rectangles 
 				throw new RuntimeException();
 			}
@@ -628,8 +619,8 @@ public class TestRunner {
 	private void generateQueryCornersOld(double[] min, double[] max) {
 		int dims = min.length;
 		//Here is a fixed size version, returning 1% of the space.
-		//final double qVolume = 0.01 * Math.pow(LEN, DIM);//(float) Math.pow(0.1, DIM); //0.01 for DIM=2
-		final double qVolume = S.cfgWindowQuerySize/(double)S.cfgNEntries * Math.pow(LEN, dims);
+		//final double qVolume = 0.01 * Math.pow(cfgDataLen, DIM);//(float) Math.pow(0.1, DIM); //0.01 for DIM=2
+		final double qVolume = S.cfgWindowQuerySize/(double)S.cfgNEntries * Math.pow(S.cfgDataLen, dims);
 		
 		int dDrop = R.nextInt(dims);
 		//query create cube
@@ -640,18 +631,18 @@ public class TestRunner {
 				if (d == dDrop) {
 					continue;
 				}
-				len[d] = R.nextDouble()*LEN;
+				len[d] = R.nextDouble()*S.cfgDataLen;
 				vol *= len[d];
 			}
 			//create cuboid/box of desired size by dropping random length
 			len[dDrop] = qVolume/vol;  //now the new len creates a rectangle/box of SIZE.
-		} while (len[dDrop] >= LEN); //drop bad rectangles
+		} while (len[dDrop] >= S.cfgDataLen); //drop bad rectangles
 		
 		//create location
 		for (int d = 0; d < dims; d++) {
-			min[d] = R.nextDouble()*(LEN-len[d]);
+			min[d] = R.nextDouble()*(S.cfgDataLen-len[d]);
 			max[d] = min[d]+len[d];
-			if (min[d]+len[d] >= LEN) {
+			if (min[d]+len[d] >= S.cfgDataLen) {
 				//drop bad rectangles 
 				throw new RuntimeException();
 			}
@@ -665,7 +656,7 @@ public class TestRunner {
 		if (pos >= N) {
 			//randomise
 			for (int d = 0; d < dims; d++) {
-				xyz[d] = R.nextDouble()*LEN;
+				xyz[d] = R.nextDouble()*S.cfgDataLen;
 			}
 		} else {
 			//get existing element
@@ -679,7 +670,7 @@ public class TestRunner {
 		if (pos >= N) {
 			//randomise
 			for (int d = 0; d < dims; d++) {
-				lo[d] = R.nextDouble()*LEN;
+				lo[d] = R.nextDouble()*S.cfgDataLen;
 				hi[d] = lo[d] + R.nextDouble();
 			}
 		} else {
@@ -693,7 +684,7 @@ public class TestRunner {
 		double[] xyz = new double[dims];
 		//randomise
 		for (int d = 0; d < dims; d++) {
-			xyz[d] = R.nextDouble()*LEN;
+			xyz[d] = R.nextDouble()*S.cfgDataLen;
 		}
 		return xyz;
 	}
@@ -701,7 +692,7 @@ public class TestRunner {
 	private void generateKnnQueryPointDRect(double[] lo, double[] hi, final int dims) {
 		//randomise
 		for (int d = 0; d < dims; d++) {
-			lo[d] = R.nextDouble()*LEN;
+			lo[d] = R.nextDouble()*S.cfgDataLen;
 			hi[d] = lo[d] + R.nextDouble();
 		}
 	}

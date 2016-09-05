@@ -47,7 +47,7 @@ public class TestPointCluster extends TestPoint {
 	}
 	
 	/**
-	 * 1000 clusters with LEN/10,000 length with N/1000 points each.
+	 * 1000 clusters with cfgDataLen/10,000 length with N/1000 points each.
 	 * 
 	 * From [1]:
 	 * cluster: Our final dataset was designed to illustrate

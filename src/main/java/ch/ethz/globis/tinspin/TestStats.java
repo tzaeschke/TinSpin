@@ -29,6 +29,13 @@ import ch.ethz.globis.tinspin.wrappers.RectangleQuadZ;
 
 public class TestStats implements Serializable, Cloneable {
 
+	/** Edge length of the populated data area. */
+	//private final double DEFAULT_LEN = (1L<<31)-1;
+	//private final double DEFAULT_LEN = 1000.0;
+	public static final double DEFAULT_DATA_LEN = 1.0;
+	/** Average edge length of the data rectangles. */
+	public static final double DEFAULT_RECT_LEN = 0.00001;
+	
 	/**
 	 * Enum with shortcuts to the candidate test classes.
 	 * 
@@ -164,6 +171,11 @@ public class TestStats implements Serializable, Cloneable {
 	public int cfgUpdateSize = DEFAULT_N_UPDATES;
 	public int cfgWindowQueryRepeat = DEFAULT_N_WINDOW_QUERY;
 	public int cfgWindowQuerySize = DEFAULT_W_QUERY_SIZE;
+	
+	/** length of the populated data area */
+	public double cfgDataLen = DEFAULT_DATA_LEN;
+	/** length of the data rectangles */
+	public double cfgRectLen = DEFAULT_RECT_LEN;
 	
 	public final TestStats.IDX INDEX;
 	public final TestStats.TST TEST;
@@ -326,8 +338,8 @@ public class TestStats implements Serializable, Cloneable {
 //		avg.paramStr = t1.paramStr;
 //		avg.paramWQSize = t1.paramWQSize;
 
-		int cnt = 0;
-		for (int i = 0; i < stats.size(); i++) {
+		int cnt = 1;
+		for (int i = 1; i < stats.size(); i++) {
 			TestStats t = stats.get(i);
 
 //			avg.testClass = t.testClass;

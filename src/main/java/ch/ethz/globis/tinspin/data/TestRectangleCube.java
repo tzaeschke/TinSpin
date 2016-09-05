@@ -17,16 +17,17 @@ import ch.ethz.globis.tinspin.TestStats;
 public class TestRectangleCube extends TestRectangle {
 
 	public static final double MIN_X = 0;
-	public static final double MAX_X = 1.0;
 	
 	public TestRectangleCube(Random R, TestStats S) {
 		super(R, S);
 	}
 	
-	
+	/**
+	 * param1 designates the default size of data rectangles.
+	 */
 	@Override
 	public double[] generate() {
-		double RECT_LEN = S.param1;
+		double RECT_LEN = S.cfgRectLen;
 		log("Running: TestCube (" + RECT_LEN + ")");
 		
 		int dims = S.cfgNDims;
@@ -34,7 +35,7 @@ public class TestRectangleCube extends TestRectangle {
 		double[] data = new double[nEntries*dims*2];
 		
 		//query create cube
-		double minRange = MAX_X-MIN_X-RECT_LEN;
+		double minRange = S.cfgDataLen-MIN_X-RECT_LEN;
 		int posMin = 0;
 		int posMax = dims;
 		for (int i = 0; i < nEntries; i++) {
