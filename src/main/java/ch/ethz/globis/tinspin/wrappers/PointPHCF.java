@@ -6,17 +6,20 @@
  */
 package ch.ethz.globis.tinspin.wrappers;
 
+import ch.ethz.globis.phtree.PhDistanceF;
 import ch.ethz.globis.phtree.PhTreeF;
+import ch.ethz.globis.phtree.PhTreeF.PhKnnQueryF;
 import ch.ethz.globis.phtree.PhTreeF.PhQueryF;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.tinspin.TestStats;
 
 public class PointPHCF extends Candidate {
 	
-	private final PhTreeF<double[]> phc;
+	private final PhTreeF<Object> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
+	private PhKnnQueryF<Object> knnQuery;
 	
 	/**
 	 * Setup of a native PH tree
@@ -27,16 +30,18 @@ public class PointPHCF extends Candidate {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
 		phc = PhTreeF.create(dims);
+		knnQuery = phc.nearestNeighbour(1, new double[dims]);
 	}
 	
 	@Override
 	public void load(double[] data, int dims) {
+		Object O = new Object();
+		double[] buf = new double[dims];
 		for (int i = 0; i < N; i++) {
-			double[] buf = new double[dims];
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			if (phc.put(buf, buf) != null) {
+			if (phc.put(buf, O) != null) {
 				throw new IllegalArgumentException();
 			}
 		}
@@ -78,7 +83,7 @@ public class PointPHCF extends Candidate {
 		return val;
 	}
 	
-	private PhQueryF<double[]> pit;
+	private PhQueryF<Object> pit;
 	
 	@Override
 	public int query(double[] min, double[] max) {
@@ -102,11 +107,30 @@ public class PointPHCF extends Candidate {
 		data = null;
 	}
 
+	@Override
+	public double knnQuery(int k, double[] center) {
+		knnQuery.reset(k, PhDistanceF.THIS, center);
+		double ret = 0;
+		int n = 0;
+		while (knnQuery.hasNext() && n++ < k) {
+			double[] v = knnQuery.nextEntryReuse().getKey();
+			ret += dist(center, v);
+		}
+		if (n < k) {
+			throw new IllegalStateException("n/k=" + n + "/" + k);
+		}
+		return ret;
+	}
+
+	@Override
+	public boolean supportsKNN() {
+		return true;
+	}
 	
 	/**
 	 * Used to test the native code during development process
 	 */
-	public PhTreeF<double[]> getNative() {
+	public PhTreeF<Object> getNative() {
 		return phc;
 	}
 

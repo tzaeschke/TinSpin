@@ -11,6 +11,7 @@ import org.zoodb.index.critbit.CritBit.QueryIteratorKD;
 import org.zoodb.index.critbit.CritBitKD;
 
 import ch.ethz.globis.phtree.util.BitTools;
+import ch.ethz.globis.tinspin.TestStats;
 import ch.ethz.globis.tinspin.wrappers.Candidate;
 
 public class PointCritBitZ extends Candidate {
@@ -22,13 +23,9 @@ public class PointCritBitZ extends Candidate {
 	
 	private double[] data;
 	
-	private PointCritBitZ(int dims, int N) {
-		this.dims = dims;
-		this.N = N;
-	}
-	
-	public static PointCritBitZ create(int dims, int N) {
-		return new PointCritBitZ(dims, N);
+	public PointCritBitZ(TestStats ts) {
+		this.dims = ts.cfgNDims;
+		this.N = ts.cfgNEntries;
 	}
 	
 	@Override

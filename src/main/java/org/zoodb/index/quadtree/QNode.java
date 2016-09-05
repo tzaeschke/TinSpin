@@ -40,7 +40,7 @@ public class QNode<T> {
 	QNode(double[] min, double[] max) {
 		this.min = min;
 		this.max = max;
-		this.values = new ArrayList<>(); 
+		this.values = new ArrayList<>(2); 
 	}
 
 	@SuppressWarnings("unchecked")
@@ -228,7 +228,7 @@ public class QNode<T> {
 		}
 		
 		//okay, let's merge
-		values = new ArrayList<>();
+		values = new ArrayList<>(nTotal);
 		for (int i = 0; i < subs.length; i++) {
 			if (subs[i] != null) {
 				values.addAll(subs[i].values);

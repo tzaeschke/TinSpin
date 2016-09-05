@@ -211,6 +211,10 @@ public abstract class Candidate {
 	public boolean supportsWindowQuery() {
 		return true;
 	}
+	
+	public boolean supportsPointQuery() {
+		return true;
+	}
 
 	/**
 	 * Float to long.

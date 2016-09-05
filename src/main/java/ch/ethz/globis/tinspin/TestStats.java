@@ -14,12 +14,11 @@ import java.util.List;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.tinspin.data.TestPoint;
 import ch.ethz.globis.tinspin.wrappers.Candidate;
+import ch.ethz.globis.tinspin.wrappers.PointCritBitZ;
 import ch.ethz.globis.tinspin.wrappers.PointPHC;
 import ch.ethz.globis.tinspin.wrappers.PointPHC2;
 import ch.ethz.globis.tinspin.wrappers.PointPHC2_IPP;
-import ch.ethz.globis.tinspin.wrappers.PointPHCCTree;
 import ch.ethz.globis.tinspin.wrappers.PointPHCF;
-import ch.ethz.globis.tinspin.wrappers.PointPHCRectangle;
 import ch.ethz.globis.tinspin.wrappers.PointPHC_IPP;
 import ch.ethz.globis.tinspin.wrappers.PointQuadZ;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHC;
@@ -46,7 +45,7 @@ public class TestStats implements Serializable, Cloneable {
 		PHC_IPP(PointPHC_IPP.class.getName(), RectanglePHC_IPP.class.getName()),
 		PHC2_IPP(PointPHC2_IPP.class.getName(), null),
 		/** CritBit by Tilmann */
-		CBZ("", ""),
+		CBZ(PointCritBitZ.class.getName(), ""),
 		/** Quadtree by Tilmann */
 		QKDZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
 
@@ -173,6 +172,7 @@ public class TestStats implements Serializable, Cloneable {
 	public final double param1;
 	public double param2;
 	public String paramStr;
+	public boolean paramUseGC = true;
 	public final boolean isRangeData;
 
 	Class<? extends TestPoint> testClass;
@@ -471,18 +471,30 @@ public class TestStats implements Serializable, Cloneable {
 				throw new IllegalStateException("Please provide a class name "
 						+ "for TestStats: " + (INDEX != null ? INDEX.name() : "no index"));
 			}
-			try {
-				Class<Candidate> cls = (Class<Candidate>) Class.forName(className);
-				Constructor<Candidate> c = cls.getConstructor(TestStats.class);
-				return c.newInstance(this);
-			} catch (InstantiationException | IllegalAccessException 
-					| IllegalArgumentException | InvocationTargetException 
-					| NoSuchMethodException | SecurityException 
-					| ClassNotFoundException e) {
-				throw new RuntimeException(e);
-			}
+			setCandidateClass(className);
 		}
-		throw new UnsupportedOperationException();
-		//return null;
+		try {
+			Class<Candidate> cls = (Class<Candidate>) indexClass;
+			Constructor<Candidate> c = cls.getConstructor(TestStats.class);
+			return c.newInstance(this);
+		} catch (InstantiationException | IllegalAccessException 
+				| IllegalArgumentException | InvocationTargetException 
+				| NoSuchMethodException | SecurityException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void setCandidateClass(String className) {
+		if (className == null || className.trim().equals("")) {
+			throw new IllegalStateException("Please provide a class name "
+					+ "for TestStats: " + (INDEX != null ? INDEX.name() : "no index"));
+		}
+		try {
+			indexClass = (Class<Candidate>) Class.forName(className);
+		} catch (IllegalArgumentException | SecurityException 
+				| ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

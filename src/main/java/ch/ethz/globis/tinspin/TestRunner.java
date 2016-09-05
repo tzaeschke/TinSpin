@@ -68,15 +68,15 @@ public class TestRunner {
 			return;
 		}
 		
-		final int DIM = 6;
-		final int N = 1*1000*1000;
+		final int DIM = 3;
+		final int N = 1*100*1000;
 						
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 0.00001);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
-		TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, false, 1.0);
+		TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
 		System.err.println("KNN count = " + s0.cfgKnnQueryBaseRepeat); //TODO
-		s0.setSeed(0);
+		s0.setSeed(2);
 		TestRunner test = new TestRunner(s0);
 		TestStats s = test.run();
 		System.out.println(s);
@@ -159,8 +159,10 @@ public class TestRunner {
 		S.assortedInfo += " WINDOW_RESULTS=" + S.cfgWindowQuerySize;
 		
 		//perform point queries.
-		repeatPointQuery(S.cfgPointQueryRepeat);
-		repeatPointQuery(S.cfgPointQueryRepeat);
+		if (tree.supportsPointQuery()) {
+			repeatPointQuery(S.cfgPointQueryRepeat);
+			repeatPointQuery(S.cfgPointQueryRepeat);
+		}
 		
 		if (tree.supportsKNN()) {
 			int repeat = getKnnRepeat(S.cfgNDims);
@@ -261,7 +263,9 @@ public class TestRunner {
 		int N = S.cfgNEntries;
 		
         long memTree = MemTools.getMemUsed();
-		MemTools.cleanMem(N, memTree);
+		if (ts.paramUseGC) {
+			MemTools.cleanMem(N, memTree);
+		}
 
 		
 		//load index
@@ -277,7 +281,9 @@ public class TestRunner {
 		S.statGcDiffL = JmxTools.getDiff();
 		S.statGcTimeL = JmxTools.getTime();
 		log("loading finished in: " + (t2-t1));
-		S.statSjvmF = MemTools.cleanMem(N, memTree);
+		if (ts.paramUseGC) {
+			S.statSjvmF = MemTools.cleanMem(N, memTree);
+		}
 		S.statSjvmE = S.statSjvmF / N;
 		S.statTLoad = t2-t1;
 		
@@ -757,5 +763,9 @@ public class TestRunner {
 	
 	private String time() {
 		return FT.format(new Date()) + " ";
+	}
+
+	public Candidate getCandidate() {
+		return tree;
 	}
 }

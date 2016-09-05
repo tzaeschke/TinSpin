@@ -84,6 +84,11 @@ public class RectangleQuadZ extends Candidate {
 	}
 
 	@Override
+	public boolean supportsPointQuery() {
+		return false;
+	}
+	
+	@Override
 	public int unload() {
 		int n = 0;
 		double[] lo = new double[dims];
