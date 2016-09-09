@@ -29,7 +29,6 @@ public class RectanglePHC_IPP extends Candidate {
 	private double[] data;
 	private static final Object O = new Object();
 	private final PreProcessorRangeF pre;
-	private final double[] buffer;
 	private PhKnnQuerySF<Object> qKNN = null;
 	private final PhDistanceSF distFn;
 
@@ -47,7 +46,6 @@ public class RectanglePHC_IPP extends Candidate {
 		//pre = new ShiftIPP(1.0);  //6e-6
 		//distFn = new PhDistanceSFCenterDist(pre, dims);
 		distFn = new PhDistanceSFEdgeDist(pre, dims);
-		this.buffer = new double[2*dims];
 		phc = PhTreeSolidF.create(dims, pre);
 	}
 	
@@ -171,7 +169,7 @@ public class RectanglePHC_IPP extends Candidate {
 		if (qKNN == null) {
 			qKNN = phc.nearestNeighbour(k, distFn, center);
 		} else {
-			qKNN.reset(k, distFn, buffer);
+			qKNN.reset(k, distFn, center);
 		}
 		double ret = 0;
 		int n = 0;

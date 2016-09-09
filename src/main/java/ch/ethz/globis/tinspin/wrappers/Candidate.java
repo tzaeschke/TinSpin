@@ -250,10 +250,24 @@ public abstract class Candidate {
 		return Math.sqrt(dist);
 	}
 	
-	static double distR(double[] center, double[] rLower, double[] rUpper) {
+	static double distRCenter(double[] center, double[] rLower, double[] rUpper) {
 		double dist = 0;
 		for (int i = 0; i < center.length; i++) {
-			double d =  center[i]-(rUpper[i]-rLower[i])/2;
+			double d = center[i]-(rUpper[i]+rLower[i])/2;
+			dist += d*d;
+		}
+		return Math.sqrt(dist);
+	}
+	
+	static double distREdge(double[] center, double[] rLower, double[] rUpper) {
+		double dist = 0;
+		for (int i = 0; i < center.length; i++) {
+			double d = 0;
+			if (center[i] > rUpper[i]) {
+				d = center[i] - rUpper[i];
+			} else  if (center[i] < rLower[i]) {
+				d = rLower[i] - rLower[i];
+			}
 			dist += d*d;
 		}
 		return Math.sqrt(dist);

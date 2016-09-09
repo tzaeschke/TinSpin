@@ -20,6 +20,7 @@ import ch.ethz.globis.tinspin.TestStats.TST;
 public class TestRectangleWrappers {
 
 	private static final int N = 100*1000;
+	private static final int dims = 3;
 
 	private final String candidate;
 	
@@ -42,10 +43,10 @@ public class TestRectangleWrappers {
 	@Parameters
     public void testCube() {
 		//0.00001 is the default size of the rectangles
-		TestStats ts = new TestStats(TST.CUBE, IDX.CUSTOM, N, 3, true, 1.0);
+		TestStats ts = new TestStats(TST.CUBE, IDX.CUSTOM, N, dims, true, 1.0);
 		ts.setCandidateClass(candidate);
 		ts.cfgNRepeat = 1;
-		ts.paramUseGC = false;
+		ts.paramEnforceGC = false;
 		ts.cfgWindowQueryRepeat = 100;
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
@@ -62,19 +63,19 @@ public class TestRectangleWrappers {
 		//DEBUG=false WINDOW_RESULTS=1000 KNN_REPEAT=1000
 
 		
-		TestPointWrappers.checkValue(ts, tr.getCandidate(), 3, N, 
+		TestPointWrappers.checkValue(ts, tr.getCandidate(), dims, N, 
 				100156, 99470, 500038, 500116, 250000, 250000,
-				0.22589505297599916, 0.22406998268552575, 
-				0.2277830659348768, 0.215077012049881);
+				0.2258929530714684, 0.22406781758094124,
+				0.2277807970873365, 0.21507474615327765);
 	}
 	
 	@Test
 	@Parameters
     public void testCluster() {
-		TestStats ts = new TestStats(TST.CLUSTER, IDX.CUSTOM, N, 3, true, 3.4);
+		TestStats ts = new TestStats(TST.CLUSTER, IDX.CUSTOM, N, dims, true, 3.4);
 		ts.setCandidateClass(candidate);
 		ts.cfgNRepeat = 1;
-		ts.paramUseGC = false;
+		ts.paramEnforceGC = false;
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 
@@ -87,10 +88,10 @@ public class TestRectangleWrappers {
 		//73	1490	730	0	0	0	0	0	0	0	0	0	0	-134	4	0	0	
 		//PhTree11 AHC/LHC=2.0 AHC-on=true HCI-on=true NtLimit=150 NtMaxDim=6 DEBUG=false WINDOW_RESULTS=1000 KNN_REPEAT=20
 
-		TestPointWrappers.checkValue(ts, tr.getCandidate(), 3, N,
+		TestPointWrappers.checkValue(ts, tr.getCandidate(), dims, N,
 				9992, 9965, 500046, 500106, 250000, 250000, 
-				0.6400297095966576, 0.7475088161602411, 
-				0.7190152445255513, 0.7391261342771682);	
+				0.640029707552298, 0.747508814394502,
+				0.7190152437227623, 0.7391261333668315);	
 				
 	}
 	

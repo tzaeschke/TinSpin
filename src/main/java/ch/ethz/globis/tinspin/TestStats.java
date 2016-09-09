@@ -184,7 +184,7 @@ public class TestStats implements Serializable, Cloneable {
 	public final double param1;
 	public double param2;
 	public String paramStr;
-	public boolean paramUseGC = true;
+	public boolean paramEnforceGC = true;
 	public final boolean isRangeData;
 
 	Class<? extends TestPoint> testClass;

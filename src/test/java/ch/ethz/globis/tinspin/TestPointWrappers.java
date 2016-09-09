@@ -49,7 +49,7 @@ public class TestPointWrappers {
 		TestStats ts = new TestStats(TST.CUBE, IDX.CUSTOM, N, 3, false, 1.0);
 		ts.setCandidateClass(candidate);
 		ts.cfgNRepeat = 1;
-		ts.paramUseGC = false;
+		ts.paramEnforceGC = false;
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 
@@ -73,7 +73,7 @@ public class TestPointWrappers {
 		TestStats ts = new TestStats(TST.CLUSTER, IDX.CUSTOM, N, 3, false, 3.4);
 		ts.setCandidateClass(candidate);
 		ts.cfgNRepeat = 1;
-		ts.paramUseGC = false;
+		ts.paramEnforceGC = false;
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 
@@ -97,7 +97,7 @@ public class TestPointWrappers {
 			int nq1, int nq2, int np1, int np2, int nu1, int nu2,
 			double dqk1_1, double dqk1_2, double dqk10_1, double dqk10_2) {
 		
-		double EPS = 0.00000000001;
+		double EPS = 0.000000001;
 
 		assertEquals(dims, ts.cfgNDims);
 		assertEquals(nEntries, ts.cfgNEntries);

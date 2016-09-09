@@ -62,11 +62,12 @@ public class TestRunner {
 		final int DIM = 3;
 		final int N = 1*100*1000;
 						
-		TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0);
+		TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 3.4);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
+		s0.cfgWindowQueryRepeat = 100;
 		System.err.println("KNN count = " + s0.cfgKnnQueryBaseRepeat); //TODO
 		s0.setSeed(0);
 		TestRunner test = new TestRunner(s0);
@@ -254,7 +255,7 @@ public class TestRunner {
 		int N = S.cfgNEntries;
 		
         long memTree = MemTools.getMemUsed();
-		if (ts.paramUseGC) {
+		if (ts.paramEnforceGC) {
 			MemTools.cleanMem(N, memTree);
 		}
 
@@ -272,7 +273,7 @@ public class TestRunner {
 		S.statGcDiffL = JmxTools.getDiff();
 		S.statGcTimeL = JmxTools.getTime();
 		log("loading finished in: " + (t2-t1));
-		if (ts.paramUseGC) {
+		if (ts.paramEnforceGC) {
 			S.statSjvmF = MemTools.cleanMem(N, memTree);
 		}
 		S.statSjvmE = S.statSjvmF / N;

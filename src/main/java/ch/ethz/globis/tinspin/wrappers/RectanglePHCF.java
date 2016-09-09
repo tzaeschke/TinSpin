@@ -10,6 +10,7 @@ import java.util.List;
 
 import ch.ethz.globis.phtree.PhTree;
 import ch.ethz.globis.phtree.PhTreeSolidF;
+import ch.ethz.globis.phtree.PhTreeSolidF.PhEntryDistSF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhEntrySF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhKnnQuerySF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhQuerySF;
@@ -125,9 +126,14 @@ public class RectanglePHCF extends Candidate {
 			knnQuery.reset(k, null, center);
 		}
 		double ret = 0;
+		int n = 0;
 		while (knnQuery.hasNext()) {
-			PhEntrySF<Object> e = knnQuery.nextEntryReuse();
-			ret += distR(center, e.lower(), e.upper());
+			PhEntryDistSF<Object> e = knnQuery.nextEntryReuse();
+			ret += e.dist();
+			//ret += distREdge(center, e.lower(), e.upper());
+			if (++n == k) {
+				break;
+			}
 		}
 		return ret;
 	}
