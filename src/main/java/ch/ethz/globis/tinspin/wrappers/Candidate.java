@@ -195,7 +195,6 @@ public abstract class Candidate {
 		System.out.println("unload: " + nu);
 	}
 
-	@SuppressWarnings("unused")
 	public void getStats(TestStats S) {
 		//Nothing to do for trees other than PhTrees
 	}

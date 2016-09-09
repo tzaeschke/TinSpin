@@ -7,6 +7,8 @@
 package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -18,7 +20,7 @@ public class RectangleDUMMY extends Candidate {
 	private double[] data;
 	
 	/**
-	 * Setup of a native PH tree
+	 * Setup of an simple array data structure (no indexing).
 	 * 
 	 * @param ts test stats
 	 */
@@ -141,6 +143,107 @@ public class RectangleDUMMY extends Candidate {
 			}
 		}
 		return results;
+	}
+
+	@Override
+	public double knnQuery(int k, double[] center) {
+		System.out.println("center: " + Arrays.toString(center)); //TODO
+
+		ArrayList<KnnEntry> ret = new ArrayList<>(k);
+		for (int i = 0; i < phc.length/2; i++) {
+			double[] min = phc[i*2];
+			double[] max = phc[i*2+1];
+			double dist = dist(center, min, max);
+			if (ret.size() < k) {
+				ret.add(new KnnEntry(min, max, dist));
+				ret.sort(COMP);
+			} else if (ret.get(k-1).dist > dist) {
+				ret.remove(k-1);
+				ret.add(new KnnEntry(min, max, dist));
+				ret.sort(COMP);
+			}
+		}
+		
+		System.out.println(ret); //TODO
+		
+		//check
+		double totalDist = 0;
+		int n = 0;
+        for (int i = 0; i < ret.size(); i++) {
+        	KnnEntry e = ret.get(i);
+        	totalDist += e.dist;
+        	n++;
+        	if (n==k) {
+        		break;
+        	}
+        }
+        if (n < k) {
+        	throw new IllegalStateException("n/k=" + n + "/" + k);
+        }
+		return totalDist;
+	}
+	
+	
+	private double dist(double[] k, double[] min, double[] max) {
+		return distEdge(k, min, max);
+		//return distCenter(k, min, max);
+	} 
+	
+	private double distEdge(double[] k, double[] min, double[] max) {
+		double d = 0;
+		for (int i = 0; i < k.length; i++) {
+			double dd = 0;
+			if (k[i] < min[i]) {
+				dd = min[i] - k[i];
+			} else if (k[i] > max[i]) {
+				dd = k[i] - max[i];
+			}
+			d += dd*dd;
+		}
+		return Math.sqrt(d);
+	}
+	
+	private double distCenter(double[] k, double[] min, double[] max) {
+		double d = 0;
+		for (int i = 0; i < k.length; i++) {
+			double dd = (max[i]+min[i])/2 - k[i];
+			d += dd*dd;
+		}
+		return Math.sqrt(d);
+	}
+	
+	private static final Comparator<KnnEntry> COMP = new Comparator<KnnEntry>() {
+		@Override
+		public int compare(KnnEntry o1, KnnEntry o2) {
+			return o1.compareTo(o2);
+		}
+	};
+	
+	private static class KnnEntry implements Comparable<KnnEntry> {
+		private final double[] min;
+		private final double[] max;
+		private final double dist;
+		KnnEntry(double[] min, double[] max, double dist) {
+			this.min = min;
+			this.max = max;
+			this.dist = dist;
+		}
+		@Override
+		public int compareTo(KnnEntry o) {
+			double d = dist-o.dist;
+			return d < 0 ? -1 : d > 0 ? 1 : 0;
+		}
+		
+		@Override
+		public String toString() {
+			return "d=" + dist + ":" + Arrays.toString(min) + "/" + Arrays.toString(max);
+		}
+		
+	}
+	
+	@Override
+	public boolean supportsKNN() {
+		return true;
 	}
 
 	@Override

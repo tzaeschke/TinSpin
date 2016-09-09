@@ -15,7 +15,6 @@ import ch.ethz.globis.phtree.PhTreeSolidF.PhKnnQuerySF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhQuerySF;
 import ch.ethz.globis.phtree.pre.PreProcessorRangeF;
 import ch.ethz.globis.phtree.util.PhTreeStats;
-import ch.ethz.globis.tinspin.TestRunner;
 import ch.ethz.globis.tinspin.TestStats;
 
 public class RectanglePHCF extends Candidate {
@@ -121,7 +120,7 @@ public class RectanglePHCF extends Candidate {
 	@Override
 	public double knnQuery(int k, double[] center) {
 		if (knnQuery == null) {
-			knnQuery = phc.nearestNeighbour(k, center);
+			knnQuery = phc.nearestNeighbour(k, null, center);
 		} else {
 			knnQuery.reset(k, null, center);
 		}

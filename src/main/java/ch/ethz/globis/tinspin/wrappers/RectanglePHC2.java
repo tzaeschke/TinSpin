@@ -9,7 +9,9 @@ package ch.ethz.globis.tinspin.wrappers;
 import java.util.Arrays;
 import java.util.List;
 
-import ch.ethz.globis.phtree.PhDistanceF;
+import ch.ethz.globis.phtree.PhDistanceSF;
+import ch.ethz.globis.phtree.PhDistanceSFEdgeDist;
+import ch.ethz.globis.phtree.PhEntryDist;
 import ch.ethz.globis.phtree.PhTree;
 import ch.ethz.globis.phtree.PhTree.PhKnnQuery;
 import ch.ethz.globis.phtree.PhTree.PhQuery;
@@ -34,6 +36,7 @@ public class RectanglePHC2 extends Candidate {
 	private final PreProcessorRangeF pre;
 	private PhQuery<Object> q = null;
 	private PhKnnQuery<Object> qKNN = null;
+	private final PhDistanceSF distFn;
 	
 	/**
 	 * Setup of a native PH tree
@@ -47,6 +50,8 @@ public class RectanglePHC2 extends Candidate {
 		phc = new PhTree11<>(2*dims); 
 		this.pre = new PreProcessorRangeF.IEEE(dims);
 		//this.pre = new PreProcessorRangeF.IPP(dims, 10e9);
+		//distFn = new PhDistanceSFCenterDist(pre, dims);
+		distFn = new PhDistanceSFEdgeDist(pre, dims);
 		this.buffer = new long[2*dims];
 		this.bufLow = new long[2*dims];
 		this.bufUpp = new long[2*dims];
@@ -140,16 +145,18 @@ public class RectanglePHC2 extends Candidate {
 	public double knnQuery(int k, double[] center) {
 		pre.pre(center, center, buffer);
 		if (qKNN == null) {
-			qKNN = phc.nearestNeighbour(k, PhDistanceF.THIS, null, buffer);
+			qKNN = phc.nearestNeighbour(k, distFn, null, buffer);
 		} else {
-			qKNN.reset(k, PhDistanceF.THIS, buffer);
+			qKNN.reset(k, distFn, buffer);
 		}
 		double ret = 0;
-		double[] v2 = new double[dims];
+		int n = 0;
 		while (qKNN.hasNext()) {
-			long[] v = qKNN.nextEntryReuse().getKey();
-			pre.post(v, v2, v2);
-			ret += dist(center, v2);
+			PhEntryDist<Object> e = qKNN.nextEntryReuse();
+			ret += e.dist();
+			if (++n == k) {
+				break;
+			}
 		}
 		return ret;
 	}

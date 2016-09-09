@@ -8,9 +8,13 @@ package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.List;
 
+import ch.ethz.globis.phtree.PhDistanceSF;
+import ch.ethz.globis.phtree.PhDistanceSFEdgeDist;
 import ch.ethz.globis.phtree.PhTree;
 import ch.ethz.globis.phtree.PhTreeSolidF;
+import ch.ethz.globis.phtree.PhTreeSolidF.PhEntryDistSF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhEntrySF;
+import ch.ethz.globis.phtree.PhTreeSolidF.PhKnnQuerySF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhQuerySF;
 import ch.ethz.globis.phtree.pre.PreProcessorRangeF;
 import ch.ethz.globis.phtree.util.PhMapperKey;
@@ -24,6 +28,10 @@ public class RectanglePHC_IPP extends Candidate {
 	private final int N;
 	private double[] data;
 	private static final Object O = new Object();
+	private final PreProcessorRangeF pre;
+	private final double[] buffer;
+	private PhKnnQuerySF<Object> qKNN = null;
+	private final PhDistanceSF distFn;
 
 	/**
 	 * Setup of a native PH tree
@@ -33,10 +41,13 @@ public class RectanglePHC_IPP extends Candidate {
 	public RectanglePHC_IPP(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
-		PreProcessorRangeF pre = new PreProcessorRangeF.Multiply(dims, 1e9); //1..1000
-		//PreProcessorRangeF pre = new EmptyPPRF();  //6e-6
-		//PreProcessorRangeF pre = new ShiftMulIPP(1e12, 1.0);  //6e-6
-		//PreProcessorRangeF pre = new ShiftIPP(1.0);  //6e-6
+		pre = new PreProcessorRangeF.Multiply(dims, 1e9); //1..1000
+		//pre = new EmptyPPRF();  //6e-6
+		//pre = new ShiftMulIPP(1e12, 1.0);  //6e-6
+		//pre = new ShiftIPP(1.0);  //6e-6
+		//distFn = new PhDistanceSFCenterDist(pre, dims);
+		distFn = new PhDistanceSFEdgeDist(pre, dims);
+		this.buffer = new double[2*dims];
 		phc = PhTreeSolidF.create(dims, pre);
 	}
 	
@@ -153,6 +164,30 @@ public class RectanglePHC_IPP extends Candidate {
 		
 		List<PhEntrySF<Object>> all = phc.queryIntersectAll(min, max);
 		return all;
+	}
+	
+	@Override
+	public double knnQuery(int k, double[] center) {
+		if (qKNN == null) {
+			qKNN = phc.nearestNeighbour(k, distFn, center);
+		} else {
+			qKNN.reset(k, distFn, buffer);
+		}
+		double ret = 0;
+		int n = 0;
+		while (qKNN.hasNext()) {
+			PhEntryDistSF<Object> e = qKNN.nextEntryReuse();
+			ret += e.dist();
+			if (++n == k) {
+				break;
+			}
+		}
+		return ret;
+	}
+
+	@Override
+	public boolean supportsKNN() {
+		return true;
 	}
 	
 	@Override

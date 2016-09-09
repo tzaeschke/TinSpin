@@ -222,17 +222,17 @@ public class PhTreeFQT<T> extends PhTreeF<T> {
 		
 		private Iterator<QEntryDist<T>> iter;
 		private QuadTreeKD<T> t;
-		private PhEntryF<T> buf;
+		private PhEntryDistF<T> buf;
 		
 		public PHRSTKnnQuery(QuadTreeKD<T> t, int nMin, PhDistance dist, double... center) {
 			super(null, 0, null);
 			this.t = t;
-			this.buf = new PhEntryF<>(new double[center.length], null);
+			this.buf = new PhEntryDistF<>(new double[center.length], null, Double.NaN);
 			reset(nMin, dist, center);
 		}
 		
 		@Override
-		public PhEntryF<T> nextEntryReuse() {
+		public PhEntryDistF<T> nextEntryReuse() {
 			QEntry<T> p = iter.next();
 			System.arraycopy(p.getPoint(), 0, buf.getKey(), 0, p.getPoint().length);
 			buf.setValue((T) p.getValue());
@@ -251,9 +251,9 @@ public class PhTreeFQT<T> extends PhTreeF<T> {
 		}
 
 		@Override
-		public PhEntryF<T> nextEntry() {
-			QEntry<T> p = iter.next();
-			return new PhEntryF<>(p.getPoint(), (T) p.getValue());
+		public PhEntryDistF<T> nextEntry() {
+			QEntryDist<T> p = iter.next();
+			return new PhEntryDistF<>(p.getPoint(), (T) p.getValue(), p.getDistance());
 		}
 
 		@Override

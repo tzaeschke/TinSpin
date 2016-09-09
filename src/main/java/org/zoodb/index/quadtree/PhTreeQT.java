@@ -23,6 +23,7 @@ import java.util.List;
 
 import ch.ethz.globis.phtree.PhDistance;
 import ch.ethz.globis.phtree.PhEntry;
+import ch.ethz.globis.phtree.PhEntryDist;
 import ch.ethz.globis.phtree.PhFilter;
 import ch.ethz.globis.phtree.PhRangeQuery;
 import ch.ethz.globis.phtree.PhTree;
@@ -319,18 +320,18 @@ public class PhTreeQT<T> implements PhTree<T> {
 		private Iterator<QEntryDist<T>> iter;
 		private QuadTreeKD<T> t;
 		private final PhTreeQT<T> pt;
-		private PhEntry<T> buf;
+		private PhEntryDist<T> buf;
 		
 		public PHRSTKnnQuery(
 				PhTreeQT<T> pt, QuadTreeKD<T> t, int nMin, PhDistance dist, long... center) {
 			this.t = t;
 			this.pt = pt;
-			this.buf = new PhEntry<>(new long[center.length], null);
+			this.buf = new PhEntryDist<>(new long[center.length], null, Double.NaN);
 			reset(nMin, dist, center);
 		}
 		
 		@Override
-		public PhEntry<T> nextEntryReuse() {
+		public PhEntryDist<T> nextEntryReuse() {
 			QEntry<T> p = iter.next();
 			pt.toLong(p.getPoint(), buf.getKey());
 			buf.setValue((T) p.getValue());
@@ -351,11 +352,11 @@ public class PhTreeQT<T> implements PhTree<T> {
 		}
 
 		@Override
-		public PhEntry<T> nextEntry() {
-			QEntry<T> p = iter.next();
+		public PhEntryDist<T> nextEntry() {
+			QEntryDist<T> p = iter.next();
 			long[] coord = new long[p.getPoint().length];
 			pt.toLong(p.getPoint(), coord);
-			return new PhEntry<>(coord, (T) p.getValue());
+			return new PhEntryDist<>(coord, (T) p.getValue(), p.getDistance());
 		}
 
 		@Override
