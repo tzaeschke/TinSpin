@@ -14,6 +14,7 @@ import java.util.List;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.tinspin.data.TestPoint;
 import ch.ethz.globis.tinspin.wrappers.Candidate;
+import ch.ethz.globis.tinspin.wrappers.PointArray;
 import ch.ethz.globis.tinspin.wrappers.PointCritBitZ;
 import ch.ethz.globis.tinspin.wrappers.PointPHC;
 import ch.ethz.globis.tinspin.wrappers.PointPHC2;
@@ -46,7 +47,7 @@ public class TestStats implements Serializable, Cloneable {
 		//Our implementations
 		//===================
 		/** Naive array implementation, for verification only */
-		ARRAY(null, RectangleArray.class.getName()),
+		ARRAY(PointArray.class.getName(), RectangleArray.class.getName()),
 		/** PH-Tree */
 		PHC(PointPHC.class.getName(), RectanglePHC.class.getName()),
 		/** PH-Tree with different preprocessor */

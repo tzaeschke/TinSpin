@@ -60,9 +60,9 @@ public class TestRunner {
 		}
 		
 		final int DIM = 3;
-		final int N = 1*100*1000;
+		final int N = 1*1*1000;
 						
-		TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 3.4);
+		TestStats s0 = new TestStats(TST.CUBE, IDX.ARRAY, N, DIM, true, 3.4);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);

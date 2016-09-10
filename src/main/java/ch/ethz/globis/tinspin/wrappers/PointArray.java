@@ -12,7 +12,7 @@ import java.util.Comparator;
 
 import ch.ethz.globis.tinspin.TestStats;
 
-public class RectangleArray extends Candidate {
+public class PointArray extends Candidate {
 	
 	private final double[][] phc;
 	private final int dims;
@@ -24,24 +24,18 @@ public class RectangleArray extends Candidate {
 	 * 
 	 * @param ts test stats
 	 */
-	public RectangleArray(TestStats ts) {
+	public PointArray(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
-		phc = new double[2*N][dims];
+		phc = new double[N][dims];
 	}
 	
 	@Override
 	public void load(double[] data, int dims) {
 		int pos = 0;
 		for (int n = 0; n < N; n++) {
-			double[] lo = new double[dims];
-			double[] hi = new double[dims];
-			System.arraycopy(data, pos, lo, 0, dims);
+			System.arraycopy(data, pos, phc[n], 0, dims);
 			pos += dims;
-			System.arraycopy(data, pos, hi, 0, dims);
-			pos += dims;
-			phc[2*n] = lo;
-			phc[2*n+1] = hi;
 		}
 		this.data = data;
 	}
@@ -55,9 +49,9 @@ public class RectangleArray extends Candidate {
 	public int pointQuery(Object qA) {
 		int n = 0;
 		double[][] dA = (double[][]) qA; 
-		for (int i = 0; i < dA.length; i+=2) {
-			for (int j = 0; j < phc.length; j+=2) { 
-				if (eq(phc[j], dA[i]) && eq(phc[j+1], dA[i+1])) {
+		for (int i = 0; i < dA.length; i++) {
+			for (int j = 0; j < N; j++) { 
+				if (eq(phc[j], dA[i])) {
 					n++;
 				}
 			}
@@ -94,28 +88,39 @@ public class RectangleArray extends Candidate {
 	
 	@Override
 	public int query(double[] min, double[] max) {
-		int n = 0; 
+		int n = queryPoints(min, max).size();
+//		List<Integer> list = queryPoints(min, max);
+//		int n = 0;
+//		while (it.hasNext()) {
+//			it.next();
+//			n++;
+//		}
+		//log("q=" + Arrays.toString(q));
+		return n;
+	}
+	
+	private ArrayList<Integer> queryPoints(double[] min, double[] max) {
+		ArrayList<Integer> results = new ArrayList<>(); 
 		for (int i = 0; i < N; i++) { 
-			if (leq(phc[i<<1], max) && geq(phc[(i<<1)+1], min)) {
-				n++;
+			if (leq(phc[i], max) && geq(phc[i], min)) {
+				results.add(i);
 			}
 		}
-		return n;
+		return results;
 	}
 
 	@Override
 	public double knnQuery(int k, double[] center) {
 		ArrayList<KnnEntry> ret = new ArrayList<>(k);
-		for (int i = 0; i < phc.length/2; i++) {
-			double[] min = phc[i*2];
-			double[] max = phc[i*2+1];
-			double dist = dist(center, min, max);
+		for (int i = 0; i < phc.length; i++) {
+			double[] p = phc[i];
+			double dist = dist(center, p);
 			if (ret.size() < k) {
-				ret.add(new KnnEntry(min, max, dist));
+				ret.add(new KnnEntry(p, dist));
 				ret.sort(COMP);
 			} else if (ret.get(k-1).dist > dist) {
 				ret.remove(k-1);
-				ret.add(new KnnEntry(min, max, dist));
+				ret.add(new KnnEntry(p, dist));
 				ret.sort(COMP);
 			}
 		}
@@ -137,12 +142,6 @@ public class RectangleArray extends Candidate {
 		return totalDist;
 	}
 	
-	
-	private double dist(double[] k, double[] min, double[] max) {
-		return distREdge(k, min, max);
-		//return distRCenter(k, min, max);
-	} 
-	
 	private static final Comparator<KnnEntry> COMP = new Comparator<KnnEntry>() {
 		@Override
 		public int compare(KnnEntry o1, KnnEntry o2) {
@@ -151,12 +150,10 @@ public class RectangleArray extends Candidate {
 	};
 	
 	private static class KnnEntry implements Comparable<KnnEntry> {
-		private final double[] min;
-		private final double[] max;
+		private final double[] p;
 		private final double dist;
-		KnnEntry(double[] min, double[] max, double dist) {
-			this.min = min;
-			this.max = max;
+		KnnEntry(double[] p, double dist) {
+			this.p = p;
 			this.dist = dist;
 		}
 		@Override
@@ -167,7 +164,7 @@ public class RectangleArray extends Candidate {
 		
 		@Override
 		public String toString() {
-			return "d=" + dist + ":" + Arrays.toString(min) + "/" + Arrays.toString(max);
+			return "d=" + dist + ":" + Arrays.toString(p);
 		}
 		
 	}
@@ -187,26 +184,13 @@ public class RectangleArray extends Candidate {
 	public int update(double[][] updateTable) {
 		int n = 0;
 		for (int i = 0; i < updateTable.length; ) {
-			double[] lo1 = updateTable[i++];
-			double[] up1 = updateTable[i++];
-			double[] lo2 = updateTable[i++];
-			double[] up2 = updateTable[i++];
-			if (update(lo1, up1, lo2, up2)) {
+			double[] p1 = updateTable[i++];
+			double[] p2 = updateTable[i++];
+			if (update(p1, p2)) {
 				n++;
 			}
 		}
 		return n;
-	}
-	
-	private boolean update(double[] lo1, double[] up1, double[] lo2, double[] up2) {
-		for (int i = 0; i < N; i++) { 
-			if (eq(phc[i<<1], lo1) && eq(phc[(i<<1)+1], up1)) {
-				System.arraycopy(lo2, 0, phc[i<<1], 0, dims);
-				System.arraycopy(up2, 0, phc[(i<<1)+1], 0, dims);
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	@Override
@@ -214,29 +198,35 @@ public class RectangleArray extends Candidate {
 		return true;
 	}
 	
+	private boolean update(double[] p1, double[] p2) {
+		for (int i = 0; i < N; i++) { 
+			if (eq(phc[i], p1)) {
+				System.arraycopy(p2, 0, phc[i], 0, dims);
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	@Override
 	public int unload() {
 		int n = 0;
-		double[] lo = new double[dims];
-		double[] hi = new double[dims];
+		double[] p = new double[dims];
 		for (int i = 0; i < N>>1; i++) {
-			System.arraycopy(data, i*dims*2, lo, 0, dims);
-			System.arraycopy(data, i*dims*2+dims, hi, 0, dims);
-			n += delete(lo, hi) ? 1 : 0;
+			System.arraycopy(data, i*dims, p, 0, dims);
+			n += delete(p) ? 1 : 0;
 			int i2 = N-i-1;
-			System.arraycopy(data, i2*dims*2, lo, 0, dims);
-			System.arraycopy(data, i2*dims*2+dims, hi, 0, dims);
-			n += delete(lo, hi) ? 1 : 0;
+			System.arraycopy(data, i2*dims, p, 0, dims);
+			n += delete(p) ? 1 : 0;
 		}
 		return n;
 	}
 	
 	
-	private boolean delete(double[] lo, double[] up) {
+	private boolean delete(double[] p) {
 		for (int i = 0; i < N; i++) { 
-			if (phc[i<<1] != null && eq(phc[i<<1], lo) && eq(phc[(i<<1)+1], up)) {
-				phc[i<<1] = null;
-				phc[(i<<1)+1] = null;
+			if (phc[i] != null && eq(phc[i], p)) {
+				phc[i] = null;
 				return true;
 			}
 		}

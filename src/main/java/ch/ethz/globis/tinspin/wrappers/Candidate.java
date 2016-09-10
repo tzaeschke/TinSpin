@@ -266,7 +266,7 @@ public abstract class Candidate {
 			if (center[i] > rUpper[i]) {
 				d = center[i] - rUpper[i];
 			} else  if (center[i] < rLower[i]) {
-				d = rLower[i] - rLower[i];
+				d = rLower[i] - center[i];
 			}
 			dist += d*d;
 		}
