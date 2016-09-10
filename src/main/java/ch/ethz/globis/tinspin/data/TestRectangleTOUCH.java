@@ -274,7 +274,7 @@ public class TestRectangleTOUCH extends TestRectangle {
 
 		// param1: 0=even, 1=gauss, >1= gauss spots
 		// param2: EPSILON, usually 5 or 10
-		TestStats S = new TestStats(TestStats.TST.TOUCH, TestStats.IDX.DUMMY, N_B, 3, true, 1, EPS[2]);
+		TestStats S = new TestStats(TestStats.TST.TOUCH, TestStats.IDX.CUSTOM, N_B, 3, true, 1, EPS[2]);
 		for (int i = 0; i < 3; i++) {
 			S.setSeed(0);;
 			System.out.println("SEED: " + S.SEEDmsg);
@@ -298,7 +298,7 @@ public class TestRectangleTOUCH extends TestRectangle {
 		//Candidate tree = new RectanglePHC_IPP(ts);
 		//Candidate tree = new RectanglePHCRect(ts);
 		//Node.AHC_LHC_BIAS=2.0;
-		//Candidate tree = new RectangleDUMMY(ts);
+		//Candidate tree = new RectangleArray(ts);
 		//Candidate tree = RectangleXtree.create(ts);
 		//Candidate tree = new RectangleMXCIF3D(ts);
 		tree.load(data, DIM);

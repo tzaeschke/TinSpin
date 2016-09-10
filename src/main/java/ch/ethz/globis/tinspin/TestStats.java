@@ -21,6 +21,7 @@ import ch.ethz.globis.tinspin.wrappers.PointPHC2_IPP;
 import ch.ethz.globis.tinspin.wrappers.PointPHCF;
 import ch.ethz.globis.tinspin.wrappers.PointPHC_IPP;
 import ch.ethz.globis.tinspin.wrappers.PointQuadZ;
+import ch.ethz.globis.tinspin.wrappers.RectangleArray;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHC;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHC2;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHCF;
@@ -44,16 +45,21 @@ public class TestStats implements Serializable, Cloneable {
 	public enum IDX {
 		//Our implementations
 		//===================
+		/** Naive array implementation, for verification only */
+		ARRAY(null, RectangleArray.class.getName()),
+		/** PH-Tree */
 		PHC(PointPHC.class.getName(), RectanglePHC.class.getName()),
+		/** PH-Tree with different preprocessor */
 		PHC2(PointPHC2.class.getName(), RectanglePHC2.class.getName()),
-		/** based on PhTreeF */
+		/** PH-Tree based on PhTreeF */
 		PHCF(PointPHCF.class.getName(), RectanglePHCF.class.getName()), 
-		/** CUBE with Integer pre-processor. */
+		/** PH-Tree with Integer pre-processor. */
 		PHC_IPP(PointPHC_IPP.class.getName(), RectanglePHC_IPP.class.getName()),
+		/** PH-Tree with Integer pre-processor. */
 		PHC2_IPP(PointPHC2_IPP.class.getName(), null),
-		/** CritBit by Tilmann */
+		/** CritBit */
 		CBZ(PointCritBitZ.class.getName(), ""),
-		/** Quadtree by Tilmann */
+		/** Quadtree */
 		QKDZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
 
 		//3rd party implementations
@@ -91,7 +97,6 @@ public class TestStats implements Serializable, Cloneable {
 		
 		//Other
 		//=====
-		DUMMY("", ""),
 		CUSTOM1(null, null),
 		CUSTOM2(null, null),
 		CUSTOM3(null, null),

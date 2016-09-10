@@ -12,7 +12,7 @@ import java.util.Comparator;
 
 import ch.ethz.globis.tinspin.TestStats;
 
-public class RectangleDUMMY extends Candidate {
+public class RectangleArray extends Candidate {
 	
 	private final double[][] phc;
 	private final int dims;
@@ -24,7 +24,7 @@ public class RectangleDUMMY extends Candidate {
 	 * 
 	 * @param ts test stats
 	 */
-	public RectangleDUMMY(TestStats ts) {
+	public RectangleArray(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
 		phc = new double[2*N][dims];
