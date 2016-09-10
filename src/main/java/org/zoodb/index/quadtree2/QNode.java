@@ -319,6 +319,19 @@ public class QNode<T> {
 		if (parent != null) {
 			if (!QUtil.isRectEnclosed(center, radius, 
 					parent.center, parent.radius)) {
+				for (int d = 0; d < center.length; d++) {
+//					if ((centerOuter[d]+radiusOuter) / (centerEnclosed[d]+radiusEnclosed) < 0.9999999 || 
+//							(centerOuter[d]-radiusOuter) / (centerEnclosed[d]-radiusEnclosed) > 1.0000001) {
+//						return false;
+//					}
+					System.out.println("Outer: " + parent.radius + " " + 
+						Arrays.toString(parent.center));
+					System.out.println("Child: " + radius + " " + Arrays.toString(center));
+					System.out.println((parent.center[d]+parent.radius) + " vs " + (center[d]+radius)); 
+					System.out.println("r=" + (parent.center[d]+parent.radius) / (center[d]+radius)); 
+					System.out.println((parent.center[d]-parent.radius) + " vs " + (center[d]-radius));
+					System.out.println("r=" + (parent.center[d]-parent.radius) / (center[d]-radius));
+				}
 				throw new IllegalStateException();
 			}
 		}

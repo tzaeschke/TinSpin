@@ -60,14 +60,16 @@ public class TestRunner {
 		}
 		
 		final int DIM = 3;
-		final int N = 1*1*1000;
+		final int N = 1*1000*1000;
 						
-		TestStats s0 = new TestStats(TST.CUBE, IDX.ARRAY, N, DIM, true, 3.4);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.ARRAY, N, DIM, true, 3.4);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
-		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
+		TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
-		s0.cfgWindowQueryRepeat = 100;
+		//s0.cfgWindowQueryRepeat = 100;
+		//s0.cfgPointQueryRepeat = 1000;
+		//s0.cfgUpdateSize = 1000;
 		System.err.println("KNN count = " + s0.cfgKnnQueryBaseRepeat); //TODO
 		s0.setSeed(0);
 		TestRunner test = new TestRunner(s0);
@@ -147,28 +149,28 @@ public class TestRunner {
 //		commitDB();
 //		reportDB();
 		
-		repeatQuery(S.cfgWindowQueryRepeat);
-		repeatQuery(S.cfgWindowQueryRepeat);
+		repeatQuery(S.cfgWindowQueryRepeat, 0);
+		repeatQuery(S.cfgWindowQueryRepeat, 1);
 		S.assortedInfo += " WINDOW_RESULTS=" + S.cfgWindowQuerySize;
 		
 		//perform point queries.
 		if (tree.supportsPointQuery()) {
-			repeatPointQuery(S.cfgPointQueryRepeat);
-			repeatPointQuery(S.cfgPointQueryRepeat);
+			repeatPointQuery(S.cfgPointQueryRepeat, 0);
+			repeatPointQuery(S.cfgPointQueryRepeat, 1);
 		}
 		
 		if (tree.supportsKNN()) {
 			int repeat = getKnnRepeat(S.cfgNDims);
 			S.assortedInfo += " KNN_REPEAT=" + repeat;
-			repeatKnnQuery(repeat, 1);
-			repeatKnnQuery(repeat, 1);
-			repeatKnnQuery(repeat, 10);
-			repeatKnnQuery(repeat, 10);
+			repeatKnnQuery(repeat, 0, 1);
+			repeatKnnQuery(repeat, 1, 1);
+			repeatKnnQuery(repeat, 0, 10);
+			repeatKnnQuery(repeat, 1, 10);
 		}
 		
 		if (tree.supportsUpdate()) {
-			update();
-			update();
+			update(0);
+			update(1);
 		} else {
 			System.err.println("WARNING: update() disabled");
 		}
@@ -294,7 +296,7 @@ public class TestRunner {
 		log("loaded objects: " + N + " " + data[0]);
 	}
 		
-	private void repeatQuery(int repeat) {
+	private void repeatQuery(int repeat, int round) {
 		int dims = S.cfgNDims;
 		log("N=" + S.cfgNEntries);
 		log(time() + "querying index ... repeat = " + repeat);
@@ -312,7 +314,7 @@ public class TestRunner {
 		long t2 = System.currentTimeMillis();
 		log("Query time: " + (t2-t1) + " ms -> " + (t2-t1)/(double)repeat + " ms/q -> " +
 				(t2-t1)*1000*1000/(double)n + " ns/q/r  (n=" + n + ")");
-		if (S.statTq1 == 0) {
+		if (round == 0) {
 			S.statTq1 = (t2-t1);
 			S.statTq1E = (long) ((t2-t1)*1000*1000/(double)n);
 			S.statNq1 = n;
@@ -325,7 +327,7 @@ public class TestRunner {
 		S.statGcTimeWq = JmxTools.getTime();
 	}
 	
-	private void repeatPointQuery(int repeat) {
+	private void repeatPointQuery(int repeat, int round) {
 		log(time() + "point queries ...");
 		//prepare query
 		//TODO
@@ -347,7 +349,7 @@ public class TestRunner {
 		log("Elements found: " + n + " -> " + n/(double)repeat);
 		log("Query time: " + (t2-t1) + " ms -> " + (t2-t1)/(double)repeat + " ms/q -> " +
 				(t2-t1)*1000*1000/(double)n + " ns/q/r");
-		if (S.statTqp1 == 0) {
+		if (round == 0) {
 			S.statTqp1 = (t2-t1);
 			S.statTqp1E = (long) ((t2-t1)*1000*1000/(double)repeat);
 			S.statNqp1 = n;
@@ -381,7 +383,7 @@ public class TestRunner {
 		return qA;
 	}
 
-	private void repeatKnnQuery(int repeat, int k) {
+	private void repeatKnnQuery(int repeat, int round, int k) {
 		log(time() + "kNN queries ...");
 		//prepare query
 		double[][] q = prepareKnnQuery(repeat);
@@ -399,7 +401,7 @@ public class TestRunner {
 		log("kNN query time: " + (t2-t1) + " ms -> " + (t2-t1)/(double)repeat + " ms/q -> " +
 				(t2-t1)*1000*1000/(double)k + " ns/q/r");
 		if (k == 1) {
-			if (S.statTqk1_1 == 0) {
+			if (round == 0) {
 				S.statTqk1_1 = t2-t1;
 				S.statTqk1_1E = (long) ((t2-t1)*1000*1000/(double)repeat);
 				S.statDqk1_1 = avgDist;
@@ -411,7 +413,7 @@ public class TestRunner {
 			S.statGcDiffK1 = JmxTools.getDiff();
 			S.statGcTimeK1 = JmxTools.getTime();
 		} else {
-			if (S.statTqk10_1 == 0) {
+			if (round == 0) {
 				S.statTqk10_1 = t2-t1;
 				S.statTqk10_1E = (long) ((t2-t1)*1000*1000/(double)repeat);
 				S.statDqk10_1 = avgDist;
@@ -698,7 +700,7 @@ public class TestRunner {
 		}
 	}
 	
-	private void update() {
+	private void update(int round) {
 		log(time() + "updates ...");
 		
 		int n = 0;
@@ -720,7 +722,7 @@ public class TestRunner {
 		
 		log("Elements updated: " + n + " -> " + n);
 		log("Update time: " + t + " ms -> " + t*1000*1000/(double)n + " ns/update");
-		if (S.statTu1 == 0) {
+		if (round == 0) {
 			S.statTu1 = t;
 			S.statTu1E = (long) (t*1000*1000/(double)n);
 			S.statNu1 = n;

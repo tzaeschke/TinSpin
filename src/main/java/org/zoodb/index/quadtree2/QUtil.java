@@ -88,12 +88,10 @@ public class QUtil {
 	public static boolean isRectEnclosed(double[] centerEnclosed, double radiusEnclosed,
 			double[] centerOuter, double radiusOuter) {
 		for (int d = 0; d < centerOuter.length; d++) {
-//			if ((centerOuter[d]+radiusOuter) / (centerEnclosed[d]+radiusEnclosed) < 0.9999999 || 
-//					(centerOuter[d]-radiusOuter) / (centerEnclosed[d]-radiusEnclosed) > 1.0000001) {
-//				return false;
-//			}
-			if ((centerOuter[d]+radiusOuter) / (centerEnclosed[d]+radiusEnclosed) < 1/EPS_MUL || 
-					(centerOuter[d]-radiusOuter) / (centerEnclosed[d]-radiusEnclosed) > EPS_MUL) {
+			double radOuter = radiusOuter * EPS_MUL * 1.0000001;
+			double radEncl = radiusEnclosed;
+			if ((centerOuter[d]+radOuter) < (centerEnclosed[d]+radEncl) || 
+					(centerOuter[d]-radOuter) > (centerEnclosed[d]-radEncl)) {
 				return false;
 			}
 		}
