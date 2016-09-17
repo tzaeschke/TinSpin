@@ -22,12 +22,14 @@ import ch.ethz.globis.tinspin.wrappers.PointPHC2_IPP;
 import ch.ethz.globis.tinspin.wrappers.PointPHCF;
 import ch.ethz.globis.tinspin.wrappers.PointPHC_IPP;
 import ch.ethz.globis.tinspin.wrappers.PointQuadZ;
+import ch.ethz.globis.tinspin.wrappers.PointRStarZ;
 import ch.ethz.globis.tinspin.wrappers.RectangleArray;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHC;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHC2;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHCF;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHC_IPP;
 import ch.ethz.globis.tinspin.wrappers.RectangleQuadZ;
+import ch.ethz.globis.tinspin.wrappers.RectangleRStarZ;
 
 public class TestStats implements Serializable, Cloneable {
 
@@ -62,6 +64,8 @@ public class TestStats implements Serializable, Cloneable {
 		CBZ(PointCritBitZ.class.getName(), ""),
 		/** Quadtree */
 		QKDZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
+		/** RStarTree */
+		RSZ(PointRStarZ.class.getName(), RectangleRStarZ.class.getName()),
 
 		//3rd party implementations
 		//=========================

@@ -31,7 +31,7 @@ public class TestRectangleWrappers extends AbstractWrapperTest {
 	
 	@BeforeClass
 	public static void beforeClass() {
-		String candidate = IDX.ARRAY.getCandidateClassNamePoint();
+		String candidate = IDX.ARRAY.getCandidateClassNameRectangle();
 		//init results
 		//use this as reference for all others
 		//if the naive implementation should be wrong, the others should fail as well
@@ -50,6 +50,7 @@ public class TestRectangleWrappers extends AbstractWrapperTest {
 		l.add(new Object[]{IDX.PHC2.getCandidateClassNameRectangle()});
 		l.add(new Object[]{IDX.PHCF.getCandidateClassNameRectangle()});
 		l.add(new Object[]{IDX.PHC_IPP.getCandidateClassNameRectangle()});
+		l.add(new Object[]{IDX.RSZ.getCandidateClassNameRectangle()});
 		//l.add(new Object[]{IDX.QKDZ.getCandidateClassNameRectangle()});
 		return l;
 	}
@@ -61,7 +62,7 @@ public class TestRectangleWrappers extends AbstractWrapperTest {
 		TestStats ts = createStats(candidate, TST.CUBE, N, dims, true, 1.0);
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
-
+		
 		check(expectedCube, ts, tr.getCandidate());
 	}
 	

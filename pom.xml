@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>ch.ethz.globis.phtree</groupId>
 			<artifactId>phtree</artifactId>
-			<version>0.3.2-SNAPSHOT</version>
+			<version>0.3.3-SNAPSHOT</version>
 		</dependency>
 		<dependency>
     		<groupId>org.zoodb</groupId>

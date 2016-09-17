@@ -96,7 +96,7 @@ public class RectangleArray extends Candidate {
 	public int query(double[] min, double[] max) {
 		int n = 0; 
 		for (int i = 0; i < N; i++) { 
-			if (leq(phc[i<<1], max) && geq(phc[(i<<1)+1], min)) {
+			if (leq(phc[i*2], max) && geq(phc[(i*2)+1], min)) {
 				n++;
 			}
 		}
@@ -200,9 +200,9 @@ public class RectangleArray extends Candidate {
 	
 	private boolean update(double[] lo1, double[] up1, double[] lo2, double[] up2) {
 		for (int i = 0; i < N; i++) { 
-			if (eq(phc[i<<1], lo1) && eq(phc[(i<<1)+1], up1)) {
-				System.arraycopy(lo2, 0, phc[i<<1], 0, dims);
-				System.arraycopy(up2, 0, phc[(i<<1)+1], 0, dims);
+			if (eq(phc[i*2], lo1) && eq(phc[(i*2)+1], up1)) {
+				System.arraycopy(lo2, 0, phc[i*2], 0, dims);
+				System.arraycopy(up2, 0, phc[(i*2)+1], 0, dims);
 				return true;
 			}
 		}
@@ -234,9 +234,9 @@ public class RectangleArray extends Candidate {
 	
 	private boolean delete(double[] lo, double[] up) {
 		for (int i = 0; i < N; i++) { 
-			if (phc[i<<1] != null && eq(phc[i<<1], lo) && eq(phc[(i<<1)+1], up)) {
-				phc[i<<1] = null;
-				phc[(i<<1)+1] = null;
+			if (phc[i*2] != null && eq(phc[i*2], lo) && eq(phc[(i*2)+1], up)) {
+				phc[i*2] = null;
+				phc[(i*2)+1] = null;
 				return true;
 			}
 		}

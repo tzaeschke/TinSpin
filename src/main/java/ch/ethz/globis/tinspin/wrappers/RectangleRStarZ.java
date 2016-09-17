@@ -7,33 +7,33 @@
 package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.Arrays;
-import java.util.List;
 
-import org.zoodb.index.quadtree.QREntryDist;
-import org.zoodb.index.quadtree.QuadTreeRKD;
-import org.zoodb.index.quadtree.QuadTreeKD.QStats;
-import org.zoodb.index.quadtree.QuadTreeRKD.QIterator;
+import org.zoodb.index.rtree.DistEntry;
+import org.zoodb.index.rtree.RTree;
+import org.zoodb.index.rtree.RTreeIterator;
+import org.zoodb.index.rtree.RTreeIteratorKnn;
 
 import ch.ethz.globis.tinspin.TestStats;
 
-public class RectangleQuadZ extends Candidate {
+public class RectangleRStarZ extends Candidate {
 	
-	private final QuadTreeRKD<Object> phc;
+	private final RTree<Object> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
 	private static final Object O = new Object();
-	private QIterator<Object> query = null;
+	private RTreeIterator<Object> query = null;
+	private RTreeIteratorKnn<Object> queryKnn = null;
 	
 	/**
 	 * Setup of a native PH tree
 	 * 
 	 * @param ts test stats
 	 */
-	public RectangleQuadZ(TestStats ts) {
+	public RectangleRStarZ(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
-		this.phc = QuadTreeRKD.create(dims);
+		this.phc = RTree.createRStar(dims);
 	}
 	
 	@Override
@@ -46,7 +46,7 @@ public class RectangleQuadZ extends Candidate {
 			pos += dims;
 			System.arraycopy(data, pos, hi, 0, dims);
 			pos += dims;
-			phc.put(lo, hi, O);
+			phc.insert(lo, hi, O);
 		}
 		this.data = data;
 	}
@@ -61,7 +61,7 @@ public class RectangleQuadZ extends Candidate {
 		int n = 0;
 		double[][] dA = (double[][]) qA; 
 		for (int i = 0; i < dA.length; i+=2) {
-			if (phc.containsExact(dA[i], dA[i+1])) {
+			if (phc.queryEntry(dA[i], dA[i+1]) != null) {
 				n++;
 			}
 		}
@@ -81,11 +81,11 @@ public class RectangleQuadZ extends Candidate {
 		for (int i = 0; i < N>>1; i++) {
 			System.arraycopy(data, i*dims*2, lo, 0, dims);
 			System.arraycopy(data, i*dims*2+dims, hi, 0, dims);
-			n += phc.removeExact(lo, hi) != null ? 1 : 0;
+			n += phc.remove(lo, hi) != null ? 1 : 0;
 			int i2 = N-i-1;
 			System.arraycopy(data, i2*dims*2, lo, 0, dims);
 			System.arraycopy(data, i2*dims*2+dims, hi, 0, dims);
-			n += phc.removeExact(lo, hi) != null? 1 : 0;
+			n += phc.remove(lo, hi) != null? 1 : 0;
 		}
 		return n;
 	}
@@ -94,7 +94,7 @@ public class RectangleQuadZ extends Candidate {
 	@Override
 	public int query(double[] min, double[] max) {
 		if (query == null) {
-			query = phc.query(min, max);
+			query = phc.queryOverlap(min, max);
 		} else {
 			query.reset(min, max);
 		}
@@ -108,11 +108,15 @@ public class RectangleQuadZ extends Candidate {
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
-		List<QREntryDist<Object>> result = phc.knnSearch(center, k);
+		if (queryKnn == null) {
+			queryKnn = phc.queryKNN(center, k, null);
+		} else {
+			queryKnn.reset(center, k, null);
+		}
 		double ret = 0;
-		for (int i = 0; i < k; i++) {
-			QREntryDist<Object> e = result.get(i);
-			ret += e.getDistance();
+		while (queryKnn.hasNext()) {
+			DistEntry<Object> e = queryKnn.next();
+			ret += e.dist();
 		}
 		return ret;
 	}
@@ -127,19 +131,16 @@ public class RectangleQuadZ extends Candidate {
 		data = null;
 	}
 
-	public QuadTreeRKD<Object> getNative() {
+	public RTree<Object> getNative() {
 		return phc;
 	}
 
 	@Override
 	public void getStats(TestStats S) {
-		QStats qs = phc.getStats();
-		S.statNnodes = qs.getNodeCount(); 
-		S.statNpostlen = qs.getMaxDepth();
+		S.statNnodes = phc.getNodeCount(); 
+		S.statNpostlen = phc.getDepth();
 	}
 	
-
-
 	@Override
 	public int update(double[][] updateTable) {
 		int n = 0;
