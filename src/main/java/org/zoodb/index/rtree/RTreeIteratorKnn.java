@@ -99,7 +99,7 @@ public class RTreeIteratorKnn<T> implements Iterator<DistEntry<T>> {
 		if (dist != null) {
 			this.dist = dist;
 		}
-		if (!(dist instanceof DistanceFunction.EdgeDistance)) {
+		if (!(this.dist instanceof DistanceFunction.EdgeDistance)) {
 			System.err.println("This distance iterator only works for EDGE distance");
 		}
 		this.k = k;
