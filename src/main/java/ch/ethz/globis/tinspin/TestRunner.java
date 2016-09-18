@@ -38,7 +38,7 @@ public class TestRunner {
 
 	private final TestStats S;
 	
-	private final Random R;
+	private Random R;
 		
 	public static boolean USE_NEW_QUERIES = true;
 	
@@ -62,7 +62,7 @@ public class TestRunner {
 		final int DIM = 3;
 		final int N = 1*10*1000;
 						
-		TestStats s0 = new TestStats(TST.CUBE, IDX.ARRAY, N, DIM, true, 1.0);
+		TestStats s0 = new TestStats(TST.CUBE, IDX.RSZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.ARRAY, N, DIM, false, 1.0);
@@ -134,58 +134,58 @@ public class TestRunner {
 	}
 	
 	public TestStats run() {
-
 		JmxTools.startUp();
 
+		//load
+		resetR();
 		load(S);
 		
-//		if (true) {
-//			TestDraw.draw(data, DIM);
-//			//return S;
-//		}
-				
-//		if (true) return S;
-		
-//		commitDB();
-//		reportDB();
-		
+		//window queries
+		resetR();
 		repeatQuery(S.cfgWindowQueryRepeat, 0);
 		repeatQuery(S.cfgWindowQueryRepeat, 1);
 		S.assortedInfo += " WINDOW_RESULTS=" + S.cfgWindowQuerySize;
 		
-		//perform point queries.
+		//point queries.
 		if (tree.supportsPointQuery()) {
+			resetR();
 			repeatPointQuery(S.cfgPointQueryRepeat, 0);
 			repeatPointQuery(S.cfgPointQueryRepeat, 1);
 		}
-		
+
+		//kNN queries
 		if (tree.supportsKNN()) {
 			int repeat = getKnnRepeat(S.cfgNDims);
 			S.assortedInfo += " KNN_REPEAT=" + repeat;
+			resetR();
 			repeatKnnQuery(repeat, 0, 1);
 			repeatKnnQuery(repeat, 1, 1);
 			repeatKnnQuery(repeat, 0, 10);
 			repeatKnnQuery(repeat, 1, 10);
 		}
 		
+		//update
 		if (tree.supportsUpdate()) {
+			resetR();
 			update(0);
 			update(1);
 		} else {
 			System.err.println("WARNING: update() disabled");
 		}
 		
+		//unload
 		unload();
 
 		if (tree != null) {
 			tree.release();
 		}
 		
-//		reportDB();
-//		closeDB();
-		
 		return S;
 	} 
+	
+	private void resetR() {
+		R.setSeed(S.seed);
+	}
 	
 	private int getKnnRepeat(int dims) {
 		if (S.TEST == TestStats.TST.CLUSTER) {

@@ -1,0 +1,6 @@
+2016-09-18
+==========
+- (TZ) Refactored random number generation to be reinitialized for each task.
+
+
+ 

@@ -105,7 +105,7 @@ public class RectangleArray extends Candidate {
 
 	@Override
 	public double knnQuery(int k, double[] center) {
-		ArrayList<KnnEntry> ret = new ArrayList<>(k);
+ 		ArrayList<KnnEntry> ret = new ArrayList<>(k);
 		for (int i = 0; i < phc.length/2; i++) {
 			double[] min = phc[i*2];
 			double[] max = phc[i*2+1];

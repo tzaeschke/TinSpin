@@ -70,7 +70,7 @@ public class RectangleRStarZ extends Candidate {
 
 	@Override
 	public boolean supportsPointQuery() {
-		return false;
+		return true;
 	}
 	
 	@Override
