@@ -37,11 +37,11 @@ import java.util.Arrays;
  */
 public class RTree<T> {
 
-	static final int NODE_MAX_DIR = 56;//56; //PAPER: M=56 for 1KB pages
-	static final int NODE_MAX_DATA = 50;//50; //PAPER: M=50 for 1KB pages
+	static final int NODE_MAX_DIR = 10;//56; //PAPER: M=56 for 1KB pages
+	static final int NODE_MAX_DATA = 10;//50; //PAPER: M=50 for 1KB pages
 	//PAPER: m = 20% of M
-	static final int NODE_MIN_DIR = 11;//11;  //2 <= min <= max/2
-	static final int NODE_MIN_DATA = 10;//10;  //2 <= min <= max/2
+	static final int NODE_MIN_DIR = 2;//11;  //2 <= min <= max/2
+	static final int NODE_MIN_DATA = 2;//10;  //2 <= min <= max/2
 	public static final boolean DEBUG = false;
 	
 	private final int dims;

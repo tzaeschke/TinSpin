@@ -68,7 +68,7 @@ public class TestManager {
 
 ////			//testSeriesR(TST.CUBE, IDX.PHC, 3, 0.01, 1, 2, 5, 10, 25);
 ////			testSeriesR(TST.CUBE, IDX.PHC, 3, 0.001, 1, 2, 5, 10, 25);
-			testSeriesR(TST.CUBE, IDX.PHC, 3, 0.00001, 1, 2, 5, 10, 25);
+//			testSeriesR(TST.CUBE, IDX.RSZ, 3, 0.00001, 1, 2, 5, 10, 25);
 ////			testSeriesR(TST.CUBE, IDX.PHC2, 3, 0.001, 1, 2, 5, 10, 25);
 			testSeriesR(TST.CUBE, IDX.RSZ, 3, 0.00001, 1, 2, 5, 10, 25);
 			testSeriesR(TST.CUBE, IDX.PHC2, 3, 0.00001, 1, 2, 5, 10, 25);
