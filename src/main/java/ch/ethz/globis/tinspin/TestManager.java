@@ -25,25 +25,28 @@ public class TestManager {
 		TestProcessLauncher.launchRmiRegistry();
 		long t1 = System.currentTimeMillis();
 		try {
-			testSeries(TST.CUBE, IDX.CBF, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CUBE, IDX.CBZ, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CUBE, IDX.PHC_IPP, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CUBE, IDX.RSS, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CUBE, IDX.RSZ, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			//testSeries(TST.CUBE, IDX.RSL, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CUBE, IDX.QKDZ, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CUBE, IDX.XTR, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
+			double[] sizesData = {0.01, 0.05, 0.1, 0.5, 1, 5, 10};
+			testSeries(TST.CUBE, IDX.CBF, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.CBZ, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.PHC_IPP, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.RSS, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.RSZ, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.KD_LEVY, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.KD_SAVA, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.QKDZ, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.XTR, 3, 1.0, sizesData);
 
-			testSeries(TST.CLUSTER, IDX.CBF, 3, 3.4, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CLUSTER, IDX.CBZ, 3, 3.4, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CLUSTER, IDX.PHC, 3, 3.4, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CLUSTER, IDX.PHC_IPP, 3, 3.4, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CLUSTER, IDX.RSS, 3, 3.4, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CLUSTER, IDX.RSZ, 3, 3.4, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			//testSeries(TST.CLUSTER, IDX.RSL, 3, 3.4, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CLUSTER, IDX.QKDZ, 3, 3.4, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
-			testSeries(TST.CLUSTER, IDX.XTR, 3, 3.4, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1, 5, 10);
+			testSeries(TST.CLUSTER, IDX.CBF, 3, 3.4, sizesData);
+			testSeries(TST.CLUSTER, IDX.CBZ, 3, 3.4, sizesData);
+			testSeries(TST.CLUSTER, IDX.PHC, 3, 3.4, sizesData);
+			testSeries(TST.CLUSTER, IDX.PHC_IPP, 3, 3.4, sizesData);
+			testSeries(TST.CLUSTER, IDX.RSS, 3, 3.4, sizesData);
+			testSeries(TST.CLUSTER, IDX.RSZ, 3, 3.4, sizesData);
+			testSeries(TST.CLUSTER, IDX.KD_LEVY, 3, 3.4, sizesData);
+			testSeries(TST.CLUSTER, IDX.KD_SAVA, 3, 3.4, sizesData);
+			testSeries(TST.CLUSTER, IDX.QKDZ, 3, 3.4, sizesData);
+			testSeries(TST.CLUSTER, IDX.XTR, 3, 3.4, sizesData);
 
 //			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, 1, 2, 5, 10);
 //			testSeries(TST.CUBE, IDX.PHC_IPP, 3, 1.0, 1, 2, 5, 10);
@@ -57,13 +60,19 @@ public class TestManager {
 			suiteDims(TST.CUBE, IDX.RSS, 1, 1.0);
 			suiteDims(TST.CUBE, IDX.RSZ, 1, 1.0);
 			suiteDims(TST.CUBE, IDX.QKDZ, 1, 1.0);
-			suiteDims(TST.CUBE, IDX.CBF, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.KD_LEVY, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.KD_SAVA, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.CBZ, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.XTR, 1, 1.0);
 			suiteDims(TST.CLUSTER, IDX.PHC, 1, 3.4);
 			suiteDims(TST.CLUSTER, IDX.PHC_IPP, 1, 3.4);
 			suiteDims(TST.CLUSTER, IDX.RSS, 1, 3.4);
 			suiteDims(TST.CLUSTER, IDX.RSZ, 1, 3.4);
 			suiteDims(TST.CLUSTER, IDX.QKDZ, 1, 3.4);
-			suiteDims(TST.CLUSTER, IDX.CBF, 1, 3.4);
+			suiteDims(TST.CLUSTER, IDX.KD_LEVY, 1, 3.4);
+			suiteDims(TST.CLUSTER, IDX.KD_SAVA, 1, 3.4);
+			suiteDims(TST.CLUSTER, IDX.CBZ, 1, 3.4);
+			suiteDims(TST.CLUSTER, IDX.XTR, 1, 3.4);
 			
 
 			testSeriesWQSR(TST.CUBE, IDX.PHC, 3, 0.00001, 1, 1, 10, 100, 1000, 10000);
@@ -89,10 +98,10 @@ public class TestManager {
 			testSeriesR(TST.CUBE, IDX.PHC_IPP, 3, 1.0, 1, 2, 5, 10, 25);
 			testSeriesR(TST.CUBE, IDX.RSZ, 3, 1.0, 1, 2, 5, 10, 25);
 			testSeriesR(TST.CUBE, IDX.RSS, 3, 1.0, 1, 2, 5, 10, 25);
-			testSeriesR(TST.CUBE, IDX.RSL, 3, 1.0, 1, 2, 5, 10, 25);
+			//testSeriesR(TST.CUBE, IDX.RSL, 3, 1.0, 1, 2, 5, 10, 25);
 			testSeriesR(TST.CUBE, IDX.RSS, 3, 1.0, 1, 2, 5, 10, 25);
-			testSeriesR(TST.CUBE, IDX.XTR, 3, 1.0, 1, 2, 5, 10, 25);
 			testSeriesR(TST.CUBE, IDX.QKDZ, 3, 1.0, 1, 2, 5, 10, 25);
+			testSeriesR(TST.CUBE, IDX.XTR, 3, 1.0, 1, 2, 5, 10, 25);
 
 			suiteDimsR(TST.CUBE, IDX.PHC, 1, 1.0);
 			suiteDimsR(TST.CUBE, IDX.PHC_IPP, 1, 1.0);
