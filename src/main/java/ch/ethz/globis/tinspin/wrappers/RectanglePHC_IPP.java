@@ -123,8 +123,8 @@ public class RectanglePHC_IPP extends Candidate {
 		return n;
 	}
 	
-	private static final int MAX = Integer.MAX_VALUE;
-	private static final PhMapperKey<double[]> MAPPER = PhMapperKey.DOUBLE_ARRAY();
+//	private static final int MAX = Integer.MAX_VALUE;
+//	private static final PhMapperKey<double[]> MAPPER = PhMapperKey.DOUBLE_ARRAY();
 	
 	private PhQuerySF<Object> it = null;
 	

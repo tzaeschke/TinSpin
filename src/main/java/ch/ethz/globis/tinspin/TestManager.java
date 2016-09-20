@@ -25,6 +25,26 @@ public class TestManager {
 		TestProcessLauncher.launchRmiRegistry();
 		long t1 = System.currentTimeMillis();
 		try {
+			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0);
+			testSeries(TST.CUBE, IDX.PHC_IPP, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0);
+			testSeries(TST.CUBE, IDX.RSS, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0);
+			testSeries(TST.CUBE, IDX.RSZ, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0);
+			testSeries(TST.CUBE, IDX.RSL, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0);
+			testSeries(TST.CUBE, IDX.QKDZ, 3, 1.0, 0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0);
+
+			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, 1, 2, 5, 10);
+			testSeries(TST.CUBE, IDX.PHC_IPP, 3, 1.0, 1, 2, 5, 10);
+			testSeries(TST.CUBE, IDX.RSS, 3, 1.0, 1, 2, 5, 10);
+			testSeries(TST.CUBE, IDX.RSZ, 3, 1.0, 1, 2, 5, 10);
+			testSeries(TST.CUBE, IDX.RSL, 3, 1.0, 1, 2, 5, 10);
+			testSeries(TST.CUBE, IDX.QKDZ, 3, 1.0, 1, 2, 5, 10);
+
+			suiteDims(TST.CUBE, IDX.PHC, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.RSS, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.RSZ, 1, 1.0);
+			suiteDims(TST.CLUSTER, IDX.PHC, 1, 3.4);
+			suiteDims(TST.CLUSTER, IDX.RSS, 1, 3.4);
+			suiteDims(TST.CLUSTER, IDX.RSZ, 1, 3.4);
 //			suiteDims(TST.CLUSTER, IDX.RSL, 1, 3.4);
 //			suiteDims(TST.CLUSTER, IDX.RSL, 10, 3.4);
 //			suiteDims(TST.CLUSTER, IDX.PHC, 1, 3.4);
@@ -201,11 +221,11 @@ public class TestManager {
 		}
 		test(r, test, idx, 8, n, p1);
 		test(r, test, idx, 10, n, p1);
-		test(r, test, idx, 12, n, p1);
+//		test(r, test, idx, 12, n, p1);
 //		test(r, test, idx, 14, n, p1);
-		test(r, test, idx, 15, n, p1);
+//		test(r, test, idx, 15, n, p1);
 
-		test(r, test, idx, 20, n, p1);
+//		test(r, test, idx, 20, n, p1);
 //		test(r, test, idx, 25, n, p1);
 //		test(r, test, idx, 30, n, p1);
 //		test(r, test, idx, 40, n, p1);

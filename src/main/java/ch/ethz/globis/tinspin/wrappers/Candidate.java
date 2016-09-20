@@ -197,9 +197,14 @@ public abstract class Candidate {
 
 	public void getStats(TestStats S) {
 		//Nothing to do for trees other than PhTrees
+		assert(S != null);
 	}
 
-	public boolean supportsUpdate() {
+	public boolean supportsWindowQuery() {
+		return true;
+	}
+	
+	public boolean supportsPointQuery() {
 		return true;
 	}
 
@@ -207,11 +212,11 @@ public abstract class Candidate {
 		return false;
 	}
 	
-	public boolean supportsWindowQuery() {
+	public boolean supportsUpdate() {
 		return true;
 	}
-	
-	public boolean supportsPointQuery() {
+
+	public boolean supportsUnload() {
 		return true;
 	}
 

@@ -35,18 +35,14 @@ import ch.ethz.globis.tinspin.wrappers.PointPHCCTree;
 public class TestRunner {
 	
 	private static final SimpleDateFormat FT = new SimpleDateFormat ("yyyy-MM-dd' 'HH:mm:ss");
-
-	private final TestStats S;
-	
-	private Random R;
-		
-	public static boolean USE_NEW_QUERIES = true;
-	
-	private double[] data;
-	private Candidate tree;
-	
 	private static final boolean DEBUG = PhTreeHelper.DEBUG;
 	
+	public static boolean USE_NEW_QUERIES = true;
+
+	private final TestStats S;
+	private Random R;
+	private double[] data;
+	private Candidate tree;
 	private AbstractTest test = null;
 
 	
@@ -60,12 +56,12 @@ public class TestRunner {
 		}
 		
 		final int DIM = 3;
-		final int N = 1*10*1000;
+		final int N = 1*1*1000;
 						
-		TestStats s0 = new TestStats(TST.CUBE, IDX.RSS, N, DIM, true, 1.0);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.RSS, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
-		//TestStats s0 = new TestStats(TST.CUBE, IDX.ARRAY, N, DIM, false, 1.0);
+		TestStats s0 = new TestStats(TST.CUBE, IDX.RSL, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
 		s0.cfgWindowQueryRepeat = 100;
 		s0.cfgPointQueryRepeat = 1000;
@@ -141,16 +137,22 @@ public class TestRunner {
 		load(S);
 		
 		//window queries
-		resetR();
-		repeatQuery(S.cfgWindowQueryRepeat, 0);
-		repeatQuery(S.cfgWindowQueryRepeat, 1);
-		S.assortedInfo += " WINDOW_RESULTS=" + S.cfgWindowQuerySize;
+		if (tree.supportsWindowQuery()) {
+			resetR();
+			repeatQuery(S.cfgWindowQueryRepeat, 0);
+			repeatQuery(S.cfgWindowQueryRepeat, 1);
+			S.assortedInfo += " WINDOW_RESULTS=" + S.cfgWindowQuerySize;
+		} else {
+			System.err.println("WARNING: window queries disabled");
+		}
 		
 		//point queries.
 		if (tree.supportsPointQuery()) {
 			resetR();
 			repeatPointQuery(S.cfgPointQueryRepeat, 0);
 			repeatPointQuery(S.cfgPointQueryRepeat, 1);
+		} else {
+			System.err.println("WARNING: point queries disabled");
 		}
 
 		//kNN queries
@@ -162,6 +164,8 @@ public class TestRunner {
 			repeatKnnQuery(repeat, 1, 1);
 			repeatKnnQuery(repeat, 0, 10);
 			repeatKnnQuery(repeat, 1, 10);
+		} else {
+			System.err.println("WARNING: kNN queries disabled");
 		}
 		
 		//update
@@ -174,7 +178,11 @@ public class TestRunner {
 		}
 		
 		//unload
-		unload();
+		if (tree.supportsUnload()) {
+			unload();
+		} else {
+			System.err.println("WARNING: unload() disabled");
+		}
 
 		if (tree != null) {
 			tree.release();
