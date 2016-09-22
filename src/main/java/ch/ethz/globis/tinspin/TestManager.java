@@ -25,6 +25,9 @@ public class TestManager {
 		TestProcessLauncher.launchRmiRegistry();
 		long t1 = System.currentTimeMillis();
 		try {
+			suiteDims(TST.CUBE, IDX.PHC, 0.1, 1.0);
+			suiteDims(TST.CUBE, IDX.RSZ, 0.1, 1.0);
+
 			double[] sizesData = {0.01, 0.05, 0.1, 0.5, 1, 5, 10};
 			testSeries(TST.CUBE, IDX.CBF, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.CBZ, 3, 1.0, sizesData);
@@ -229,8 +232,8 @@ public class TestManager {
 		}
 		test(r, test, idx, 8, n, p1);
 		test(r, test, idx, 10, n, p1);
-//		test(r, test, idx, 12, n, p1);
-//		test(r, test, idx, 14, n, p1);
+		test(r, test, idx, 12, n, p1);
+		test(r, test, idx, 14, n, p1);
 //		test(r, test, idx, 15, n, p1);
 
 //		test(r, test, idx, 20, n, p1);
@@ -542,7 +545,7 @@ public class TestManager {
 
 	private static TestStats average(int nStats) {
 		int n = stats.size();
-		List<TestStats> toAggregate = stats.subList(n-nStats, n-1); 
+		List<TestStats> toAggregate = stats.subList(n-nStats, n); 
 		TestStats avg = TestStats.aggregate(toAggregate);
 		return avg;
 	}
