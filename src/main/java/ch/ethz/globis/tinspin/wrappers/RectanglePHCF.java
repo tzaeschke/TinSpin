@@ -8,7 +8,6 @@ package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.List;
 
-import ch.ethz.globis.phtree.PhTree;
 import ch.ethz.globis.phtree.PhTreeSolidF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhEntryDistSF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhEntrySF;
@@ -18,6 +17,9 @@ import ch.ethz.globis.phtree.pre.PreProcessorRangeF;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.tinspin.TestStats;
 
+/**
+ * Rectangle PH-Tree that uses the PH-Tree solid/rectangle-float API. 
+ */
 public class RectanglePHCF extends Candidate {
 	
 	private final PhTreeSolidF<Object> phc;
@@ -148,8 +150,8 @@ public class RectanglePHCF extends Candidate {
 		data = null;
 	}
 
-	public PhTree<Object> getNative() {
-		return phc.getInternalTree();
+	public PhTreeSolidF<Object> getNative() {
+		return phc;
 	}
 
 	@Override

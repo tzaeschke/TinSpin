@@ -22,26 +22,23 @@ public class TestRectangleCube extends TestRectangle {
 		super(R, S);
 	}
 	
-	/**
-	 * param1 designates the default size of data rectangles.
-	 */
 	@Override
 	public double[] generate() {
-		double RECT_LEN = S.cfgRectLen;
-		log("Running: TestCube (" + RECT_LEN + ")");
+		double rectLen = S.cfgRectLen;
+		log("Running: TestCube (" + rectLen + ")");
 		
 		int dims = S.cfgNDims;
 		int nEntries = S.cfgNEntries;
 		double[] data = new double[nEntries*dims*2];
 		
 		//query create cube
-		double minRange = S.cfgDataLen-MIN_X-RECT_LEN;
+		double minRange = S.cfgDataLen-MIN_X-rectLen;
 		int posMin = 0;
 		int posMax = dims;
 		for (int i = 0; i < nEntries; i++) {
 			for (int d = 0; d < dims; d++) {
 				data[posMin++] = MIN_X+R.nextDouble()*minRange;
-				data[posMax++] = data[posMin-1]+R.nextDouble()*RECT_LEN;
+				data[posMax++] = data[posMin-1]+R.nextDouble()*rectLen;
 			}
 			posMin += dims;
 			posMax += dims;
