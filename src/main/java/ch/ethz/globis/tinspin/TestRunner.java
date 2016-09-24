@@ -13,22 +13,16 @@ import java.util.Date;
 import java.util.Random;
 
 import ch.ethz.globis.phtree.PhTreeHelper;
-import ch.ethz.globis.phtree.PhTreeSolidF;
-import ch.ethz.globis.phtree.PhTreeSolidF.PhEntrySF;
-import ch.ethz.globis.phtree.PhTreeSolidF.PhIteratorSF;
-import ch.ethz.globis.phtree.PhTreeSolidF.PhQuerySF;
 import ch.ethz.globis.tinspin.TestStats.IDX;
 import ch.ethz.globis.tinspin.TestStats.TST;
 import ch.ethz.globis.tinspin.data.AbstractTest;
 import ch.ethz.globis.tinspin.data.TestPoint;
 import ch.ethz.globis.tinspin.data.TestRectangle;
 import ch.ethz.globis.tinspin.util.JmxTools;
-import ch.ethz.globis.tinspin.util.TestPerf;
 import ch.ethz.globis.tinspin.util.MemTools;
+import ch.ethz.globis.tinspin.util.TestPerf;
 import ch.ethz.globis.tinspin.wrappers.Candidate;
 import ch.ethz.globis.tinspin.wrappers.PointPHCCTree;
-import ch.ethz.globis.tinspin.wrappers.RectanglePHC;
-import ch.ethz.globis.tinspin.wrappers.RectanglePHCF;
 
 
 /**
@@ -61,7 +55,7 @@ public class TestRunner {
 			return;
 		}
 		
-		final int DIM = 6;
+		final int DIM = 1;
 		final int N = 1*1000*1000;
 						
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.RSS, N, DIM, true, 1.0);
@@ -73,137 +67,6 @@ public class TestRunner {
 		s0.cfgPointQueryRepeat = 1000;
 		s0.cfgUpdateSize = 1000;
 		
-		
-		//k=3
-		//s0.cfgRectLen = 0.1;
-		
-//		k=2 rectLen=0.001
-//				Checked elements: 1000000  vol=0.24996563419084167
-//				Overlapping elements: 998706  vol=0.060678532102246156
-//				Ratio: 0.1213737486328217  nSingle=499353
-//				Ratio: 0.030339266051123078  nSingle=499353
-
-//		k=2 rectLen=0.01
-//				Checked elements: 1000000  vol=24.996563419084815
-//				Overlapping elements: 101303278  vol=616.2546254633894
-//				Ratio: 12.326786989304308  nSingle=50651639
-//				Ratio: 308.1273127316947  nSingle=50651639
-
-//		k=3 rectLen=0.005
-//				Checked elements: 1000000  vol=0.015619269862661767
-//				Overlapping elements: 126254  vol=2.4686348950812934E-4
-//				Ratio: 0.007902529749430296  nSingle=63127
-//				Ratio: 1.2343174475406467E-4  nSingle=63127
-		
-//		k=3 rectLen=0.01
-//				Checked elements: 1000000  vol=0.12495415890129391
-//				Overlapping elements: 1021230  vol=0.015910135024388535
-//				Ratio: 0.06366388747795326  nSingle=510615
-//				Ratio: 0.007955067512194268  nSingle=510615
-	
-//		k=3 rectLen=0.02
-//				Checked elements: 1000000  vol=0.9996332712103548
-//				Overlapping elements: 8277075  vol=1.0390328732444825
-//				Ratio: 0.5197070281516454  nSingle=4138537
-//				Ratio: 0.5195164366222412  nSingle=4138537
-				
-//		k=3 rectLen=0.03
-//				Checked elements: 1000000  vol=3.373762290334961
-//				Overlapping elements: 28525900  vol=12.098961839019985
-//				Ratio: 1.7930963710277807  nSingle=14262950
-//				Ratio: 6.049480919509993  nSingle=14262950
-		
-//		k=4 rectLen=0.01
-//				Checked elements: 1000000  vol=6.250126417987038E-4
-//				Overlapping elements: 10198  vol=4.0674313804350706E-7
-//				Ratio: 3.253879288528901E-4  nSingle=5099
-//				Ratio: 2.0337156902175353E-7  nSingle=5099
-				
-//		k=4 rectLen=0.03
-//				Checked elements: 1000000  vol=0.05062602398569457
-//				Overlapping elements: 875057  vol=0.002773436009875891
-//				Ratio: 0.02739140654873058  nSingle=437528
-//				Ratio: 0.0013867180049379456  nSingle=437528
-				
-//		k=4 rectLen=0.1
-//				Checked elements: 1000000  vol=6.250126417987243
-//				Overlapping elements: 130904176  vol=52.69602705325548
-//				Ratio: 4.2155968958965016  nSingle=65452088
-//				Ratio: 26.34801352662774  nSingle=65452088
-
-//		k=4 rectLen=0.02
-//				Checked elements: 1000000  vol=0.010000202268779278
-//				Overlapping elements: 168058  vol=1.0460576498183071E-4
-//				Ratio: 0.005230182458829401  nSingle=84029
-//				Ratio: 5.2302882490915354E-5  nSingle=84029
-
-//		k=5 rectLen=0.01
-//				Checked elements: 1000000  vol=3.120910995674637E-6
-//				Overlapping elements: 92  vol=7.791567558111558E-12
-//				Ratio: 1.2482841658910046E-6  nSingle=46
-//				Ratio: 3.895783779055779E-12  nSingle=46
-		
-//		k=5 rectLen=0.05
-//				Checked elements: 1000000  vol=0.009752846861483424
-//				Overlapping elements: 370146  vol=1.1493905732292053E-4
-//				Ratio: 0.005892590079356486  nSingle=185073
-//				Ratio: 5.7469528661460266E-5  nSingle=185073
-		
-//		k=5 rectLen=0.06
-//				Checked elements: 1000000  vol=0.02426820390236688
-//				Overlapping elements: 951756  vol=7.397387678770777E-4
-//				Ratio: 0.01524090474212908  nSingle=475878
-//				Ratio: 3.6986938393853883E-4  nSingle=475878
-				
-//		k=6 rectLen=0.03
-//				Checked elements: 1000000  vol=1.139762075593237E-5
-//				Overlapping elements: 854  vol=1.4590064461928473E-10
-//				Ratio: 6.400486897379202E-6  nSingle=427
-//				Ratio: 7.295032230964237E-11  nSingle=427
-
-//		k=6 rectLen=0.04
-//				Checked elements: 1000000  vol=6.403930674389243E-5
-//				Overlapping elements: 4924  vol=4.731028607269581E-9
-//				Ratio: 3.693847456992334E-5  nSingle=2462
-//				Ratio: 2.3655143036347906E-9  nSingle=2462
-
-//		k=6 rectLen=0.05
-//				Checked elements: 1000000  vol=2.442905683284552E-4
-//				Overlapping elements: 19372  vol=7.305864743557814E-8
-//				Ratio: 1.4953227203055346E-4  nSingle=9686
-//				Ratio: 3.652932371778907E-8  nSingle=9686
-				
-//		k=6 rectLen=0.08
-//				Checked elements: 1000000  vol=0.004098515631609189
-//				Overlapping elements: 363616  vol=2.407650703707947E-5
-//				Ratio: 0.002937222790050257  nSingle=581808
-//				Ratio: 1.2038253518539734E-5  nSingle=581808
-	
-//		k=6 rectLen=0.1
-//				Checked elements: 1000000  vol=0.015634596373020965
-//				Overlapping elements: 1500753  vol=3.8434924134137796E-4
-//				Ratio: 0.012291626600754798  nSingle=750376
-//				Ratio: 1.9217462067068898E-4  nSingle=750376
-				
-//		k=8 rectLen=0.1
-//				Checked elements: 1000000  vol=3.91238964304921E-5
-//				Overlapping elements: 17086  vol=2.5197288850638793E-9
-//				Ratio: 3.220191641111788E-5  nSingle=8543
-//				Ratio: 1.2598644425319396E-9  nSingle=8543
-		
-//		k=8 rectLen=0.2
-//				Checked elements: 1000000  vol=0.010015717486206208
-//				Overlapping elements: 7604179  vol=3.443461045122709E-4
-//				Ratio: 0.0171902864166501  nSingle=3802089
-//				Ratio: 1.7217305225613545E-4  nSingle=3802089
-		
-//		k=10 rectLen=0.1
-//				Checked elements: 1000000  vol=9.787375930845904E-8
-//				Overlapping elements: 202  vol=2.3017500990954988E-14
-//				Ratio: 1.1758770253430752E-7  nSingle=101
-//				Ratio: 1.1508750495477494E-14  nSingle=101
-		
-		System.err.println("KNN count = " + s0.cfgKnnQueryBaseRepeat); //TODO
 		s0.setSeed(0);
 		TestRunner test = new TestRunner(s0);
 		TestStats s = test.run();
@@ -272,9 +135,6 @@ public class TestRunner {
 		//load
 		resetR();
 		load(S);
-		
-		//calcOverlap();
-		//if (true) System.exit(0);
 		
 		//window queries
 		if (tree.supportsWindowQuery()) {
@@ -596,6 +456,7 @@ public class TestRunner {
 		return qA;
 	}
 
+	@SuppressWarnings("unused")
 	private static class Hist implements Comparable<Hist> {
 		long t1, t2, X1, X2, X2f, X3, X3f;
 		long X4, X4pa, X4pb, X4pc, X4sa, X4sb, X4sc;
@@ -636,6 +497,10 @@ public class TestRunner {
 					" X3=" + X3 + " X3f=" + X3f +
 					" X5=" + X5 + " X5a/b=" + X5a + "/" + X5b;
 		}
+		/**
+		 * @param histList histograms
+		 * @return summary in String form
+		 */
 		public static String summary(ArrayList<Hist> histList) {
 			Hist sum = new Hist();
 			for (Hist h: histList) {
@@ -911,64 +776,4 @@ public class TestRunner {
 	public Candidate getCandidate() {
 		return tree;
 	}
-	
-	private void calcOverlap() {
-		PhTreeSolidF<Object> pht = ((RectanglePHCF)tree).getNative();
-		PhIteratorSF<Object> it = pht.iterator();
-		double[] lower = new double[S.cfgNDims];
-		double[] upper = new double[S.cfgNDims];
-		PhQuerySF<Object> q = pht.queryIntersect(lower, upper);
-		int nChecked = 0;
-		int nOverlap = 0;
-		double dOverlap = 0;
-		double dVolume = 0;
-		while (it.hasNext()) {
-			nChecked++;
-			PhEntrySF<Object> e = it.nextEntryReuse();
-			q.reset(e.lower(), e.upper());
-			double myVolume = calcVolume(e);
-			dVolume += myVolume;
-			while (q.hasNext()) {
-				PhEntrySF<Object> e2 = q.nextEntryReuse();
-				double myOverlap = calcOverlap(e, e2);
-				//check if we have the original box here
-				if (myOverlap < myVolume) {
-					nOverlap++;
-					dOverlap += myOverlap;
-				}
-			}
-		}
-		System.out.println("k=" + S.cfgNDims + " rectLen=" + S.cfgRectLen);
-		System.out.println("Checked elements: " + nChecked + "  vol=" + dVolume);
-		System.out.println("Overlapping elements: " + nOverlap + "  vol=" + dOverlap);
-		System.out.println("Ratio: " + (dOverlap/2/dVolume) + "  nSingle=" + nOverlap/2);
-		System.out.println("Ratio: " + (dOverlap/2/1) + "  nSingle=" + nOverlap/2);
-	}
-	
-	private static double calcOverlap(PhEntrySF<?> e1, PhEntrySF<?> e2) {
-		double[] min1 = e1.lower();
-		double[] max1 = e1.upper();
-		double[] min2 = e2.lower();
-		double[] max2 = e2.upper();
-		double area = 1;
-		for (int i = 0; i < e1.lower().length; i++) {
-			double d = Math.min(max1[i], max2[i]) - Math.max(min1[i], min2[i]);
-			if (d <= 0) {
-				return 0;
-			}
-			area *= d;
-		}
-		return area;
-	}
-	
-	public static double calcVolume(PhEntrySF<?> e) {
-		double[] min = e.lower();
-		double[] max = e.upper();
-		double v = 1;
-		for (int d = 0; d < min.length; d++) {
-			v *= max[d] - min[d];
-		}
-		return v;
-	}
-
 }

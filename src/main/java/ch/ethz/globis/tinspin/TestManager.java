@@ -28,7 +28,7 @@ public class TestManager {
 			suiteDims(TST.CUBE, IDX.PHC, 0.1, 1.0);
 			suiteDims(TST.CUBE, IDX.RSZ, 0.1, 1.0);
 
-			double[] sizesData = {0.01, 0.05, 0.1, 0.5, 1, 5, 10};
+			double[] sizesData = {0.1, 0.5, 1, 5, 10};
 			testSeries(TST.CUBE, IDX.CBF, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.CBZ, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, sizesData);
