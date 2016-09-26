@@ -23,6 +23,7 @@ import ch.ethz.globis.tinspin.wrappers.PointPHCF;
 import ch.ethz.globis.tinspin.wrappers.PointPHC_IPP;
 import ch.ethz.globis.tinspin.wrappers.PointQuadZ;
 import ch.ethz.globis.tinspin.wrappers.PointRStarZ;
+import ch.ethz.globis.tinspin.wrappers.PointSTRZ;
 import ch.ethz.globis.tinspin.wrappers.RectangleArray;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHC;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHC2;
@@ -30,6 +31,7 @@ import ch.ethz.globis.tinspin.wrappers.RectanglePHCF;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHC_IPP;
 import ch.ethz.globis.tinspin.wrappers.RectangleQuadZ;
 import ch.ethz.globis.tinspin.wrappers.RectangleRStarZ;
+import ch.ethz.globis.tinspin.wrappers.RectangleSTRZ;
 
 public class TestStats implements Serializable, Cloneable {
 
@@ -60,12 +62,14 @@ public class TestStats implements Serializable, Cloneable {
 		PHC_IPP(PointPHC_IPP.class.getName(), RectanglePHC_IPP.class.getName()),
 		/** PH-Tree with Integer pre-processor. */
 		PHC2_IPP(PointPHC2_IPP.class.getName(), null),
-		/** CritBit */
+		/** CritBit from ZooDB */
 		CBZ(PointCritBitZ.class.getName(), ""),
-		/** Quadtree */
+		/** Quadtree from ZooDB */
 		QKDZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
-		/** RStarTree */
+		/** RStarTree from ZooDB */
 		RSZ(PointRStarZ.class.getName(), RectangleRStarZ.class.getName()),
+		/** STR-loaded RStarTree from ZooDB */
+		STRZ(PointSTRZ.class.getName(), RectangleSTRZ.class.getName()),
 
 		//3rd party implementations
 		//=========================
@@ -77,6 +81,8 @@ public class TestStats implements Serializable, Cloneable {
 		/** R*Tree by Seeger */
 		RSS("ch.ethz.globis.tinspin.wrappers.PointRStarSeeger", 
 				"ch.ethz.globis.tinspin.wrappers.RectangleRStarSeeger"),
+		RSS2("ch.ethz.globis.tinspin.wrappers.PointRStarSeeger2", 
+				"ch.ethz.globis.tinspin.wrappers.RectangleRStarSeeger2"),
 		CBR("ch.ethz.globis.tinspin.wrappers.PointCBR", null),
 		CBF("ch.ethz.globis.tinspin.wrappers.PointCBF", null),
 		XTR("ch.ethz.globis.tinspin.wrappers.PointXtree", 

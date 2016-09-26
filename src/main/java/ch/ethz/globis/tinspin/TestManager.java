@@ -25,6 +25,10 @@ public class TestManager {
 		TestProcessLauncher.launchRmiRegistry();
 		long t1 = System.currentTimeMillis();
 		try {
+//			suiteDims(TST.CUBE, IDX.RSS2, 0.1, 1.0);
+//			suiteDims(TST.CUBE, IDX.RSS, 0.1, 1.0);
+
+			
 			suiteDims(TST.CUBE, IDX.PHC, 0.1, 1.0);
 			suiteDims(TST.CUBE, IDX.RSZ, 0.1, 1.0);
 
@@ -230,10 +234,10 @@ public class TestManager {
 		if (idx == IDX.RSS) {
 			return;
 		}
-		test(r, test, idx, 8, n, p1);
-		test(r, test, idx, 10, n, p1);
-		test(r, test, idx, 12, n, p1);
-		test(r, test, idx, 14, n, p1);
+//		test(r, test, idx, 8, n, p1);
+//		test(r, test, idx, 10, n, p1);
+//		test(r, test, idx, 12, n, p1);
+//		test(r, test, idx, 14, n, p1);
 //		test(r, test, idx, 15, n, p1);
 
 //		test(r, test, idx, 20, n, p1);
