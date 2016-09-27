@@ -46,7 +46,7 @@ public class RectangleQuadZ extends Candidate {
 			pos += dims;
 			System.arraycopy(data, pos, hi, 0, dims);
 			pos += dims;
-			phc.put(lo, hi, O);
+			phc.insert(lo, hi, O);
 		}
 		this.data = data;
 	}
@@ -81,11 +81,11 @@ public class RectangleQuadZ extends Candidate {
 		for (int i = 0; i < N>>1; i++) {
 			System.arraycopy(data, i*dims*2, lo, 0, dims);
 			System.arraycopy(data, i*dims*2+dims, hi, 0, dims);
-			n += phc.removeExact(lo, hi) != null ? 1 : 0;
+			n += phc.remove(lo, hi) != null ? 1 : 0;
 			int i2 = N-i-1;
 			System.arraycopy(data, i2*dims*2, lo, 0, dims);
 			System.arraycopy(data, i2*dims*2+dims, hi, 0, dims);
-			n += phc.removeExact(lo, hi) != null? 1 : 0;
+			n += phc.remove(lo, hi) != null? 1 : 0;
 		}
 		return n;
 	}
@@ -94,7 +94,7 @@ public class RectangleQuadZ extends Candidate {
 	@Override
 	public int query(double[] min, double[] max) {
 		if (query == null) {
-			query = phc.query(min, max);
+			query = phc.queryIntersect(min, max);
 		} else {
 			query.reset(min, max);
 		}
@@ -108,11 +108,11 @@ public class RectangleQuadZ extends Candidate {
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
-		List<QREntryDist<Object>> result = phc.knnSearch(center, k);
+		List<QREntryDist<Object>> result = phc.knnQuery(center, k);
 		double ret = 0;
 		for (int i = 0; i < k; i++) {
 			QREntryDist<Object> e = result.get(i);
-			ret += e.getDistance();
+			ret += e.dist();
 		}
 		return ret;
 	}

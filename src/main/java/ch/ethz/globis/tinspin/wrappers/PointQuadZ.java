@@ -41,7 +41,7 @@ public class PointQuadZ extends Candidate {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			phc.put(buf, buf);
+			phc.insert(buf, buf);
 		}
 		this.data = data;
 	}
@@ -68,8 +68,8 @@ public class PointQuadZ extends Candidate {
 		int n = 0;
 		double[] l = new double[dims];
 		for (int i = 0; i < N>>1; i++) {
-			n += phc.removeExact(getEntry(l, i)) != null ? 1 : 0;
-			n += phc.removeExact(getEntry(l, N-i-1)) != null ? 1 : 0;
+			n += phc.remove(getEntry(l, i)) != null ? 1 : 0;
+			n += phc.remove(getEntry(l, N-i-1)) != null ? 1 : 0;
 		}
 		return n;
 	}
@@ -102,10 +102,10 @@ public class PointQuadZ extends Candidate {
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
-		List<QEntryDist<double[]>> nn = phc.knnSearch(center, k);
+		List<QEntryDist<double[]>> nn = phc.knnQuery(center, k);
 		double ret = 0;
 		for (int i = 0; i < k; i++) {
-			ret += nn.get(i).getDistance();
+			ret += nn.get(i).dist();
 		}
 		return ret;
 	}

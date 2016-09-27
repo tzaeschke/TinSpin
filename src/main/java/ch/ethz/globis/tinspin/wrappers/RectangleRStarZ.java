@@ -8,6 +8,7 @@ package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.Arrays;
 
+import org.zoodb.index.Index;
 import org.zoodb.index.rtree.DistEntry;
 import org.zoodb.index.rtree.RTree;
 import org.zoodb.index.rtree.RTreeIterator;
@@ -61,7 +62,7 @@ public class RectangleRStarZ extends Candidate {
 		int n = 0;
 		double[][] dA = (double[][]) qA; 
 		for (int i = 0; i < dA.length; i+=2) {
-			if (phc.queryEntry(dA[i], dA[i+1]) != null) {
+			if (phc.queryExact(dA[i], dA[i+1]) != null) {
 				n++;
 			}
 		}
@@ -94,7 +95,7 @@ public class RectangleRStarZ extends Candidate {
 	@Override
 	public int query(double[] min, double[] max) {
 		if (query == null) {
-			query = phc.queryOverlap(min, max);
+			query = phc.queryIntersect(min, max);
 		} else {
 			query.reset(min, max);
 		}
@@ -131,7 +132,7 @@ public class RectangleRStarZ extends Candidate {
 		data = null;
 	}
 
-	public RTree<Object> getNative() {
+	public Index<Object> getNative() {
 		return phc;
 	}
 
