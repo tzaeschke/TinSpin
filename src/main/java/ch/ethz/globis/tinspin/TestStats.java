@@ -87,6 +87,7 @@ public class TestStats implements Serializable, Cloneable {
 		CBF("ch.ethz.globis.tinspin.wrappers.PointCBF", null),
 		XTR("ch.ethz.globis.tinspin.wrappers.PointXtree", 
 				"ch.ethz.globis.tinspin.wrappers.RectangleXtree"),
+		XTS("ch.ethz.globis.tinspin.wrappers.PointXTSeeger", null),
 		KD_LEVY("ch.ethz.globis.tinspin.wrappers.PointKDL", null),
 		KD_SAVA("ch.ethz.globis.tinspin.wrappers.PointKDS", null),
 		KD_RED("ch.ethz.globis.tinspin.wrappers.PointKDRed", null),
