@@ -291,17 +291,67 @@ public class TestStats implements Serializable, Cloneable {
 		}
 	}
 
+	public String[] testHeader() {
+		String D = "\t"; //delimiter
+
+		String[][] h2 = {
+//				{"", "", "",    "",     "",  "Space", "", "", "", "", 
+//					"Times", "", "", "", "", "", "", "", "", "", "", "", 
+//					"Stats", "", "", "", "", "Result sizes for verification", 
+//					"", "", "", "", "", "", "", "", "", "", "", "", "GC"},
+				{"Index", "data", "dim", "bits", "N", "calcMin", "calcMax", 
+						"measured","entryBytes", "gen", 
+						"load", "q1/n", "q2/n", "pq1/n", "pq2/n", "up1/n", "up2/n", 
+						"1-NN1", "1-NN2", "10-NN1", "10-NN2", 
+						"nodes", "postLen", "AHC", "NT", "NTinternal", 
+						"q1-n", "q2-n", "q1p-n", "q2p-n", "up1-n", "up2-n", 
+						"d1-1NN", "d2-1NN", "d1-kNN", "d2-kNN", 
+						"unload", "load/n", "unload/n", 
+						"load-s", "load-t", "w-query-s", "w-query-t", 
+						"p-query-s", "p-query-t", "update-s", "update-t", 
+						"1-NN-s", "1-NN-t", "10-NN-s", "10-NN-t", 
+						"unload-s", "unload-t", "msg"},	
+//				{"", "", "",    "",     "",  "MiB", "MiB", "MiB", "bytes", 
+//							"[ms]", "[ms]", 
+//							"[ns/result]", "[ns/call]", "[ns/call]", "[ns/call]", 
+//							"[ns/call]", "", "", "", "", "", "", "", "", "", "", 
+//							"", "", "", "", "", "", "", "", 
+//							"[MB]", "[ms]", "[MB]", "[ms]", 
+//							"[MB]", "[ms]", "[MB]", "[ms]", 
+//							"[MB]", "[ms]", "[MB]", "[ms]", "[MB]", "[ms]"}		
+		};
+		
+		String[] ret = new String[h2.length];
+		for (int i = 0; i < h2.length; i++) {
+			StringBuilder sb = new StringBuilder();
+			for (String col: h2[i]) {
+				sb.append(col);
+				sb.append(D);
+			}
+			ret[i] = sb.toString();
+		}
+		return ret;
+	}
+	
+	public String testDescription1() {
+		String ret = "";
+		ret += INDEX.name();
+		ret += "-" + (isRangeData ? "R" : "P");
+		return ret;
+	}
+	
+	public String testDescription2() {
+		return TEST.name() + "(" + param1 + "," + param2 + "," + paramStr + ")";
+	}
+	
 	@Override
 	public String toString() {
 		String D = "\t"; //delimiter
 		String ret = "";
 
-		ret += INDEX.name();
+		ret += testDescription1() + "-" + SEEDmsg + D;
+		ret += testDescription2() + D;
 
-		ret += "-" + (isRangeData ? "R" : "P");
-		ret += "-" + SEEDmsg + D;
-
-		ret += TEST.name() + "(" + param1 + ", " + param2 + ", " + paramStr + ")" + D;
 		ret += cfgNDims + D + cfgNBits + D + cfgNEntries + D; 
 		ret += (statSMin>>20) + D + (statSCalc>>20) + D + statSjvmF + D + statSjvmE + D; 
 		ret += statTGen + D + statTLoad + D;
