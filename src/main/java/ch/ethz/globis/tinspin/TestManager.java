@@ -30,19 +30,20 @@ public class TestManager {
 //			suiteDims(TST.CUBE, IDX.PHC, 0.1, 1.0);
 //			suiteDims(TST.CUBE, IDX.RSZ, 0.1, 1.0);
 
-			double[] sizesData = {0.1, 0.5};//, 1, 5, 10};
+			double[] sizesData = {0.1};//, 0.5, 1, 5, 10, 25};
 //			testSeries(TST.CUBE, IDX.CBF, 3, 1.0, sizesData);
 //			testSeries(TST.CUBE, IDX.CBZ, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, sizesData);
-//			testSeries(TST.CUBE, IDX.PHC_IPP, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.PHC_IPP, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.RSS, 3, 1.0, sizesData);
-//			testSeries(TST.CUBE, IDX.RSZ, 3, 1.0, sizesData);
-//			testSeries(TST.CUBE, IDX.KD_LEVY, 3, 1.0, sizesData);
-//			testSeries(TST.CUBE, IDX.KD_SAVA, 3, 1.0, sizesData);
-//			testSeries(TST.CUBE, IDX.QKDZ, 3, 1.0, sizesData);
-//			testSeries(TST.CUBE, IDX.XTS, 3, 1.0, sizesData);
-//			testSeries(TST.CUBE, IDX.XTR, 3, 1.0, sizesData);
-//
+			testSeries(TST.CUBE, IDX.RSZ, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.KD_LEVY, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.KD_SAVA, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.QKDZ, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.XTS, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.XTR, 3, 1.0, sizesData);
+
 //			//sizesData = new double[]{0.1, 0.5, 1, 5, 10};
 //			testSeries(TST.CLUSTER, IDX.CBF, 3, 3.4, sizesData);
 //			testSeries(TST.CLUSTER, IDX.CBZ, 3, 3.4, sizesData);
@@ -63,15 +64,15 @@ public class TestManager {
 //			testSeries(TST.CUBE, IDX.RSL, 3, 1.0, 1, 2, 5, 10);
 //			testSeries(TST.CUBE, IDX.QKDZ, 3, 1.0, 1, 2, 5, 10);
 
-//			suiteDims(TST.CUBE, IDX.PHC, 1, 1.0);
-//			suiteDims(TST.CUBE, IDX.PHC_IPP, 1, 1.0);
-//			suiteDims(TST.CUBE, IDX.RSS, 1, 1.0);
-//			suiteDims(TST.CUBE, IDX.RSZ, 1, 1.0);
-//			suiteDims(TST.CUBE, IDX.QKDZ, 1, 1.0);
-//			suiteDims(TST.CUBE, IDX.KD_LEVY, 1, 1.0);
-//			suiteDims(TST.CUBE, IDX.KD_SAVA, 1, 1.0);
-//			suiteDims(TST.CUBE, IDX.CBZ, 1, 1.0);
-//			suiteDims(TST.CUBE, IDX.XTR, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.PHC, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.PHC_IPP, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.RSS, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.RSZ, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.QKDZ, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.KD_LEVY, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.KD_SAVA, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.CBZ, 1, 1.0);
+			suiteDims(TST.CUBE, IDX.XTR, 1, 1.0);
 //			suiteDims(TST.CLUSTER, IDX.PHC, 1, 3.4);
 //			suiteDims(TST.CLUSTER, IDX.PHC_IPP, 1, 3.4);
 //			suiteDims(TST.CLUSTER, IDX.RSS, 1, 3.4);
@@ -188,6 +189,7 @@ public class TestManager {
 		test(r, test, idx, 4, n, p1);
 		test(r, test, idx, 5, n, p1);
 		if (idx == IDX.RSS) {
+			log.writeLogFileForTestSeries("dimsP");
 			return;
 		}
 		test(r, test, idx, 6, n, p1);
@@ -203,7 +205,7 @@ public class TestManager {
 //		test(r, test, idx, 40, n, p1);
 //		test(r, test, idx, 50, n, p1);
 //		test(r, test, idx, 60, n, p1);
-		log.writeLogFileForTestSeries();
+		log.writeLogFileForTestSeries("dimsP");
 	}
 	
 	private static void suiteDimsR(TST test, IDX idx, double nEntries, double p1) {
@@ -213,6 +215,7 @@ public class TestManager {
 		testR(r, test, idx, 3, n, p1);
 		testR(r, test, idx, 4, n, p1);
 		if (idx == IDX.RSS) {
+			log.writeLogFileForTestSeries("dimsR");
 			return;
 		}
 		testR(r, test, idx, 5, n, p1);
@@ -222,7 +225,7 @@ public class TestManager {
 		testR(r, test, idx, 12, n, p1);
 //		testR(r, test, idx, 15, n, p1);
 //		testR(r, test, idx, 20, n, p1);
-		log.writeLogFileForTestSeries();
+		log.writeLogFileForTestSeries("dimsR");
 	}
 		
 	
@@ -266,7 +269,7 @@ public class TestManager {
 		for (double N: Ns) {
 			test(3, TEST, INDEX, DIM, (int)(N*1000*1000), param1);
 		}
-		log.writeLogFileForTestSeries();
+		log.writeLogFileForTestSeries("sizeP");
 	}
 
 	private static void test(int repeat, TST TEST, IDX INDEX, int DIM, int N, double param1) { 
@@ -285,7 +288,7 @@ public class TestManager {
 			ts.cfgWindowQuerySize = wqs;
 			runTest(ts);
 		}
-		log.writeLogFileForTestSeries();
+		log.writeLogFileForTestSeries("sizeP");
 	}
 
 	/**
@@ -302,7 +305,7 @@ public class TestManager {
 		for (int N: Ns) {
 			testR(3, TEST, INDEX, DIM, N*1000*1000, param1);
 		}
-		log.writeLogFileForTestSeries();
+		log.writeLogFileForTestSeries("sizeR");
 	}
 
 	private static void testR(int repeat, TST TEST, IDX INDEX, int DIM, 
@@ -322,7 +325,7 @@ public class TestManager {
 			TestStats.DEFAULT_W_QUERY_SIZE = wqs;
 			testR(3, TEST, INDEX, DIM, N*1000*1000, param1);
 		}
-		log.writeLogFileForTestSeries();
+		log.writeLogFileForTestSeries("sizeR");
 	}
 
 	

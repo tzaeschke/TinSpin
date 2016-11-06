@@ -83,13 +83,24 @@ public class TestLogging {
 	 * previous call to this method.
 	 * 
 	 * Results are stored in prjHome/target/logs.
+	 * @param subDir 
 	 */
-	public void writeLogFileForTestSeries() {
+	public void writeLogFileForTestSeries(String subDir) {
 		TestStats avg = logBufferAvgStats.get(0);
 		String name = avg.testDescription1() + "-" + avg.testDescription2();
 		
-		Path file = Paths.get(logFolder.toString(), name + ".txt");
+		Path sub = Paths.get(logFolder.toString(), subDir);
+		Path file = Paths.get(sub.toString(), name + ".txt");
 		try {
+			if (!Files.exists(sub)) {
+				Files.createDirectory(sub);
+			}
+			
+			int i = 1;
+			while (Files.exists(file)) {
+				file = Paths.get(sub.toString(), name + "(" + i + ").txt");
+				i++;
+			}
 			Files.createFile(file);
 		} catch (IOException e) {
 			throw new RuntimeException(e);

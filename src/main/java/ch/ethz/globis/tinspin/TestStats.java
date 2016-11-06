@@ -81,8 +81,8 @@ public class TestStats implements Serializable, Cloneable {
 		/** R*Tree by Seeger */
 		RSS("ch.ethz.globis.tinspin.wrappers.PointRStarSeeger", 
 				"ch.ethz.globis.tinspin.wrappers.RectangleRStarSeeger"),
-		RSS2("ch.ethz.globis.tinspin.wrappers.PointRStarSeeger2", 
-				"ch.ethz.globis.tinspin.wrappers.RectangleRStarSeeger2"),
+//		RSS2("ch.ethz.globis.tinspin.wrappers.PointRStarSeeger2", 
+//				"ch.ethz.globis.tinspin.wrappers.RectangleRStarSeeger2"),
 		CBR("ch.ethz.globis.tinspin.wrappers.PointCBR", null),
 		CBF("ch.ethz.globis.tinspin.wrappers.PointCBF", null),
 		XTR("ch.ethz.globis.tinspin.wrappers.PointXtree", 
