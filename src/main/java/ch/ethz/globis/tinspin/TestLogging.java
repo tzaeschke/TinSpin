@@ -86,6 +86,11 @@ public class TestLogging {
 	 * @param subDir 
 	 */
 	public void writeLogFileForTestSeries(String subDir) {
+		writeLogFileFull();
+		writeLogFileForSeries(subDir);
+	}
+	
+	private void writeLogFileForSeries(String subDir) {
 		TestStats avg = logBufferAvgStats.get(0);
 		String name = avg.testDescription1() + "-" + avg.testDescription2();
 		
@@ -107,7 +112,7 @@ public class TestLogging {
 		}
 		
         try (PrintWriter out = new PrintWriter(file.toFile())) {
-        	for (String header: avg.testHeader()) {
+        	for (String header: TestStats.testHeader()) {
         		out.println(header);
         	}
         	out.println("% Averages");
@@ -125,6 +130,49 @@ public class TestLogging {
         }
         logBufferAvgStats.clear();
         logBufferStats.clear();
+	}
+
+	private void writeLogFileFull() {
+		Path file = Paths.get(logFolder.toString(), "full.txt");
+		Path fileBak = Paths.get(logFolder.toString(), "full.bak");
+		try {
+			if (Files.exists(fileBak)) {
+				//just in case...
+				Files.delete(fileBak);
+			}
+			if (Files.exists(file)) {
+				Files.move(file, fileBak);
+			}
+			Files.createFile(file);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		
+        try (PrintWriter out = new PrintWriter(file.toFile())) {
+        	for (String header: TestStats.testHeader()) {
+        		out.println(header);
+        	}
+        	out.println("% Averages");
+        	out.println("% ========");
+        	for (TestStats ts: avgStats) {
+        		out.println(ts);
+        	}
+        	out.println("% Measurements");
+        	out.println("% ============");
+        	for (TestStats ts: stats) {
+        		out.println(ts);
+        	}
+        } catch (IOException e) {
+			throw new RuntimeException(e);
+        }
+
+		try {
+			if (Files.exists(fileBak)) {
+				Files.delete(fileBak);
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static Path createLogFolder() {

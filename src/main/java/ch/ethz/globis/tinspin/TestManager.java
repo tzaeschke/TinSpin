@@ -35,6 +35,7 @@ public class TestManager {
 //			testSeries(TST.CUBE, IDX.CBZ, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.PHC_IPP, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.RSS, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.RSZ, 3, 1.0, sizesData);

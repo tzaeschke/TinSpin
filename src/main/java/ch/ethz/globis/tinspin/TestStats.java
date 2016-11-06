@@ -291,7 +291,7 @@ public class TestStats implements Serializable, Cloneable {
 		}
 	}
 
-	public String[] testHeader() {
+	public static String[] testHeader() {
 		String D = "\t"; //delimiter
 
 		String[][] h2 = {
