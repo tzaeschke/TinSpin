@@ -26,7 +26,7 @@ import ch.ethz.globis.tinspin.wrappers.RectanglePHCF;
 
 
 /**
- * This is a special test class to estimate paiwise overlap counts.
+ * This is a special test class to estimate pairwise overlap counts.
  *
  * @author Tilmann Zaeschke
  */

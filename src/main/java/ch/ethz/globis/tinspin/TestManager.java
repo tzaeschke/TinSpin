@@ -30,11 +30,9 @@ public class TestManager {
 //			suiteDims(TST.CUBE, IDX.PHC, 0.1, 1.0);
 //			suiteDims(TST.CUBE, IDX.RSZ, 0.1, 1.0);
 
-			double[] sizesData = {0.1};//, 0.5, 1, 5, 10, 25};
-//			testSeries(TST.CUBE, IDX.CBF, 3, 1.0, sizesData);
-//			testSeries(TST.CUBE, IDX.CBZ, 3, 1.0, sizesData);
-			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, sizesData);
-			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, sizesData);
+			double[] sizesData = {0.1, 0.5, 1, 5, 10, 25};
+			testSeries(TST.CUBE, IDX.CBF, 3, 1.0, sizesData);
+			testSeries(TST.CUBE, IDX.CBZ, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.PHC_IPP, 3, 1.0, sizesData);
 			testSeries(TST.CUBE, IDX.RSS, 3, 1.0, sizesData);
@@ -104,31 +102,19 @@ public class TestManager {
 ////			testSeriesWQS(TST.CUBE, IDX.XTR, 3, 1.0, 1, 1, 10, 100, 1000, 10000);
 ////			testSeriesWQS(TST.CUBE, IDX.MX_CIF, 3, 1.0, 1, 1, 10, 100, 1000, 10000);
 
-//			testSeriesR(TST.CUBE, IDX.PHC, 3, 1.0, 1, 2, 5, 10, 25);
-//			testSeriesR(TST.CUBE, IDX.PHC_IPP, 3, 1.0, 1, 2, 5, 10, 25);
-//			testSeriesR(TST.CUBE, IDX.RSZ, 3, 1.0, 1, 2, 5, 10, 25);
-//			testSeriesR(TST.CUBE, IDX.RSS, 3, 1.0, 1, 2, 5, 10, 25);
-//			//testSeriesR(TST.CUBE, IDX.RSL, 3, 1.0, 1, 2, 5, 10, 25);
-//			testSeriesR(TST.CUBE, IDX.RSS, 3, 1.0, 1, 2, 5, 10, 25);
-//			testSeriesR(TST.CUBE, IDX.QKDZ, 3, 1.0, 1, 2, 5, 10, 25);
-//			testSeriesR(TST.CUBE, IDX.XTR, 3, 1.0, 1, 2, 5, 10, 25);
-//
-//			suiteDimsR(TST.CUBE, IDX.PHC, 1, 1.0);
-//			suiteDimsR(TST.CUBE, IDX.PHC_IPP, 1, 1.0);
-//			suiteDimsR(TST.CUBE, IDX.RSZ, 1, 1.0);
+			testSeriesR(TST.CUBE, IDX.PHC, 3, 1.0, 1, 2, 5, 10, 25);
+			testSeriesR(TST.CUBE, IDX.PHC_IPP, 3, 1.0, 1, 2, 5, 10, 25);
+			testSeriesR(TST.CUBE, IDX.RSZ, 3, 1.0, 1, 2, 5, 10, 25);
+			testSeriesR(TST.CUBE, IDX.RSS, 3, 1.0, 1, 2, 5, 10, 25);
+			testSeriesR(TST.CUBE, IDX.QKDZ, 3, 1.0, 1, 2, 5, 10, 25);
+			testSeriesR(TST.CUBE, IDX.XTR, 3, 1.0, 1, 2, 5, 10, 25);
+
+			suiteDimsR(TST.CUBE, IDX.PHC, 1, 1.0);
+			suiteDimsR(TST.CUBE, IDX.PHC_IPP, 1, 1.0);
 			suiteDimsR(TST.CUBE, IDX.RSS, 1, 1.0);
+			suiteDimsR(TST.CUBE, IDX.RSZ, 1, 1.0);
 			suiteDimsR(TST.CUBE, IDX.QKDZ, 1, 1.0);
 			suiteDimsR(TST.CUBE, IDX.XTR, 1, 1.0);
-////			suiteDimsR(TST.CUBE, IDX.PHC, 1, 0.001);
-//			suiteDimsR(TST.CUBE, IDX.PHC, 1, 0.00001);
-////			suiteDimsR(TST.CUBE, IDX.PHC2, 1, 0.001);
-//			suiteDimsR(TST.CUBE, IDX.PHC2, 1, 0.00001);
-////			//suiteDimsR(TST.CUBE, IDX.RSS, 1, 0.01);
-////			suiteDimsR(TST.CUBE, IDX.RSS, 1, 0.001);
-//			suiteDimsR(TST.CUBE, IDX.RSS, 1, 0.00001);
-////			//suiteDimsR(TST.CUBE, IDX.XTR, 1, 0.01);
-////			suiteDimsR(TST.CUBE, IDX.XTR, 1, 0.001);
-//			suiteDimsR(TST.CUBE, IDX.XTR, 1, 0.00001);
 
 //			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, 1);
 //			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, 1, 2, 5, 10, 25, 50, 75, 100);
@@ -283,6 +269,15 @@ public class TestManager {
 		}
 	}
 
+	/**
+	 * Test varying result size for window queries.
+	 * @param TEST
+	 * @param INDEX
+	 * @param DIM
+	 * @param param1
+	 * @param N
+	 * @param wqss
+	 */
 	private static void testSeriesWQS(TST TEST, IDX INDEX, int DIM, double param1, double N, int...wqss) {
 		for (int wqs: wqss) {
 			TestStats ts = new TestStats(TEST, INDEX, (int)(N*1000*1000), DIM, false, param1);
@@ -320,6 +315,15 @@ public class TestManager {
 		}
 	}
 
+	/**
+	 * Test varying result size for window queries.
+	 * @param TEST
+	 * @param INDEX
+	 * @param DIM
+	 * @param param1
+	 * @param N
+	 * @param wqss
+	 */
 	private static void testSeriesWQSR(TST TEST, IDX INDEX, int DIM, 
 			double param1, int N, int... wqss) {
 		for (int wqs: wqss) {

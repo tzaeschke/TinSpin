@@ -79,8 +79,11 @@ public class TestLogging {
 	 * This should be called after every test series, i.e. whenever
 	 * switching to a new index or new dataset.
 	 * 
-	 * This methods writes only results that accumulated after the
-	 * previous call to this method.
+	 * This methods writes results that accumulated after the
+	 * previous call to this method. The results are written to the
+	 * specified subfolder.
+	 * 
+	 * Also, this methods writes ALL results to a file called full.txt.
 	 * 
 	 * Results are stored in prjHome/target/logs.
 	 * @param subDir 

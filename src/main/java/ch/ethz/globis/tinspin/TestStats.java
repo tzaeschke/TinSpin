@@ -246,7 +246,6 @@ public class TestStats implements Serializable, Cloneable {
 	double statDqk10_2;
 	int statNu1;
 	int statNu2;
-	long statSMin;
 	long statSCalc;
 	public long statSjvmF;
 	public long statSjvmE;
@@ -299,14 +298,14 @@ public class TestStats implements Serializable, Cloneable {
 //					"Times", "", "", "", "", "", "", "", "", "", "", "", 
 //					"Stats", "", "", "", "", "Result sizes for verification", 
 //					"", "", "", "", "", "", "", "", "", "", "", "", "GC"},
-				{"Index", "data", "dim", "bits", "N", "calcMin", "calcMax", 
-						"measured","entryBytes", "gen", 
-						"load", "q1/n", "q2/n", "pq1/n", "pq2/n", "up1/n", "up2/n", 
+				{"Index", "data", "dim", "bits", "N", "calcMem", 
+						"memory", "memory/n", "gen", 
+						"load", "load/n", "q1/n", "q2/n", "pq1/n", "pq2/n", "up1/n", "up2/n", 
 						"1-NN1", "1-NN2", "10-NN1", "10-NN2", 
+						"unload", "unload/n", 
 						"nodes", "postLen", "AHC", "NT", "NTinternal", 
 						"q1-n", "q2-n", "q1p-n", "q2p-n", "up1-n", "up2-n", 
 						"d1-1NN", "d2-1NN", "d1-kNN", "d2-kNN", 
-						"unload", "load/n", "unload/n", 
 						"load-s", "load-t", "w-query-s", "w-query-t", 
 						"p-query-s", "p-query-t", "update-s", "update-t", 
 						"1-NN-s", "1-NN-t", "10-NN-s", "10-NN-t", 
@@ -353,19 +352,25 @@ public class TestStats implements Serializable, Cloneable {
 		ret += testDescription2() + D;
 
 		ret += cfgNDims + D + cfgNBits + D + cfgNEntries + D; 
-		ret += (statSMin>>20) + D + (statSCalc>>20) + D + statSjvmF + D + statSjvmE + D; 
-		ret += statTGen + D + statTLoad + D;
+		ret += (statSCalc>>20) + D + statSjvmF + D + statSjvmE + D; 
+		ret += statTGen + D;
+		
+		//times
+		ret += statTLoad + D + (statTLoad*1000000/cfgNEntries) + D;
 		//			ret += statTq1 + D + statTq1E + D + statTq2 + D + statTq2E + D + statTqp1 + D + statTqp1E + D + statTqp2 + D + statTqp2E + D;
 		ret += statTq1E + D + statTq2E + D + statTqp1E + D + statTqp2E + D; 
 		ret += statTu1E + D + statTu2E + D;
 		ret += statTqk1_1E + D + statTqk1_2E + D;
 		ret += statTqk10_1E + D + statTqk10_2E + D;
+		ret += statTUnload + D + (statTUnload*1000000/cfgNEntries) + D;
+		
+		//Result sizes, etc
 		ret += statNnodes + D + statNpostlen + D + statNNodeAHC + D + statNNodeNT + D + statNNodeInternalNT + D;
 		ret += statNq1 + D + statNq2 + D + statNqp1 + D + statNqp2 + D;
 		ret += statNu1 + D + statNu2 + D;
 		ret += statDqk1_1 + D + statDqk1_2 + D + statDqk10_1 + D + statDqk10_2 + D;
-		ret += statTUnload + D;
-		ret += (statTLoad*1000000/cfgNEntries) + D + (statTUnload*1000000/cfgNEntries) + D;
+
+		//GC
 		ret += statGcDiffL/1000000 + D + statGcTimeL + D;
 		ret += statGcDiffWq/1000000 + D + statGcTimeWq + D;
 		ret += statGcDiffPq/1000000 + D + statGcTimePq + D;
@@ -457,7 +462,6 @@ public class TestStats implements Serializable, Cloneable {
 			avg.statDqk10_2 += t.statDqk10_2;
 			avg.statNu1 += t.statNu1;
 			avg.statNu2 += t.statNu2;
-			avg.statSMin += t.statSMin;
 			avg.statSCalc += t.statSCalc;
 			avg.statSjvmF += t.statSjvmF;
 			avg.statSjvmE += t.statSjvmE;
@@ -517,7 +521,6 @@ public class TestStats implements Serializable, Cloneable {
 		avg.statDqk10_2 /= (double)cnt;
 		avg.statNu1 /= (double)cnt;
 		avg.statNu2 /= (double)cnt;
-		avg.statSMin /= (double)cnt;
 		avg.statSCalc /= (double)cnt;
 		avg.statSjvmF /= (double)cnt;
 		avg.statSjvmE /= (double)cnt;
