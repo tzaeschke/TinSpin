@@ -316,7 +316,7 @@ public class OsmIO {
 					if (nNode % 10000 == 0) {
 						System.out.print('.');
 						if (nNode % 1000000 == 0) {
-							System.out.println();
+							System.out.println(" points:" + nNode);
 						}
 					}
 				}

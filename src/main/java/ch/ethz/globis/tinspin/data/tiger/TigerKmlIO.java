@@ -486,7 +486,9 @@ public class TigerKmlIO {
 			throw new IllegalStateException("f3=" + f3);
 		}
 		if (f1>0 || f2 < 0) {
-			throw new IllegalArgumentException("f1/f2=" + f1 + " / " + f2);
+			//TODO why warning???
+			System.out.println("ValueWarningKML: f1/f2=" + f1 + " / " + f2);
+			//throw new IllegalArgumentException("f1/f2=" + f1 + " / " + f2);
 		}
 
 		point[pos+0] = f1;
