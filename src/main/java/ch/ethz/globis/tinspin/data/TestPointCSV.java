@@ -11,10 +11,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
 import ch.ethz.globis.tinspin.TestStats;
+import ch.ethz.globis.tinspin.data.tiger.TigerKmlIO;
 
 /**
  * @author Tilmann Zaeschke
@@ -45,15 +47,14 @@ public class TestPointCSV extends TestPoint {
 		
 		log("Running: TestCSV(" + paramStr + ")");
 		
-		return readFile(paramStr, Integer.MAX_VALUE);
+		double[] data = readFile(paramStr, Integer.MAX_VALUE);
+		globalMin[0] = TigerKmlIO.minX;
+		globalMax[0] = TigerKmlIO.maxX;
+		globalMin[1] = TigerKmlIO.minY;
+		globalMax[1] = TigerKmlIO.maxY;
+		return data;
 	}
 
-	@Override
-	public void queryCuboid(int resultsPerQuery, double[] xyz, double[] len) {
-		// Adrien 06/02/2014
-		// added for compatibility, only used for CUSTOM tests
-	}
-	
 	private double[] readFile(String pathName, int maxPoints) {
 		File f = new File(pathName);
 		if (!f.exists()) {
@@ -67,8 +68,24 @@ public class TestPointCSV extends TestPoint {
 
 		int dim = dataA.get(0).length;
 		double[] data = new double[dataA.size()*dim];
+		
+		//min max for query generation
+		globalMin = new double[dim];
+		globalMax = new double[dim];
+		Arrays.fill(globalMin, Double.POSITIVE_INFINITY);
+		Arrays.fill(globalMax, Double.NEGATIVE_INFINITY);
+		
 		for (int i = 0; i < dataA.size(); i++) {
+			double[] da = dataA.get(i);
 			System.arraycopy(dataA.get(i), 0, data, i*dim, dim);
+			for (int d = 0; d < dim; d++) {
+				if (da[d] < globalMin[d]) {
+					globalMin[d] = da[d]; 
+				}
+				if (da[d] > globalMax[d]) {
+					globalMax[d] = da[d]; 
+				}
+			}
 		}
 		S.cfgNDims = dim;
 		S.cfgNEntries = dataA.size();

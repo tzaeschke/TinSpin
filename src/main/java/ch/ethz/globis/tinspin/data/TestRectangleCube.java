@@ -51,10 +51,4 @@ public class TestRectangleCube extends TestRectangle {
 	public double maxUpdateDistance() {
 		return S.param1/100;
 	}
-
-
-	@Override
-	public void queryCuboid(int resultsPerQuery, double[] min, double[] max) {
-		throw new UnsupportedOperationException();
-	}
 }

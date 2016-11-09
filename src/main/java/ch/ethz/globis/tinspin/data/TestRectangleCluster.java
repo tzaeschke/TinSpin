@@ -109,15 +109,17 @@ public class TestRectangleCluster extends TestRectangle {
 	}
 	
 	@Override
-	public void queryCuboid(int resultsPerQuery, double[] min, double[] max) {
+	public void generateQuery(double[] min, double[] max, 
+			final double maxLen, final double avgQVol) {
 		switch (TYPE.toType(param1)) {
 		case HORIZONTAL04:
-		case HORIZONTAL05: queryCuboidHorizontalNormal(resultsPerQuery, min, max); break;
+		case HORIZONTAL05: queryCuboidHorizontalNormal(min, max); break;
 		default: throw new IllegalArgumentException("param1=" + param1);
 		}
 	}
 	
-	private void queryCuboidHorizontalNormal(int resultsPerQuery, double[] min, double[] max) {
+	private void queryCuboidHorizontalNormal(double[] min, double[] max) {
+		int resultsPerQuery = S.cfgWindowQuerySize;
 		min[0] = R.nextDouble();
 		max[0] = min[0] + (0.0001 * resultsPerQuery/1000);
 		for (int i = 1; i < DIM; i++) {

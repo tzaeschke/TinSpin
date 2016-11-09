@@ -187,6 +187,7 @@ public class TestStats implements Serializable, Cloneable {
 	public int cfgUpdateRepeat = DEFAULT_N_UPDATE_CYCLES;
 	public int cfgUpdateSize = DEFAULT_N_UPDATES;
 	public int cfgWindowQueryRepeat = DEFAULT_N_WINDOW_QUERY;
+	/** Expected average number of entries in a query result. */
 	public int cfgWindowQuerySize = DEFAULT_W_QUERY_SIZE;
 	
 	/** length of the populated data area */

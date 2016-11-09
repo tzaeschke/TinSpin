@@ -34,12 +34,10 @@ public class TestPointOpenStreetMap extends TestPoint {
 		//double[] data = io.readAndBuffer(dbName, S);
 		Osm2D osm = new Osm2D();
 		double[] data = osm.readAndBuffer(dbName, S);
+		globalMin[0] = osm.min()[0];
+		globalMax[0] = osm.max()[0];
+		globalMin[1] = osm.min()[1];
+		globalMax[1] = osm.max()[1];
 		return data;
-	}
-
-	@Override
-	public void queryCuboid(int resultsPerQuery, double[] xyz, double[] len) {
-		// Adrien 06/02/2014
-		// added for compatibility, only used for CUSTOM tests
 	}
 }

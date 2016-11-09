@@ -162,7 +162,8 @@ public class TestRectangleTOUCH extends TestRectangle {
 	}
 	
 	@Override
-	public void queryCuboid(int resultsPerQuery, double[] min, double[] max) {
+	public void generateQuery(double[] min, double[] max, 
+			final double maxLen, final double avgQVol) {
 		double[] q = generate(1, param1, spotsQueries);
 		for (int i = 0; i < DIM; i++) {
 			min[i] = q[i]-param2;
@@ -311,7 +312,7 @@ public class TestRectangleTOUCH extends TestRectangle {
 		for (int i = 0; i < N_A; i++) {
 			double[] min = new double[DIM];
 			double[] max = new double[DIM];
-			queryCuboid(0, min, max);
+			generateQuery(min, max, -1, -1);
 			qA[2*i] = min;
 			qA[2*i+1] = max;
 		}

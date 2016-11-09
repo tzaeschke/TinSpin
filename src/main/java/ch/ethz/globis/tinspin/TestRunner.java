@@ -8,7 +8,6 @@ package ch.ethz.globis.tinspin;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
 
@@ -58,11 +57,11 @@ public class TestRunner {
 		final int DIM = 3;
 		final int N = 1*1000*1000;
 						
-		//TestStats s0 = new TestStats(TST.CUBE, IDX.STRZ, N, DIM, true, 1.0);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
-		TestStats s0 = new TestStats(TST.CUBE, IDX.XTS, N, DIM, false, 1.0);
-		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
+		TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
 		s0.cfgWindowQueryRepeat = 100;
 		s0.cfgPointQueryRepeat = 10000;
 		s0.cfgUpdateSize = 1000;
@@ -321,7 +320,7 @@ public class TestRunner {
 		log(time() + "querying index ... repeat = " + repeat);
 		double[][] lower = new double[repeat][dims]; 
 		double[][] upper = new double[repeat][dims];
-		generateWindowQueries(lower, upper);
+		test.generateWindowQueries(lower, upper);
 		JmxTools.reset();
 		long t1 = System.currentTimeMillis();
 		int n = 0;
@@ -530,12 +529,6 @@ public class TestRunner {
 		}
 	}
 	
-	private void generateWindowQueries(double[][] lower, double[][] upper) {
-		for (int i = 0; i < lower.length; i++) {
-			generateQueryCorners(lower[i], upper[i]);
-		}
-	}
-	
 	private int repeatQueries(double[][] lower, double[][] upper) {
 		int n=0;
 		for (int i = 0; i < lower.length; i++) {
@@ -561,120 +554,60 @@ public class TestRunner {
 	 * @param xyz lower left corner
 	 * @param len lengths of edges
 	 */
-	private void generateQueryCorners(double[] min, double[] max) {
-		if (test.getTestType() == TST.CLUSTER) {
-			test.queryCuboid(S.cfgWindowQuerySize, min, max);
-			return;
-		} else if (test.getTestType() == TST.TIGER) {
-			if (test.getTestStats().isRangeData) {
-				test.queryCuboid(S.cfgWindowQuerySize, min, max);
-			}
-			return;
-		} else if (test.getTestType() == TST.CUSTOM) {
-			test.queryCuboid(S.cfgWindowQuerySize, min, max);
-			return;
-		}
-
-		if (USE_NEW_QUERIES) {
-			generateQueryCornersNew(min, max);
-		} else {
-			generateQueryCornersOld(min, max);
-		}
-	}
+//	private void generateQueryCorners(double[] min, double[] max) {
+//		if (test.getTestType() == TST.CLUSTER) {
+//			test.queryCuboid(S.cfgWindowQuerySize, min, max);
+//			return;
+//		} else if (test.getTestType() == TST.TIGER) {
+//			if (test.getTestStats().isRangeData) {
+//				test.queryCuboid(S.cfgWindowQuerySize, min, max);
+//			}
+//			return;
+//		} else if (test.getTestType() == TST.CUSTOM) {
+//			test.queryCuboid(S.cfgWindowQuerySize, min, max);
+//			return;
+//		}
+//
+//		if (USE_NEW_QUERIES) {
+//			generateQueryCornersNew(min, max);
+//		} else {
+//			generateQueryCornersOld(min, max);
+//		}
+//	}
 	
-	private void generateQueryCornersNew(double[] min, double[] max) {
-		int dims = min.length;
-		
-		int nEntries = S.cfgNEntries;
-		if (nEntries < S.cfgWindowQuerySize*10) {
-			//N < 10*000 ? -> N = 100
-			nEntries = S.cfgWindowQuerySize*10;
-		}
-		
-		//Here is a fixed size version, returning 1% of the space.
-		//final double qVolume = 0.01 * Math.pow(cfgDataLen, DIM);//(float) Math.pow(0.1, DIM); //0.01 for DIM=2
-		final double avgVolume = S.cfgWindowQuerySize/(double)nEntries * Math.pow(S.cfgDataLen, dims);
-		//final double avgLen = Math.pow(avgVolume, 1./DIM);
-		//final double avgLenVar = 0.5*avgLen;
-		//final double minLen = 0.5*avgLen;
-		
-		//query create cube
-		double[] len = new double[min.length];
-		int nTries = 0;
-		do {
-			double vol = 1;
-			for (int d = 0; d < dims-1; d++) {
-				//calculate the average required len 
-				final double avgLen = Math.pow(avgVolume/vol, 1./dims);
-				//create a len between 0.5 and 1.5 of the required length
-				len[d] = (0.5*avgLen) + R.nextDouble()*(avgLen);
-				len[d] = len[d] > S.cfgDataLen*0.99 ? S.cfgDataLen*0.99 : len[d];
-				vol *= len[d];
-			}
-			//create cuboid/box of desired size by dropping random length
-			len[dims-1] = avgVolume/vol;  //now the new len creates a rectangle/box of SIZE.
-			if (nTries++ > 100) {
-				System.out.println(Arrays.toString(len) + " vol=" + vol + " aVol=" + avgVolume);
-				throw new IllegalStateException("dims=" + dims + "  N=" + S.cfgNEntries);
-			}
-		} while (len[dims-1] >= S.cfgDataLen); //drop bad rectangles
-		
-		
-		//create location
-		for (int d = 0; d < dims; d++) {
-			min[d] = R.nextDouble()*(S.cfgDataLen-len[d]);
-			max[d] = min[d]+len[d];
-			if (min[d]+len[d] >= S.cfgDataLen) {
-				//drop bad rectangles 
-				throw new RuntimeException();
-			}
-		}
-		
-		shuffle(len);
-	}
 
-	private void shuffle(double[] da) {
-		// Fisher–Yates shuffle
-		for (int i = da.length - 1; i > 0; i--) {
-			int index = R.nextInt(i + 1);
-			double a = da[index];
-			da[index] = da[i];
-			da[i] = a;
-		}
-	}
-
-	private void generateQueryCornersOld(double[] min, double[] max) {
-		int dims = min.length;
-		//Here is a fixed size version, returning 1% of the space.
-		//final double qVolume = 0.01 * Math.pow(cfgDataLen, DIM);//(float) Math.pow(0.1, DIM); //0.01 for DIM=2
-		final double qVolume = S.cfgWindowQuerySize/(double)S.cfgNEntries * Math.pow(S.cfgDataLen, dims);
-		
-		int dDrop = R.nextInt(dims);
-		//query create cube
-		double[] len = new double[min.length];
-		do {
-			double vol = 1;
-			for (int d = 0; d < dims; d++) {
-				if (d == dDrop) {
-					continue;
-				}
-				len[d] = R.nextDouble()*S.cfgDataLen;
-				vol *= len[d];
-			}
-			//create cuboid/box of desired size by dropping random length
-			len[dDrop] = qVolume/vol;  //now the new len creates a rectangle/box of SIZE.
-		} while (len[dDrop] >= S.cfgDataLen); //drop bad rectangles
-		
-		//create location
-		for (int d = 0; d < dims; d++) {
-			min[d] = R.nextDouble()*(S.cfgDataLen-len[d]);
-			max[d] = min[d]+len[d];
-			if (min[d]+len[d] >= S.cfgDataLen) {
-				//drop bad rectangles 
-				throw new RuntimeException();
-			}
-		}
-	}
+//	private void generateQueryCornersOld(double[] min, double[] max) {
+//		int dims = min.length;
+//		//Here is a fixed size version, returning 1% of the space.
+//		//final double qVolume = 0.01 * Math.pow(cfgDataLen, DIM);//(float) Math.pow(0.1, DIM); //0.01 for DIM=2
+//		final double qVolume = S.cfgWindowQuerySize/(double)S.cfgNEntries * Math.pow(S.cfgDataLen, dims);
+//		
+//		int dDrop = R.nextInt(dims);
+//		//query create cube
+//		double[] len = new double[min.length];
+//		do {
+//			double vol = 1;
+//			for (int d = 0; d < dims; d++) {
+//				if (d == dDrop) {
+//					continue;
+//				}
+//				len[d] = R.nextDouble()*S.cfgDataLen;
+//				vol *= len[d];
+//			}
+//			//create cuboid/box of desired size by dropping random length
+//			len[dDrop] = qVolume/vol;  //now the new len creates a rectangle/box of SIZE.
+//		} while (len[dDrop] >= S.cfgDataLen); //drop bad rectangles
+//		
+//		//create location
+//		for (int d = 0; d < dims; d++) {
+//			min[d] = R.nextDouble()*(S.cfgDataLen-len[d]);
+//			max[d] = min[d]+len[d];
+//			if (min[d]+len[d] >= S.cfgDataLen) {
+//				//drop bad rectangles 
+//				throw new RuntimeException();
+//			}
+//		}
+//	}
 
 	
 	private double[] generateQueryPointD(final int N, final int dims) {
@@ -683,7 +616,7 @@ public class TestRunner {
 		if (pos >= N) {
 			//randomise
 			for (int d = 0; d < dims; d++) {
-				xyz[d] = R.nextDouble()*S.cfgDataLen;
+				xyz[d] = test.min(d) + R.nextDouble()*test.len(d);
 			}
 		} else {
 			//get existing element
@@ -697,8 +630,8 @@ public class TestRunner {
 		if (pos >= N) {
 			//randomise
 			for (int d = 0; d < dims; d++) {
-				lo[d] = R.nextDouble()*S.cfgDataLen;
-				hi[d] = lo[d] + R.nextDouble();
+				lo[d] = test.min(d) + R.nextDouble()*test.len(d);
+				hi[d] = lo[d] + R.nextDouble()*test.len(d)/1000.;
 			}
 		} else {
 			//get existing element
@@ -711,7 +644,7 @@ public class TestRunner {
 		double[] xyz = new double[dims];
 		//randomise
 		for (int d = 0; d < dims; d++) {
-			xyz[d] = R.nextDouble()*S.cfgDataLen;
+			xyz[d] = test.min(d) + R.nextDouble()*test.len(d);
 		}
 		return xyz;
 	}
@@ -719,8 +652,8 @@ public class TestRunner {
 	private void generateKnnQueryPointDRect(double[] lo, double[] hi, final int dims) {
 		//randomise
 		for (int d = 0; d < dims; d++) {
-			lo[d] = R.nextDouble()*S.cfgDataLen;
-			hi[d] = lo[d] + R.nextDouble();
+			lo[d] = test.min(d) + R.nextDouble()*test.len(d);
+			hi[d] = lo[d] + R.nextDouble()*test.len(d)/1000.;
 		}
 	}
 	

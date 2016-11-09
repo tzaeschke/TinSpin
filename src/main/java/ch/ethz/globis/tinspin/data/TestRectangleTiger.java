@@ -48,14 +48,19 @@ public class TestRectangleTiger extends TestRectangle {
 				data[i*4+3] = t;
 			}
 		}
+		globalMin[0] = TigerKmlIO.minX;
+		globalMax[0] = TigerKmlIO.maxX;
+		globalMin[1] = TigerKmlIO.minY;
+		globalMax[1] = TigerKmlIO.maxY;
 		return data;
 	}
 
 	@Override
-	public void queryCuboid(int resultsPerQuery, double[] min, double[] max) {
+	public void generateQuery(double[] min, double[] max, 
+			final double maxLen, final double avgQVol) {
 		//queries should in average return 1000 results
 		//double ratio = 18300000.0/MAX_E * 1.0/18300;
-		double ratio = Math.sqrt(resultsPerQuery/(double)getN());  //ratio for each axis
+		double ratio = Math.sqrt(S.cfgWindowQuerySize/(double)getN());  //ratio for each axis
 		//double ratio = 0.001; 
 		
 		//create rectangles with 0.1% coverage

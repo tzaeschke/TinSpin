@@ -37,10 +37,4 @@ public class TestPointCube extends TestPoint {
 		}
 		return data;
 	}
-
-	@Override
-	public void queryCuboid(int resultsPerQuery, double[] xyz, double[] len) {
-		// Adrien 06/02/2014
-		// added for compatibility, only used for TST.CUSTOM tests
-	}
 }

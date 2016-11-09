@@ -31,12 +31,10 @@ public class TestPointTiger extends TestPoint {
 	public double[] generate() {
 		log("Running: TestTiger(" + getN() + ")");
 		double[] data = TigerKmlIO.readAndBuffer(dbName, S);
+		globalMin[0] = TigerKmlIO.minX;
+		globalMax[0] = TigerKmlIO.maxX;
+		globalMin[1] = TigerKmlIO.minY;
+		globalMax[1] = TigerKmlIO.maxY;
 		return data;
-	}
-
-	@Override
-	public void queryCuboid(int resultsPerQuery, double[] xyz, double[] len) {
-		// Adrien 06/02/2014
-		// added for compatibility, only used for TST.CUSTOM tests
 	}
 }

@@ -44,8 +44,18 @@ public class Osm2D {
 	public Osm2D() {
 		min = new double[2];
 		max = new double[2];
+		Arrays.fill(min, Double.POSITIVE_INFINITY);
+		Arrays.fill(max, Double.NEGATIVE_INFINITY);
 	}
 
+	public double[] min() {
+		return min;
+	}
+	
+	public double[] max() {
+		return max;
+	}
+	
 	public double[] readAndBuffer(String dbName, TestStats ts) {
 		if (ts.cfgNDims != 2) {
 			throw new IllegalArgumentException();
@@ -85,6 +95,11 @@ public class Osm2D {
 		//We always read, because the original data[] may contain duplicates 
 		System.out.println("Reading OSM data from buffer file: " + dbName);
 		double[] data = readFromDB_Array(dbName, ts);
+		
+		for (int i = 0; i < data.length; i += 2) {
+			minMax(data[i], 0);
+			minMax(data[i+1], 1);
+		}
 		
 //		if (false) {
 //			//draw output

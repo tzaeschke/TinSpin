@@ -44,19 +44,19 @@ public class TestManager {
 //			testSeries(TST.CUBE, IDX.XTS, 3, 1.0, sizesData);
 //			testSeries(TST.CUBE, IDX.XTR, 3, 1.0, sizesData);
 
-			sizesData = new double[]{0.1, 0.5, 1, 5, 10, 20};
-//			testSeries(TST.OSM, IDX.CBF, 2, 3.4, sizesData);
-//			testSeries(TST.OSM, IDX.CBZ, 2, 3.4, sizesData);
-//			testSeries(TST.OSM, IDX.PHC, 2, 3.4, sizesData);
-//			testSeries(TST.OSM, IDX.PHC_IPP, 2, 3.4, sizesData);
-//			testSeries(TST.OSM, IDX.RSS, 2, 3.4, sizesData);
-//			testSeries(TST.OSM, IDX.RSZ, 2, 3.4, sizesData);
-			testSeries(TST.OSM, IDX.STRZ, 2, 3.4, sizesData);
-//			testSeries(TST.OSM, IDX.KD_LEVY, 2, 3.4, sizesData);
-//			testSeries(TST.OSM, IDX.KD_SAVA, 2, 3.4, sizesData);
-//			testSeries(TST.OSM, IDX.QKDZ, 2, 3.4, sizesData);
-//			testSeries(TST.OSM, IDX.XTS, 2, 3.4, sizesData);
-//			testSeries(TST.OSM, IDX.XTR, 2, 3.4, sizesData);
+			sizesData = new double[]{0.1, 0.5, 1, 5, 10, 25};
+//			testSeries(TST.OSM, IDX.CBF, 2, 1.0, sizesData);
+//			testSeries(TST.OSM, IDX.CBZ, 2, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.PHC, 2, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.PHC_IPP, 2, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.RSS, 2, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.RSZ, 2, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.STRZ, 2, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.KD_LEVY, 2, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.KD_SAVA, 2, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.QKDZ, 2, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.XTS, 2, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.XTR, 2, 1.0, sizesData);
 
 			sizesData = new double[]{0.1, 0.5, 1, 5, 10};
 //			testSeries(TST.CLUSTER, IDX.CBF, 3, 3.4, sizesData);
@@ -65,7 +65,7 @@ public class TestManager {
 //			testSeries(TST.CLUSTER, IDX.PHC_IPP, 3, 3.4, sizesData);
 //			testSeries(TST.CLUSTER, IDX.RSS, 3, 3.4, sizesData);
 //			testSeries(TST.CLUSTER, IDX.RSZ, 3, 3.4, sizesData);
-			testSeries(TST.CLUSTER, IDX.STRZ, 3, 3.4, sizesData);
+//			testSeries(TST.CLUSTER, IDX.STRZ, 3, 3.4, sizesData);
 //			testSeries(TST.CLUSTER, IDX.KD_LEVY, 3, 3.4, sizesData);
 //			testSeries(TST.CLUSTER, IDX.KD_SAVA, 3, 3.4, sizesData);
 //			testSeries(TST.CLUSTER, IDX.QKDZ, 3, 3.4, sizesData);
@@ -83,7 +83,7 @@ public class TestManager {
 //			suiteDims(TST.CUBE, IDX.PHC_IPP, 1, 1.0);
 //			suiteDims(TST.CUBE, IDX.RSS, 1, 1.0);
 //			suiteDims(TST.CUBE, IDX.RSZ, 1, 1.0);
-			suiteDims(TST.CUBE, IDX.STRZ, 1, 1.0);
+//			suiteDims(TST.CUBE, IDX.STRZ, 1, 1.0);
 //			suiteDims(TST.CUBE, IDX.QKDZ, 1, 1.0);
 //			suiteDims(TST.CUBE, IDX.KD_LEVY, 1, 1.0);
 //			suiteDims(TST.CUBE, IDX.KD_SAVA, 1, 1.0);
@@ -95,7 +95,7 @@ public class TestManager {
 //			suiteDims(TST.CLUSTER, IDX.PHC_IPP, 1, 3.4);
 //			suiteDims(TST.CLUSTER, IDX.RSS, 1, 3.4);
 //			suiteDims(TST.CLUSTER, IDX.RSZ, 1, 3.4);
-			suiteDims(TST.CLUSTER, IDX.STRZ, 1, 3.4);
+//			suiteDims(TST.CLUSTER, IDX.STRZ, 1, 3.4);
 //			suiteDims(TST.CLUSTER, IDX.QKDZ, 1, 3.4);
 //			suiteDims(TST.CLUSTER, IDX.KD_LEVY, 1, 3.4);
 //			suiteDims(TST.CLUSTER, IDX.KD_SAVA, 1, 3.4);
