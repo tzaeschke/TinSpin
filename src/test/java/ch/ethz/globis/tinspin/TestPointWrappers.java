@@ -53,6 +53,7 @@ public class TestPointWrappers extends AbstractWrapperTest {
 		l.add(new Object[]{IDX.PHC2_IPP.getCandidateClassNamePoint()});
 		//l.add(new Object[]{IDX.QKDZ.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.RSZ.getCandidateClassNamePoint()});
+		l.add(new Object[]{IDX.STRZ.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.CBZ.getCandidateClassNamePoint()});
 		return l;
 	}

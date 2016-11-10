@@ -51,6 +51,7 @@ public class TestRectangleWrappers extends AbstractWrapperTest {
 		l.add(new Object[]{IDX.PHCF.getCandidateClassNameRectangle()});
 		l.add(new Object[]{IDX.PHC_IPP.getCandidateClassNameRectangle()});
 		l.add(new Object[]{IDX.RSZ.getCandidateClassNameRectangle()});
+		l.add(new Object[]{IDX.STRZ.getCandidateClassNameRectangle()});
 		l.add(new Object[]{IDX.QKDZ.getCandidateClassNameRectangle()});
 		return l;
 	}

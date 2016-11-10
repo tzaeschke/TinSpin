@@ -304,7 +304,7 @@ public class TestManager {
 			ts.cfgWindowQuerySize = wqs;
 			runTest(ts);
 		}
-		log.writeLogFileForTestSeries("sizeP");
+		log.writeLogFileForTestSeries("sizePWQS");
 	}
 
 	/**
@@ -350,7 +350,7 @@ public class TestManager {
 			TestStats.DEFAULT_W_QUERY_SIZE = wqs;
 			testR(3, TEST, INDEX, DIM, N*1000*1000, param1);
 		}
-		log.writeLogFileForTestSeries("sizeR");
+		log.writeLogFileForTestSeries("sizeRWQS");
 	}
 
 	
