@@ -150,7 +150,7 @@ public class TestStats implements Serializable, Cloneable {
 	public static int DEFAULT_W_QUERY_SIZE = 1000;
 	public static int DEFAULT_N_WINDOW_QUERY = 1000; //number of range queries
 	public static int DEFAULT_N_POINT_QUERY = 1000*1000; //number of point queries
-	public static int DEFAULT_N_KNN_QUERY = 10*100;
+	public static int DEFAULT_N_KNN_QUERY = 10*1000;
 	public static int DEFAULT_N_UPDATES = 100*1000;
 	public static int DEFAULT_N_UPDATE_CYCLES = 10;
 

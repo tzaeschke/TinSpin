@@ -1,4 +1,4 @@
-package ch.ethz.globis.tinspin;
+package ch.ethz.globis.tinspin.util;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,15 +11,27 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class TestLogging {
+import ch.ethz.globis.tinspin.TestStats;
+
+public class Logging {
 
 	private final ArrayList<TestStats> stats = new ArrayList<>();
 	private final ArrayList<TestStats> avgStats = new ArrayList<>();
 	
-	private Path logFolder = createLogFolder();
+	private final String dateStamp;
+	private final Path logFolder;
 	private final ArrayList<TestStats> logBufferStats = new ArrayList<>();
 	private final ArrayList<TestStats> logBufferAvgStats = new ArrayList<>();
+	private Path logSubFolder;
 
+	public Logging() {
+		SimpleDateFormat FT = new SimpleDateFormat ("yyyyMMdd-HHmmss");
+		dateStamp = FT.format(new Date());
+		logFolder = createLogFolder();
+		//just for now...
+		logSubFolder = logFolder;
+	}
+	
 	/**
 	 * Prints all results to console.
 	 */
@@ -72,6 +84,18 @@ public class TestLogging {
 		List<TestStats> toAggregate = stats.subList(n-nStats, n); 
 		TestStats avg = TestStats.aggregate(toAggregate);
 		return avg;
+	}
+	
+	/**
+	 * Sets the logfolder for subsequent logs.
+	 * Every following call to logResultAverage will cause
+	 * a logfile to be (re-)written with all know result for the current series.
+	 * @param subDir
+	 */
+	//TODO remove writeLogFileForSeries()
+	//TODO public
+	private void setLogSubFolder(String subDir) {
+		logSubFolder = Paths.get(logFolder.toString(), subDir);
 	}
 
 	/**
@@ -136,8 +160,8 @@ public class TestLogging {
 	}
 
 	private void writeLogFileFull() {
-		Path file = Paths.get(logFolder.toString(), "full.txt");
-		Path fileBak = Paths.get(logFolder.toString(), "full.bak");
+		Path file = Paths.get(logFolder.toString(), "full-" + dateStamp + ".txt");
+		Path fileBak = Paths.get(logFolder.toString(), "full-" + dateStamp + ".bak");
 		try {
 			if (Files.exists(fileBak)) {
 				//just in case...
@@ -178,9 +202,8 @@ public class TestLogging {
 		}
 	}
 
-	private static Path createLogFolder() {
-		SimpleDateFormat FT = new SimpleDateFormat ("yyyyMMdd-HHmmss");
-		Path dir = Paths.get("target", "logs", FT.format(new Date()));
+	private Path createLogFolder() {
+		Path dir = Paths.get("target", "logs", dateStamp);
 		try {
 			Files.createDirectories(dir);
 		} catch (IOException e) {
