@@ -55,14 +55,14 @@ public class TestRunner {
 		}
 		
 		final int DIM = 2;
-		final int N = 1*1000*1000;
+		final int N = 1*10*1000;
 						
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.STRZ, N, DIM, false, 1.0);
 		TestStats s0 = new TestStats(TST.OSM, IDX.QKDZ, N, 2, false, 1.0);
-//		s0.cfgWindowQueryRepeat = 1000;
+		s0.cfgWindowQueryRepeat = 1000;
 		s0.cfgPointQueryRepeat = 10000;
 		s0.cfgUpdateSize = 1000;
 
