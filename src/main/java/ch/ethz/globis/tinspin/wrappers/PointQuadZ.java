@@ -18,10 +18,11 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class PointQuadZ extends Candidate {
 	
-	private final QuadTreeKD<double[]> phc;
+	private QuadTreeKD<double[]> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
+	private final int maxNodeSize = 10;
 	
 	/**
 	 * Setup of a native PH tree
@@ -31,11 +32,39 @@ public class PointQuadZ extends Candidate {
 	public PointQuadZ(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
-		phc = QuadTreeKD.create(dims);
+		//phc = QuadTreeKD.create(dims);
 	}
 	
 	@Override
 	public void load(double[] data, int dims) {
+		double[] min = new double[dims];
+		double[] max = new double[dims];
+		Arrays.fill(min, Double.POSITIVE_INFINITY);
+		Arrays.fill(max, Double.NEGATIVE_INFINITY);
+		for (int i = 0; i < N; i+=dims) {
+			for (int d = 0; d < dims; d++) {
+				double x = data[i*dims+d];
+				if (x > max[d]) {
+					max[d] = x;
+				}
+				if (x < min[d]) {
+					min[d] = x;
+				}
+			}
+		}
+
+		double[] center = new double[dims];
+		double r = 0;
+		for (int i = 0; i < dims; i++) {
+			center[i] = (max[i]+min[i])/2;
+			double d = max[i]-min[i];
+			if (r < d) {
+				r = d;
+			}
+		}
+		
+		phc = QuadTreeKD.create(dims, maxNodeSize, center, r);
+
 		for (int i = 0; i < N; i++) {
 			double[] buf = new double[dims];
 			for (int d = 0; d < dims; d++) {
