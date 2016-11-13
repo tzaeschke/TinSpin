@@ -228,6 +228,12 @@ public class RectangleArray extends Candidate {
 			System.arraycopy(data, i2*dims*2+dims, hi, 0, dims);
 			n += delete(lo, hi) ? 1 : 0;
 		}
+		if ((N%2) != 0) {
+			int i = (N>>1);
+			System.arraycopy(data, i*dims*2, lo, 0, dims);
+			System.arraycopy(data, i*dims*2+dims, hi, 0, dims);
+			n += delete(lo, hi) ? 1 : 0;
+		}
 		return n;
 	}
 	

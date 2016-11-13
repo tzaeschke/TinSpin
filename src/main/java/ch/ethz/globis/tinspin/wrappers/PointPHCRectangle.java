@@ -106,6 +106,11 @@ public class PointPHCRectangle extends Candidate {
 			e = getEntry(l, N-i-1);
 			n += phc.remove(e, e) != null ? 1 : 0;
 		}
+		if ((N%2) != 0) {
+			int i = (N>>1);
+			long[] e = getEntry(l, i);
+			n += phc.remove(e, e) != null ? 1 : 0;
+		}
 		return n;
 	}
 

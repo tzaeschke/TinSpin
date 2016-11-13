@@ -9,21 +9,22 @@ package ch.ethz.globis.tinspin.wrappers;
 import java.util.Arrays;
 import java.util.List;
 
-import org.zoodb.index.quadtree.QREntryDist;
-import org.zoodb.index.quadtree.QuadTreeRKD;
-import org.zoodb.index.quadtree.QuadTreeKD.QStats;
-import org.zoodb.index.quadtree.QuadTreeRKD.QIterator;
+import org.zoodb.index.quadtree2.QREntryDist;
+import org.zoodb.index.quadtree2.QuadTreeRKD;
+import org.zoodb.index.quadtree2.QuadTreeKD.QStats;
+import org.zoodb.index.quadtree2.QuadTreeRKD.QIterator;
 
 import ch.ethz.globis.tinspin.TestStats;
 
 public class RectangleQuadZ extends Candidate {
 	
-	private final QuadTreeRKD<Object> phc;
+	private QuadTreeRKD<Object> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
 	private static final Object O = new Object();
 	private QIterator<Object> query = null;
+	private final int maxNodeSize = 10;
 	
 	/**
 	 * Setup of a native PH tree
@@ -33,11 +34,29 @@ public class RectangleQuadZ extends Candidate {
 	public RectangleQuadZ(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
-		this.phc = QuadTreeRKD.create(dims);
+		//this.phc = QuadTreeRKD.create(dims);
 	}
 	
 	@Override
 	public void load(double[] data, int dims) {
+		double[] min = new double[dims];
+		double[] max = new double[dims];
+		Arrays.fill(min, Double.POSITIVE_INFINITY);
+		Arrays.fill(max, Double.NEGATIVE_INFINITY);
+		for (int i = 0; i < N; i+=dims) {
+			for (int d = 0; d < dims; d++) {
+				double x = data[i*dims+d];
+				if (x > max[d]) {
+					max[d] = x;
+				}
+				if (x < min[d]) {
+					min[d] = x;
+				}
+			}
+		}
+
+		this.phc = QuadTreeRKD.create(dims, maxNodeSize, min, max);
+		
 		int pos = 0;
 		for (int n = 0; n < N; n++) {
 			double[] lo = new double[dims];
@@ -86,6 +105,12 @@ public class RectangleQuadZ extends Candidate {
 			System.arraycopy(data, i2*dims*2, lo, 0, dims);
 			System.arraycopy(data, i2*dims*2+dims, hi, 0, dims);
 			n += phc.remove(lo, hi) != null? 1 : 0;
+		}
+		if ((N%2) != 0) {
+			int i = (N>>1);
+			System.arraycopy(data, i*dims*2, lo, 0, dims);
+			System.arraycopy(data, i*dims*2+dims, hi, 0, dims);
+			n += phc.remove(lo, hi) != null ? 1 : 0;
 		}
 		return n;
 	}

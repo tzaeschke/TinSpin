@@ -9,16 +9,16 @@ package ch.ethz.globis.tinspin.data;
 import java.util.Random;
 
 import ch.ethz.globis.tinspin.TestStats;
-import ch.ethz.globis.tinspin.data.osm.Osm2D;
+import ch.ethz.globis.tinspin.data.osm.OsmPoint2D;
 
 /**
  * @author Tilmann Zaeschke
  */
-public class TestPointOpenStreetMap extends TestPoint {
+public class TestPointOSM extends TestPoint {
 
 	private static final String dbName = "OsmBufferDB";
 
-	protected TestPointOpenStreetMap(Random R, TestStats S) {
+	protected TestPointOSM(Random R, TestStats S) {
 		super(R, S);
 	}
 
@@ -32,7 +32,7 @@ public class TestPointOpenStreetMap extends TestPoint {
 		
 		//OsmIO io = new OsmIO(DIM);
 		//double[] data = io.readAndBuffer(dbName, S);
-		Osm2D osm = new Osm2D();
+		OsmPoint2D osm = new OsmPoint2D();
 		double[] data = osm.readAndBuffer(dbName, S);
 		globalMin[0] = osm.min()[0];
 		globalMax[0] = osm.max()[0];

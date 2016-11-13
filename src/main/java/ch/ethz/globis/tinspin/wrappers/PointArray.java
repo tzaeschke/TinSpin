@@ -219,6 +219,11 @@ public class PointArray extends Candidate {
 			System.arraycopy(data, i2*dims, p, 0, dims);
 			n += delete(p) ? 1 : 0;
 		}
+		if ((N%2) != 0) {
+			int i = (N>>1);
+			System.arraycopy(data, i*dims, p, 0, dims);
+			n += delete(p) ? 1 : 0;
+		}
 		return n;
 	}
 	

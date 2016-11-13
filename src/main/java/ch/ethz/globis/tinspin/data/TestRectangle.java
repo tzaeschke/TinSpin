@@ -21,7 +21,7 @@ public abstract class TestRectangle extends AbstractTest {
 		switch (S.TEST) {
 		case CUBE: return new TestRectangleCube(R, S);
 		case CLUSTER: return new TestRectangleCluster(R, S);
-		//case OSM: return new TestRectangleOpenStreetMap(R, S);
+		case OSM: return new TestRectangleOSM(R, S);
 		case TIGER: return new TestRectangleTiger(R, S);
 		case TOUCH: return new TestRectangleTOUCH(R, S);
 		default:

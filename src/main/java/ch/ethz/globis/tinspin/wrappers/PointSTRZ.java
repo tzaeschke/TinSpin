@@ -85,6 +85,10 @@ public class PointSTRZ extends Candidate {
 			n += phc.remove(getEntry(l, i)) != null ? 1 : 0;
 			n += phc.remove(getEntry(l, N-i-1)) != null ? 1 : 0;
 		}
+		if ((N%2) != 0) {
+			int i = (N>>1);
+			n += phc.remove(getEntry(l, i)) != null ? 1 : 0;
+		}
 		return n;
 	}
 

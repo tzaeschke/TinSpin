@@ -32,7 +32,7 @@ import ch.ethz.globis.tinspin.TestStats;
 import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDouble;
 import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDoubleParent;
 
-public class Osm2D {
+public class OsmPoint2D {
 
 	private static final SimpleDateFormat FT = 
 		      new SimpleDateFormat ("yyyy-MM-dd'T'hh:mm:ss'Z'");
@@ -41,7 +41,7 @@ public class Osm2D {
 
 	public static String OSM_PATH = "F:\\data\\OSM";
 	
-	public Osm2D() {
+	public OsmPoint2D() {
 		min = new double[2];
 		max = new double[2];
 		Arrays.fill(min, Double.POSITIVE_INFINITY);

@@ -114,6 +114,11 @@ public class RectanglePHC2 extends Candidate {
 			pre.pre(data, i2*dims*2, data, i2*dims*2+dims, buffer);
 			n += phc.remove(buffer) != null? 1 : 0;
 		}
+		if ((N%2) != 0) {
+			int i = (N>>1);
+			pre.pre(data, i*dims*2, data, i*dims*2+dims, buffer);
+			n += phc.remove(buffer) != null ? 1 : 0;
+		}
 		return n;
 	}
 	

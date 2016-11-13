@@ -100,6 +100,10 @@ public class PointCritBitZ extends Candidate {
 			n += sfc.removeKD(getEntryDPR(e, N-i-1)) != null ? 1 : 0;
 			//n+=2;
 		}
+		if ((N%2) != 0) {
+			int i = (N>>1);
+			n += sfc.removeKD(getEntryDPR(e, i)) != null ? 1 : 0;
+		}
 		return n;
 	}
 
