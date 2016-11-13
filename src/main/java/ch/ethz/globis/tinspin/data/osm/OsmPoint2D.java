@@ -31,6 +31,18 @@ import ch.ethz.globis.tinspin.TestStats;
 import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDouble;
 import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDoubleParent;
 
+/**
+ * OSM XML point reader.
+ * 
+ * This class reads all OSM XML files in the specified folder and
+ * extracts all points (nodes). The nodes are then stored 
+ * in a ZooDB for faster read.
+ * Geometric duplicates are removed (i.e. points with identical 
+ * coordinates).
+ * 
+ * @author Tilmann Zäschke
+ *
+ */
 public class OsmPoint2D {
 
 	@SuppressWarnings("unused")

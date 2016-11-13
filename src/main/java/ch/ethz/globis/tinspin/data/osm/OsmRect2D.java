@@ -30,6 +30,18 @@ import ch.ethz.globis.tinspin.TestStats;
 import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDouble;
 import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDoubleParent;
 
+/**
+ * OSM XML rectangle (line segment) reader.
+ * 
+ * This class reads all OSM XML files in the specified folder and
+ * extracts all lines (ways). The line segments are stored as rectangles
+ * (bounding boxes) in a ZooDB for faster read.
+ * Geometric duplicates are removed (i.e. line segments with identical 
+ * bounding boxes).
+ * 
+ * @author Tilmann Zäschke
+ *
+ */
 public class OsmRect2D {
 
 	@SuppressWarnings("unused")
@@ -74,22 +86,11 @@ public class OsmRect2D {
 
 			System.out.println("Allocating arrays ...");
 			int nPoints = ts.cfgNEntries * 2;//two point per segment, max
-			double[][] data = new double[nPoints][ts.cfgNDims];
-			long[] ids = new long[nPoints];
 			
 			System.out.println("Reading points ...");
-			readFolderPoints(OSM_PATH, data, ids);
-			
-			System.out.println("Loading point map ...");
 			PrimLongMapLI<double[]> map = new PrimLongMapLI<>(nPoints);
-			for (int i = 0; i < data.length; i++) {
-				map.put(ids[i], data[i]);
-				printProgress(i);
-			}
-			System.out.println();
-			data = null;
-			ids = null;
-
+			readFolderPoints(OSM_PATH, map, nPoints);
+			
 			System.out.println("Reading ways ...");
 			idx = PhTreeSolidF.create(DIM);
 			readFolderWays(OSM_PATH, map, idx, ts.cfgNEntries);
@@ -119,38 +120,6 @@ public class OsmRect2D {
 		return data;
 	}
 
-//	static void storeToDB(ArrayList<OSMEntry> entries, String dbName) {
-//		log("Storing to database");
-//		ZooHelper.getDataStoreManager().createDb(dbName);
-//		
-//		ZooJdoProperties prop = new ZooJdoProperties(dbName);
-//		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(prop);
-//		//pmf.setRetainValues(true);  //TODO?
-//		PersistenceManager pm = pmf.getPersistenceManager();
-//		pm.currentTransaction().begin();
-//		
-//		long t1 = System.currentTimeMillis();
-//		
-//		int n = 0;
-//		for (OSMEntry e: entries) {
-//			if (e == null) {
-//				continue;
-//			}
-//			pm.makePersistent(e);
-//			if (n++ % 10000 ==0) {
-//				long t2 = System.currentTimeMillis();
-//				System.out.println("n=" + n + "     t=" + (t2-t1));
-//				t1 = t2;
-//				pm.currentTransaction().commit();
-//				pm.currentTransaction().begin();
-//			}
-//		}
-//		
-//		pm.currentTransaction().commit();
-//		pm.close();
-//		pmf.close();
-//	}
-	
 	private void storeToDB(PhTreeSolidF<Object> idx, String dbName) {
 		log("Storing to database");
 		ZooHelper.getDataStoreManager().createDb(dbName);
@@ -186,7 +155,7 @@ public class OsmRect2D {
 			if (n % PersistentArrayDoubleParent.CHUNK_SIZE == 0) {
 				pm.currentTransaction().commit();
 				pm.currentTransaction().begin();
-				pm.evict(data);
+				pm.evict(pad);
 				pad = list.getNextForWrite();
 				data = pad.getData();
 				pos = 0;
@@ -257,8 +226,7 @@ public class OsmRect2D {
 	}
 	
 	
-	private void readFolderPoints(String pathName, double[][] data, long[] ids) {
-		int MAX_E = ids.length;
+	private void readFolderPoints(String pathName, PrimLongMapLI<double[]> map, int MAX_E) {
 		File dir = new File(pathName);
 		if (!dir.exists()) {
 			return;
@@ -273,7 +241,7 @@ public class OsmRect2D {
 				continue;
 			}
 
-			pos = readFile_P(f, data, ids, pos, MAX_E);
+			pos = readFile_P(f, map, pos, MAX_E);
 
 			if (pos >= MAX_E) {
 				break;
@@ -288,7 +256,7 @@ public class OsmRect2D {
 	 * @param b2 
 	 * @param entries2 
 	 */
-	private final int readFile_P(File fFile, double[][] data, long[] ids, 
+	private final int readFile_P(File fFile, PrimLongMapLI<double[]> map, 
 			int pos, int MAX_E) {
 		//Note that FileReader is used, not File, since File is not Closeable
 		BufferedReader scanner;
@@ -310,12 +278,15 @@ public class OsmRect2D {
 				line = line.trim();
 				if (line.startsWith("<node")) {
 					nNode++;
-					readOSM_P(line, data, ids, pos);
+					readOSM_P(line, map);
 					pos++;
 					if (nNode >= MAX_E) {
 						return pos;
 					}
 					printProgress(nNode);
+				} else if (line.startsWith("<way")) {
+					//abort, node block is finished.
+					break;
 				}
 			}
 			
@@ -350,7 +321,7 @@ public class OsmRect2D {
 		}
 	}
 	
-	private static void readOSM_P(String line, double[][] node, long[] ids, int pos) {
+	private void readOSM_P(String line, PrimLongMapLI<double[]> map) {
 		long id = -1;
 		double lat = 0;
 		double lon = 0;
@@ -374,45 +345,62 @@ public class OsmRect2D {
 
 			k1 = line.indexOf('"', k2+1);
 			k2 = line.indexOf('"', k1+1);
-			String val = line.substring(k1+1, k2);
 			//System.out.println("key=" + key + "  val="+val);
-			switch (key.charAt(0)) {
-			case 'i': //if ("id".equals(key)) {
-				id = Long.parseLong(val); break;
-			case 'l': 
-				if ("lon".equals(key)) {
+			//String val = line.substring(k1+1, k2);
+			
+			int c0 = key.charAt(0);
+			if (c0 == 'i') {
+				String val = line.substring(k1+1, k2);
+				id = Long.parseLong(val); 
+			} else if (c0 == 'l') {
+				char c1 = key.charAt(1);
+				char c2 = key.charAt(2);
+				if (c1 == 'o' && c2 == 'n') { // 'lon' 
+					String val = line.substring(k1+1, k2);
 					lon = Double.parseDouble(val);
-				} else if ("lat".equals(key)) {
+				} else if (c1 == 'a' && c2 == 't') { // 'lat'
+					String val = line.substring(k1+1, k2);
 					lat = Double.parseDouble(val);
-				} 
-				break;
-			case 'u': 
+				}
+			}
+
+//			switch (key.charAt(0)) {
+//			case 'i': //if ("id".equals(key)) {
+//				id = Long.parseLong(val); break;
+//			case 'l': 
+//				if ("lon".equals(key)) {
+//					lon = Double.parseDouble(val);
+//				} else if ("lat".equals(key)) {
+//					lat = Double.parseDouble(val);
+//				} 
+//				break;
+//			case 'u': 
 //				if ("user".equals(key)) {
 //					user = val;
 //				} else if ("uid".equals(key)) {
 //					uid = Integer.parseInt(val);
 //				}
-				break;
-			case 'v':
+//				break;
+//			case 'v':
 //				if ("visible".equals(key)) {
 //					visible = Boolean.parseBoolean(val);
 //				} else if ("version".equals(key)) {
 //					version = Integer.parseInt(val);
 //				}
-				break;
-			case 'c': //if ("changeset".equals(key)) {
+//				break;
+//			case 'c': //if ("changeset".equals(key)) {
 //				changeset = Integer.parseInt(val); 
-				break;
-			case 't': //if ("timestamp".equals(key)) {
+//				break;
+//			case 't': //if ("timestamp".equals(key)) {
 //				try {
 //					date = FT.parse(val).getTime();
 //				} catch (ParseException e) {
 //					throw new RuntimeException(e);
 //				}
-				break;
-			default:
-				throw new IllegalStateException("key=" + key);
-			}
+//				break;
+//			default:
+//				throw new IllegalStateException("key=" + key);
+//			}
 		} while (true);
 		
 //		lat = Double.parseDouble(line.substring(k1+1, k2));
@@ -429,9 +417,13 @@ public class OsmRect2D {
 //
 //		date = Date.parse(line.substring(k1+1, k2));
 
-		node[pos][0] = lon;
-		node[pos][1] = lat;
-		ids[pos] = id;
+		double[] node = new double[DIM];
+		node[0] = lon;
+		node[1] = lat;
+		map.put(id, node);
+//		node[pos][0] = lon;
+//		node[pos][1] = lat;
+//		ids[pos] = id;
 //		node[pos+0] = id;
 //		node[pos+1] = (long) (lon*10000000);
 //		node[pos+2] = (long) (lat*10000000);
@@ -524,6 +516,7 @@ public class OsmRect2D {
 							nDuplicates++;
 						}
 						nRect++;
+						printProgress(nRect);
 					}
 					prevNode = node;
 					
@@ -536,9 +529,12 @@ public class OsmRect2D {
 						System.out.println("Duplicates: " + nDuplicates);
 						return pos;
 					}
-					printProgress(nRect);
 				} else { 
 					prevNode = null;
+					if (line.startsWith("<relation")) {
+						//abort, 'ways' block is finished.
+						break;
+					}
 				}
 			}
 			
