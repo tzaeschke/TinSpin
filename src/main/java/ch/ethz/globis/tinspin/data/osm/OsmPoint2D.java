@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +33,7 @@ import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDoubleParent;
 
 public class OsmPoint2D {
 
+	@SuppressWarnings("unused")
 	private static final SimpleDateFormat FT = 
 		      new SimpleDateFormat ("yyyy-MM-dd'T'hh:mm:ss'Z'");
 
@@ -379,15 +379,15 @@ public class OsmPoint2D {
 	}
 
 	private static void readOSM(String line, double[] node, int pos) {
-		long id = -1;
+//		long id = -1;
 		double lat = 0;
 		double lon = 0;
-		String user;
-		int uid = -1;
-		boolean visible = true;
-		int version = -1;
-		int changeset = -1;
-		long date = -1;
+//		String user;
+//		int uid = -1;
+//		boolean visible = true;
+//		int version = -1;
+//		int changeset = -1;
+//		long date = -1;
 		
 		int k1 = 0;
 		int k2 = -1;
@@ -406,7 +406,8 @@ public class OsmPoint2D {
 			//System.out.println("key=" + key + "  val="+val);
 			switch (key.charAt(0)) {
 			case 'i': //if ("id".equals(key)) {
-				id = Long.parseLong(val); break;
+//				id = Long.parseLong(val); 
+				break;
 			case 'l': 
 				if ("lon".equals(key)) {
 					lon = Double.parseDouble(val);
@@ -415,27 +416,28 @@ public class OsmPoint2D {
 				} 
 				break;
 			case 'u': 
-				if ("user".equals(key)) {
-					user = val;
-				} else if ("uid".equals(key)) {
-					uid = Integer.parseInt(val);
-				}
+//				if ("user".equals(key)) {
+//					user = val;
+//				} else if ("uid".equals(key)) {
+//					uid = Integer.parseInt(val);
+//				}
 				break;
 			case 'v':
-				if ("visible".equals(key)) {
-					visible = Boolean.parseBoolean(val);
-				} else if ("version".equals(key)) {
-					version = Integer.parseInt(val);
-				}
+//				if ("visible".equals(key)) {
+//					visible = Boolean.parseBoolean(val);
+//				} else if ("version".equals(key)) {
+//					version = Integer.parseInt(val);
+//				}
 				break;
 			case 'c': //if ("changeset".equals(key)) {
-				changeset = Integer.parseInt(val); break;
+//				changeset = Integer.parseInt(val); 
+				break;
 			case 't': //if ("timestamp".equals(key)) {
-				try {
-					date = FT.parse(val).getTime();
-				} catch (ParseException e) {
-					throw new RuntimeException(e);
-				}
+//				try {
+//					date = FT.parse(val).getTime();
+//				} catch (ParseException e) {
+//					throw new RuntimeException(e);
+//				}
 				break;
 			default:
 				throw new IllegalStateException("key=" + key);

@@ -55,7 +55,7 @@ public class TestRunner {
 		}
 		
 		final int DIM = 3;
-		final int N = 1*1000*1000;
+		final int N = 150*1000*1000;
 						
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, true, 1.0);
 		TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, true, 1.0);

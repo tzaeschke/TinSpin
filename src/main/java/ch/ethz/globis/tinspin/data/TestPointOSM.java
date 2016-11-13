@@ -16,7 +16,7 @@ import ch.ethz.globis.tinspin.data.osm.OsmPoint2D;
  */
 public class TestPointOSM extends TestPoint {
 
-	private static final String dbName = "OsmBufferDB";
+	private static final String dbName = "OsmBufferDB_P";
 
 	protected TestPointOSM(Random R, TestStats S) {
 		super(R, S);
