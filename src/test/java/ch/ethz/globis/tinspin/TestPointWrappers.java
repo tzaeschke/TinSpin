@@ -35,10 +35,10 @@ public class TestPointWrappers extends AbstractWrapperTest {
 		//init results
 		//use this as reference for all others
 		//if the naive implementation should be wrong, the others should fail as well
-		expectedCube = createStats(candidate, TST.CUBE, N, dims, false, 1.0);
+		expectedCube = createUnitTestStats(candidate, TST.CUBE, N, dims, false, 1.0);
 		new TestRunner(expectedCube).run();
 
-		expectedCluster = createStats(candidate, TST.CLUSTER, N, dims, false, 3.4);
+		expectedCluster = createUnitTestStats(candidate, TST.CLUSTER, N, dims, false, 3.4);
 		new TestRunner(expectedCluster).run();
 	}
 	
@@ -61,7 +61,7 @@ public class TestPointWrappers extends AbstractWrapperTest {
 	@Test
 	@Parameters
     public void testCube() {
-		TestStats ts = createStats(candidate, TST.CUBE, N, dims, false, 1.0);
+		TestStats ts = createUnitTestStats(candidate, TST.CUBE, N, dims, false, 1.0);
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 
@@ -71,7 +71,7 @@ public class TestPointWrappers extends AbstractWrapperTest {
 	@Test
 	@Parameters
     public void testCluster() {
-		TestStats ts = createStats(candidate, TST.CLUSTER, N, dims, false, 3.4);
+		TestStats ts = createUnitTestStats(candidate, TST.CLUSTER, N, dims, false, 3.4);
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 

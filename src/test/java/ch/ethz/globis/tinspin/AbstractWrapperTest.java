@@ -17,7 +17,7 @@ public abstract class AbstractWrapperTest {
 	protected static final int N = 10*1000;
 	protected static final int dims = 3;
 
-	public static TestStats createStats(
+	public static TestStats createUnitTestStats(
 			String candidate, TST tst, int N, int dims, boolean isRangeData, double param1) {
 		TestStats ts = new TestStats(tst, IDX.CUSTOM, N, dims, isRangeData, param1);
 		ts.setCandidateClass(candidate);

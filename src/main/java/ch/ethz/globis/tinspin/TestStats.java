@@ -147,6 +147,9 @@ public class TestStats implements Serializable, Cloneable {
 		CSV;
 	}
 
+	/** How often are tests repeated? */
+	public static int DEFAULT_CFG_REPEAT = 3;
+	
 	public static int DEFAULT_W_QUERY_SIZE = 1000;
 	public static int DEFAULT_N_WINDOW_QUERY = 1000; //number of range queries
 	public static int DEFAULT_N_POINT_QUERY = 1000*1000; //number of point queries
@@ -175,7 +178,7 @@ public class TestStats implements Serializable, Cloneable {
 
 	//configuration
 	/** how often to repeat the test. */
-	int cfgNRepeat = 3;
+	int cfgNRepeat = DEFAULT_CFG_REPEAT;
 	int cfgNBits = 64; //default
 	public int cfgNDims;
 	public int cfgNEntries;

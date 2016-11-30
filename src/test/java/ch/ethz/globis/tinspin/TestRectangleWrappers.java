@@ -35,10 +35,10 @@ public class TestRectangleWrappers extends AbstractWrapperTest {
 		//init results
 		//use this as reference for all others
 		//if the naive implementation should be wrong, the others should fail as well
-		expectedCube = createStats(candidate, TST.CUBE, N, dims, true, 1.0);
+		expectedCube = createUnitTestStats(candidate, TST.CUBE, N, dims, true, 1.0);
 		new TestRunner(expectedCube).run();
 
-		expectedCluster = createStats(candidate, TST.CLUSTER, N, dims, true, 3.4);
+		expectedCluster = createUnitTestStats(candidate, TST.CLUSTER, N, dims, true, 3.4);
 		new TestRunner(expectedCluster).run();
 	}
 	
@@ -60,7 +60,7 @@ public class TestRectangleWrappers extends AbstractWrapperTest {
 	@Parameters
     public void testCube() {
 		//0.00001 is the default size of the rectangles
-		TestStats ts = createStats(candidate, TST.CUBE, N, dims, true, 1.0);
+		TestStats ts = createUnitTestStats(candidate, TST.CUBE, N, dims, true, 1.0);
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 		
@@ -70,7 +70,7 @@ public class TestRectangleWrappers extends AbstractWrapperTest {
 	@Test
 	@Parameters
     public void testCluster() {
-		TestStats ts = createStats(candidate, TST.CLUSTER, N, dims, true, 3.4);
+		TestStats ts = createUnitTestStats(candidate, TST.CLUSTER, N, dims, true, 3.4);
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 
