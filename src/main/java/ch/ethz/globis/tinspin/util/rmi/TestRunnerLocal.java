@@ -60,11 +60,11 @@ public class TestRunnerLocal implements TestRunnerAPI {
 	
 	static TestStats test(TestStats stats) {
 		//warm-up
-		//testWarm(TEST, INDEX, DIM, DEPTH, 100*1000, 0, param1);
 		TestStats s2 = stats.cloneStats();
 		s2.setN(100*1000);
 		s2.setSeed(0);
 		testWarm(s2);
+		
 		//warm test
 		return testWarm(stats);
 	}

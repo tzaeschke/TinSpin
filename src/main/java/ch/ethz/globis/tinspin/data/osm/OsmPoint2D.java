@@ -195,7 +195,7 @@ public class OsmPoint2D {
 		pmf.close();
 	}
 	
-	static void storeToDB(PhTree<Object> idx, String dbName) {
+	private void storeToDB(PhTree<Object> idx, String dbName) {
 		log("Storing to database");
 		ZooHelper.getDataStoreManager().createDb(dbName);
 		
@@ -251,7 +251,7 @@ public class OsmPoint2D {
 		max[d] = max(x, max[d]);
 	}
 	
-	static double[] readFromDB_Array(String dbName, TestStats ts) {
+	private double[] readFromDB_Array(String dbName, TestStats ts) {
 		log("Reading from database");
 		
 		ZooJdoProperties prop = new ZooJdoProperties(dbName);
@@ -295,7 +295,7 @@ public class OsmPoint2D {
 	}
 	
 	
-	static double[] readFolder(String pathName, int DIM, int MAX_E) {
+	private double[] readFolder(String pathName, int DIM, int MAX_E) {
 		try {
 			File dir = new File(pathName);
 			if (!dir.exists()) {
@@ -333,7 +333,7 @@ public class OsmPoint2D {
 	 * @param b2 
 	 * @param entries2 
 	 */
-	private static final int readFile(File fFile, double[] data, int pos, int DIM, int MAX_E) {
+	private int readFile(File fFile, double[] data, int pos, int DIM, int MAX_E) {
 		//Note that FileReader is used, not File, since File is not Closeable
 		BufferedReader scanner;
 		try {
@@ -390,7 +390,7 @@ public class OsmPoint2D {
 		return pos;
 	}
 
-	private static void readOSM(String line, double[] node, int pos) {
+	private void readOSM(String line, double[] node, int pos) {
 //		long id = -1;
 		double lat = 0;
 		double lon = 0;
