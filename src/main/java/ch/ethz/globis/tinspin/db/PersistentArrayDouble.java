@@ -4,7 +4,7 @@
  * This software is the proprietary information of ETH Zurich.
  * Use is subject to license terms.
  */
-package ch.ethz.globis.tinspin.data.tiger;
+package ch.ethz.globis.tinspin.db;
 
 import org.zoodb.jdo.spi.PersistenceCapableImpl;
 
@@ -31,4 +31,12 @@ public class PersistentArrayDouble extends PersistenceCapableImpl {
 		this.data = data;
 	}
 	
+	public void truncate(int newSize) {
+		if (newSize < data.length) {
+			zooActivateWrite();
+			double[] data2 = new double[newSize];
+			System.arraycopy(data, 0, data2, 0, newSize);
+			data = data2;
+		}
+	}
 }

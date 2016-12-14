@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.jdo.Extent;
@@ -23,13 +22,11 @@ import javax.jdo.PersistenceManagerFactory;
 import org.zoodb.jdo.ZooJdoProperties;
 import org.zoodb.tools.ZooHelper;
 
-import ch.ethz.globis.phtree.PhTree;
-import ch.ethz.globis.phtree.PhTree.PhExtent;
-import ch.ethz.globis.phtree.util.BitTools;
-import ch.ethz.globis.phtree.util.Tools;
+import ch.ethz.globis.phtree.PhTreeF;
 import ch.ethz.globis.tinspin.TestStats;
-import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDouble;
-import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDoubleParent;
+import ch.ethz.globis.tinspin.db.DbWriter;
+import ch.ethz.globis.tinspin.db.PersistentArrayDouble;
+import ch.ethz.globis.tinspin.db.PersistentArrayDoubleParent;
 
 /**
  * OSM XML point reader.
@@ -72,35 +69,18 @@ public class OsmPoint2D {
 		if (ts.cfgNDims != 2) {
 			throw new IllegalArgumentException();
 		}
-		PhTree<Object> idx = null;
 
-		//DB_ARRAY --> DB_ARRAY_NO_DUP
-		//Duplicates: 8685895
-		//Entries: 10281158
-		//Entries: 29248211
-		
-		//FILES --> DB_ARRAY_NO_DUP
-		//Duplicates: 18875845
-		//Entries: -62110
-		//Entries: 18751626
-
-		
-		//n=18967053     t=88065
-		//min/max: -178.977381/0.0  179.859681/71.441059
+		//N=215981638
+		//min/max longitude= 3.931094/20.2583918   latitude=37.7126446/49.1369103
 
 		if (!ZooHelper.dbExists(dbName)) {
 			//read from file
 			System.out.println("Creating buffer file for OSM data: " + dbName);
-			if (!ts.isRangeData) {
-				double[] data = readFolder(OSM_PATH, ts.cfgNDims, ts.cfgNEntries);
-				idx = buildIndexPHT(data, ts); 
-			} else {
-				//data = readFolderRectangle(OSM_PATH, ts.cfgNDims, Integer.MAX_VALUE);
+			if (ts.isRangeData) {
 				throw new UnsupportedOperationException();
 			}
-			System.out.println("min/max longitude= " + min[0] + "/" + max[0] + 
-					"   latitude=" + min[1] + "/" + max[1]);
-			storeToDB(idx, dbName);
+			
+			readFolder(OSM_PATH, dbName, ts);
 		} 
 
 		//read from DB
@@ -113,132 +93,16 @@ public class OsmPoint2D {
 			minMax(data[i+1], 1);
 		}
 		
+		System.out.println("min/max longitude= " + min[0] + "/" + max[0] + 
+				"   latitude=" + min[1] + "/" + max[1]);
+		System.out.println("N=" + data.length/2 + " / " + ts.cfgNEntries);
 //		if (false) {
 //			//draw output
-//			TestDraw.draw(data, DIM, 1, 2);
+//			TestDraw.draw(data, 100, MODE.POINTS);
 //		}
 		return data;
 	}
 
-	private PhTree<Object> buildIndexPHT(double[] data, TestStats ts) {
-		log("Building index");
-		Object O = new Object();
-		int dims = ts.cfgNDims;
-		int MAX_E = ts.cfgNEntries;
-		int N = data.length/(dims);
-        long memTree = Tools.getMemUsed();
-		long t1 = System.currentTimeMillis();
-		PhTree<Object> ind = PhTree.create(dims);
-		long[] l = new long[dims];
-		int nDupl = 0;
-		int n = 0;
-		for (int i = 0; i < data.length; ) {
-			for (int d = 0; d < dims; d++) {
-				minMax( data[i], d );
-				l[d] = BitTools.toSortableLong(data[i++]);
-			}
-			if (ind.put(l, O) != null) {
-				nDupl++;
-			} else {
-				n++;
-			}
-			if (n%100000 == 0) {
-				System.out.print('.');
-				if (n%10000000 == 0) {
-					System.out.println();
-				}
-			}
-			if (n >= MAX_E) {
-				break;
-			}
-		}
-		long t2 = System.currentTimeMillis();
-		ts.cfgNEntries = n;
-		System.out.println("Duplicates: " + nDupl);
-		System.out.println("Entries (max): " + (N-nDupl));
-		System.out.println("Entries (done): " + n);
-		System.out.println("Build-index time: " + (t2-t1)/1000.);
-		Tools.cleanMem(n, memTree);
-		return ind;
-	}
-	
-
-	static void storeToDB(ArrayList<OSMEntry> entries, String dbName) {
-		log("Storing to database");
-		ZooHelper.getDataStoreManager().createDb(dbName);
-		
-		ZooJdoProperties prop = new ZooJdoProperties(dbName);
-		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(prop);
-		//pmf.setRetainValues(true);  //TODO?
-		PersistenceManager pm = pmf.getPersistenceManager();
-		pm.currentTransaction().begin();
-		
-		long t1 = System.currentTimeMillis();
-		
-		int n = 0;
-		for (OSMEntry e: entries) {
-			if (e == null) {
-				continue;
-			}
-			pm.makePersistent(e);
-			if (n++ % 10000 ==0) {
-				long t2 = System.currentTimeMillis();
-				System.out.println("n=" + n + "     t=" + (t2-t1));
-				t1 = t2;
-				pm.currentTransaction().commit();
-				pm.currentTransaction().begin();
-			}
-		}
-		
-		pm.currentTransaction().commit();
-		pm.close();
-		pmf.close();
-	}
-	
-	private void storeToDB(PhTree<Object> idx, String dbName) {
-		log("Storing to database");
-		ZooHelper.getDataStoreManager().createDb(dbName);
-		
-		ZooJdoProperties prop = new ZooJdoProperties(dbName);
-		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(prop);
-		pmf.setRetainValues(true);
-		PersistenceManager pm = pmf.getPersistenceManager();
-		pm.currentTransaction().begin();
-		
-		PersistentArrayDoubleParent list = 
-				new PersistentArrayDoubleParent(idx.size(), idx.getDim());
-		pm.makePersistent(list);
-		
-		int n = 0;
-		int pos = 0;
-		final int DIM = idx.getDim(); 
-		PhExtent<Object> it = idx.queryExtent();
-		double[] data = list.getNextForWrite().getData();
-		while (it.hasNext()) {
-			long[] v = it.nextEntryReuse().getKey();
-			for (int k = 0; k < DIM; k++) {
-				data[pos++] = BitTools.toDouble(v[k]); 
-			}
-			
-			if (++n % 100000 == 0) {
-				System.out.print(".");
-			}
-			if (n % PersistentArrayDoubleParent.CHUNK_SIZE == 0) {
-				pm.currentTransaction().commit();
-				pm.currentTransaction().begin();
-				data = list.getNextForWrite().getData();
-				pos = 0;
-			}
-		}
-		System.out.println();
-		
-		log("comitting...");
-		pm.currentTransaction().commit();
-		log("done");
-		pm.close();
-		pmf.close();
-	}
-	
 	private static double min(double d1, double d2) {
 		return d1<d2 ? d1 : d2;
 	}
@@ -296,45 +160,48 @@ public class OsmPoint2D {
 	}
 	
 	
-	private double[] readFolder(String pathName, int DIM, int MAX_E) {
-		try {
-			File dir = new File(pathName);
-			if (!dir.exists()) {
-				return null;
-			}
-			double[] data = new double[DIM*MAX_E];
-			int pos = 0;
-			for (File f: dir.listFiles()) {
-				log("Reading file: " + f.getName());
-				
-				if (!f.getName().endsWith(".osm")) {
-					//skip
-					System.out.println("File skipped !!!!!!!!!!!!!!");
-					continue;
-				}
-				
-				pos = readFile(f, data, pos, DIM, MAX_E);
-
-				if (pos >= MAX_E) {
-					break;
-				}
-			}
-			data = Arrays.copyOf(data, pos);
-			System.out.println("RF: doubles: " + pos);
-			System.out.println("RF: Points: " + pos/DIM);
-			return data;
-		} finally {
-
+	private void readFolder(String pathName, String dbName, TestStats ts) {
+		File dir = new File(pathName);
+		if (!dir.exists()) {
+			return;
 		}
+		
+		int MAX_E = ts.cfgNEntries;
+		DbWriter w = new DbWriter(dbName);
+		w.init(ts.cfgNDims);
+		PhTreeF<Object> idxF = PhTreeF.create(ts.cfgNDims);
+		
+		int n = 0;
+		for (File f: dir.listFiles()) {
+			log("Reading file: " + f.getName());
+
+			if (!f.getName().endsWith(".osm")) {
+				//skip
+				System.out.println("File skipped !!!!!!!!!!!!!!");
+				continue;
+			}
+
+			n = readFile(f, n, MAX_E, idxF, w);
+
+			if (n >= MAX_E) {
+				break;
+			}
+		}
+		w.close();
+		System.out.println("RF: Points: " + n);
 	}
 	
 	
 	/** 
 	 * Template method that calls {@link #processLine(String)}.  
+	 * @param idxF 
+	 * @param w 
 	 * @param b2 
 	 * @param entries2 
 	 */
-	private int readFile(File fFile, double[] data, int pos, int DIM, int MAX_E) {
+	private int readFile(File fFile, int nTotal, int MAX_E, 
+			PhTreeF<Object> idxF, DbWriter w) {
+		Object DUMMY = new Object();
 		//Note that FileReader is used, not File, since File is not Closeable
 		BufferedReader scanner;
 		try {
@@ -347,7 +214,9 @@ public class OsmPoint2D {
 		try {
 			int nNode = 0;
 			int nL = 0;
+			int nDupl = 0;
 			String line = null;
+			double[] node = new double[idxF.getDim()];
 			while ( (line = scanner.readLine()) != null ) {//hasNext()) {
 				line = line.trim();
 				nL++;
@@ -355,22 +224,25 @@ public class OsmPoint2D {
 				line = line.trim();
 				if (line.startsWith("<node")) {
 					nNode++;
-					readOSM(line, data, pos);
-					pos+=DIM;
-					if (nNode >= MAX_E) {
-						return pos;
-					}
-					if (nNode % 10000 == 0) {
-						System.out.print('.');
-						if (nNode % 1000000 == 0) {
-							System.out.println(" points:" + nNode);
+					readOSM(line, node);
+					if (idxF.put(node, DUMMY) == null) {
+						nTotal++;
+						w.write(node);
+						if (nTotal >= MAX_E) {
+							return nTotal;
 						}
+					} else {
+						nDupl++;
 					}
+				} else if (line.startsWith("<way")) {
+					//abort, node block is finished.
+					break;
 				}
 			}
 			
 			System.out.println("Nodes: " + nNode);
-			System.out.println("Points: " + pos/DIM);
+			System.out.println("Nodes total: " + nTotal);
+			System.out.println("Nodes duplicates: " + nDupl);
 			System.out.println("Lines: " + nL);
 		} catch (NumberFormatException e) {
 			System.err.println("File: " + fFile.getAbsolutePath());
@@ -388,10 +260,10 @@ public class OsmPoint2D {
 				throw new RuntimeException(e);
 			}
 		}
-		return pos;
+		return nTotal;
 	}
 
-	private void readOSM(String line, double[] node, int pos) {
+	private void readOSM(String line, double[] node) {
 //		long id = -1;
 		double lat = 0;
 		double lon = 0;
@@ -471,8 +343,8 @@ public class OsmPoint2D {
 //
 //		date = Date.parse(line.substring(k1+1, k2));
 
-		node[pos+0] = lon;
-		node[pos+1] = lat;
+		node[0] = lon;
+		node[1] = lat;
 //		node[pos+0] = id;
 //		node[pos+1] = (long) (lon*10000000);
 //		node[pos+2] = (long) (lat*10000000);

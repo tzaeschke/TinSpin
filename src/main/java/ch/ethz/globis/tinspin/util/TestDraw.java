@@ -60,8 +60,13 @@ public class TestDraw extends JPanel {
 		}
 		System.out.println("TestDraw min/max: " + minX + "/" + maxX + "    " + minY + "/" + maxY);
 		
-		minY = minX = min(minX, minY);
-		maxY = maxX = max(maxX, maxY);
+		double lenX = maxX-minX;
+		double lenY = maxY-minY;
+		double scaleLen = max(lenX, lenY);
+		
+		
+//		minY = minX = min(minX, minY);
+//		maxY = maxX = max(maxX, maxY);
 //		minX = 0.0;
 //		maxX = 0.002;
 //		minY = 0.499;
@@ -73,8 +78,8 @@ public class TestDraw extends JPanel {
 		for (int i = 0; i < data.length; i+=DIM) {
 			double x = data[i+dx];
 			double y = data[i+dy];
-			int x2 = (int) ((x-minX)*LEN_X/(maxX-minX)); 
-			int y2 = (int) ((y-minY)*LEN_Y/(maxY-minY));
+			int x2 = (int) ((x-minX)*LEN_X/scaleLen); 
+			int y2 = (int) ((y-minY)*LEN_Y/scaleLen);
 			this.data[i2++] = x2;
 			this.data[i2++] = y2;
 //			System.out.println("x /y =" + x + "/" + y);

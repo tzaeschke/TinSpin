@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.jdo.Extent;
@@ -23,10 +22,10 @@ import org.zoodb.jdo.ZooJdoProperties;
 import org.zoodb.tools.ZooHelper;
 
 import ch.ethz.globis.phtree.PhTreeSolidF;
-import ch.ethz.globis.phtree.PhTreeSolidF.PhEntrySF;
-import ch.ethz.globis.phtree.PhTreeSolidF.PhIteratorSF;
-import ch.ethz.globis.phtree.util.Tools;
 import ch.ethz.globis.tinspin.TestStats;
+import ch.ethz.globis.tinspin.db.DbWriter;
+import ch.ethz.globis.tinspin.db.PersistentArrayDouble;
+import ch.ethz.globis.tinspin.db.PersistentArrayDoubleParent;
 
 /**
  * Reads data from TIGER files and, if desired buffers them in a ZooDB file.
@@ -49,7 +48,6 @@ public class TigerKmlRect2D {
 		if (ts.cfgNDims != 2) {
 			throw new IllegalArgumentException();
 		}
-		PhTreeSolidF<Object> idx = null;
 		
 		//2016 (without Hawaii, Alaska, Cuba, ...):
 		//Duplicates: 12638343
@@ -63,9 +61,8 @@ public class TigerKmlRect2D {
 			if (!ts.isRangeData) {
 				throw new UnsupportedOperationException("Please use Point reader."); 
 			}
-			double[] data = readFolderRectangle(TIGER_PATH, ts.cfgNDims, ts.cfgNEntries);
-			idx = buildIndexPHT(data, ts, Integer.MAX_VALUE); 
-			storeToDB(idx, dbName);
+			
+			readFolderRectangle(TIGER_PATH, dbName, ts);
 		} 
 		
 		//read from DB
@@ -86,110 +83,6 @@ public class TigerKmlRect2D {
 //			TestDraw.draw(data, 2);
 //		}
 		return data;
-	}
-	
-	private static PhTreeSolidF<Object> buildIndexPHT(double[] data, 
-			TestStats ts, int MAX_ENTRIES) {
-		log("Building index");
-		int dims = ts.cfgNDims;
-		int N = data.length/(2*dims);
-        long memTree = Tools.getMemUsed();
-		long t1 = System.currentTimeMillis();
-		PhTreeSolidF<Object> ind = PhTreeSolidF.create(dims);
-		Object OBJ = new Object();
-		double[] lo = new double[dims];
-		double[] up = new double[dims];
-		int nDupl = 0;
-		int n = 0;
-		for (int i = 0; i < data.length; ) {
-			lo[0] = data[i++];
-			lo[1] = data[i++];
-			up[0] = data[i++];
-			up[1] = data[i++];
-			
-			if (lo[0] > up[0]) {
-				double d = lo[0]; 
-				lo[0] = up[0];
-				up[0] = d;
-			}
-			if (lo[1] > up[1]) {
-				double d = lo[1]; 
-				lo[1] = up[1];
-				up[1] = d;
-			}
-			
-			if (ind.put(lo, up, OBJ) != null) {
-				nDupl++;
-			} else {
-				n++;
-			}
-			if (n%100000 == 0) {
-				System.out.print('.');
-				if (n%10000000 == 0) {
-					System.out.println();
-				}
-			}
-			if (n >= MAX_ENTRIES) {
-				break;
-			}
-		}
-		long t2 = System.currentTimeMillis();
-		ts.cfgNEntries = n;
-		//ts.statTLoad = t2-t1;
-		System.out.println("Duplicates: " + nDupl);
-		System.out.println("Entries (max): " + (N-nDupl));
-		System.out.println("Entries (done): " + n);
-		System.out.println("Build-index time: " + (t2-t1)/1000.);
-		Tools.cleanMem(n, memTree);
-		return ind;
-	}
-	
-	private static void storeToDB(PhTreeSolidF<Object> idx, String dbName) {
-		log("Storing to database");
-		ZooHelper.getDataStoreManager().createDb(dbName);
-		
-		ZooJdoProperties prop = new ZooJdoProperties(dbName);
-		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(prop);
-		pmf.setRetainValues(true);
-		PersistenceManager pm = pmf.getPersistenceManager();
-		pm.currentTransaction().begin();
-		
-		PersistentArrayDoubleParent list = 
-				new PersistentArrayDoubleParent(idx.size(), idx.getDims()*2);
-		pm.makePersistent(list);
-		
-		final int dims = idx.getDims(); 
-
-		int n = 0;
-		int pos = 0;
-		PhIteratorSF<Object> it = idx.iterator();
-		PersistentArrayDouble pad = list.getNextForWrite();
-		double[] data = pad.getData();
-		while (it.hasNext()) {
-			PhEntrySF<?> e = it.nextEntryReuse();
-			for (int k = 0; k < dims; k++) {
-				data[pos++] = e.lower()[k]; 
-			}
-			for (int k = 0; k < dims; k++) {
-				data[pos++] = e.upper()[k]; 
-			}
-			
-			if (++n % 100000 == 0) {
-				System.out.print(".");
-			}
-			if (n % PersistentArrayDoubleParent.CHUNK_SIZE == 0) {
-				pad = list.getNextForWrite();
-				data = pad.getData();
-				pos = 0;
-			}
-		}
-		System.out.println();
-		
-		log("comitting...");
-		pm.currentTransaction().commit();
-		log("done");
-		pm.close();
-		pmf.close();
 	}
 	
 	private static double min(double d1, double d2) {
@@ -251,13 +144,19 @@ public class TigerKmlRect2D {
 	}
 	
 	
-	private static double[] readFolderRectangle(String pathName, int DIM, int MAX_E) {
+	private static void readFolderRectangle(String pathName, String dbName,
+			TestStats ts) {
 		File dir = new File(pathName);
 		if (!dir.exists()) {
-			return null;
+			return;
 		}
-		double[] data = new double[200*1000*1000];
-		int pos = 0;
+
+		int MAX_E = ts.cfgNEntries;
+		DbWriter w = new DbWriter(dbName);
+		w.init(ts.cfgNDims*2);
+		PhTreeSolidF<Object> idxF = PhTreeSolidF.create(ts.cfgNDims);
+
+		int n = 0;
 		for (File f: dir.listFiles()) {
 			log("Reading file: " + f.getName());
 
@@ -272,16 +171,14 @@ public class TigerKmlRect2D {
 				continue;
 			}
 
-			pos = readFileRect(f, data, pos, DIM, MAX_E);
+			n = readFileRect(f, n, MAX_E, idxF, w);
 
-			if (pos >= MAX_E) {
+			if (n >= MAX_E) {
 				break;
 			}
 		}
-		data = Arrays.copyOf(data, pos);
-		System.out.println("RF: doubles: " + pos);
-		System.out.println("RF: Rectangles: " + pos/4);
-		return data;
+		w.close();
+		System.out.println("RF: Rectangles: " + n);
 	}
 	
 	
@@ -290,8 +187,9 @@ public class TigerKmlRect2D {
 	 * @param b2 
 	 * @param entries2 
 	 */
-	private static final int readFileRect(File fFile, double[] data, int pos, int DIM, int MAX_E) {
-		//log("Loading...");
+	private static final int readFileRect(File fFile, int nTotal, int MAX_E, 
+			PhTreeSolidF<Object> idxF, DbWriter w) {
+		Object DUMMY = new Object();
 		//Note that FileReader is used, not File, since File is not Closeable
 		Scanner scanner;
 		try {
@@ -303,8 +201,11 @@ public class TigerKmlRect2D {
 		//log("Header");
 		String nl = null;
 		boolean hasFailed = false;
+		int nDupl = 0;
 		try {
 			int nLinearRing = 0;
+			double[] r1 = new double[idxF.getDims()];
+			double[] r2 = new double[idxF.getDims()];
 			ArrayList<double[]> points = new ArrayList<>();
 			while ( scanner.hasNext()) {
 				String line = scanner.nextLine();
@@ -322,7 +223,7 @@ public class TigerKmlRect2D {
 
 					points.clear();
 					while (!line.startsWith("<")) {
-						double[] p = new double[DIM];
+						double[] p = new double[idxF.getDims()];
 						readPoint(line, p, 0);
 						line = scanner.next();
 						if (p[0] > 0 || p[0] < -130 || p[1] < 20) {
@@ -334,31 +235,37 @@ public class TigerKmlRect2D {
 					for (int i = 1; i < points.size(); i++) {
 						double[] p1 = points.get(i-1);
 						double[] p2 = points.get(i);
-						data[pos+0] = p1[0];
-						data[pos+1] = p1[1];
-						data[pos+2] = p2[0];
-						data[pos+3] = p2[1];
-						if (data[pos  ] > data[pos+2]) {
-							double t = data[pos  ];
-							data[pos  ] = data[pos+2];
-							data[pos+2] = t;
+						if (p1[0] < p2[0]) {
+							r1[0] = p1[0];
+							r2[0] = p2[0];
+						} else {
+							r1[0] = p2[0];
+							r2[0] = p1[0];
 						}
-						if (data[pos+1] > data[pos+3]) {
-							double t = data[pos+1];
-							data[pos+1] = data[pos+3];
-							data[pos+3] = t;
+						if (p1[1] < p2[1]) {
+							r1[1] = p1[1];
+							r2[1] = p2[1];
+						} else {
+							r1[1] = p2[1];
+							r2[1] = p1[1];
 						}
-						pos+=4;
-						
-						if (pos/4 >= MAX_E) {
-							return pos;
+
+						if (idxF.put(r1, r2, DUMMY) == null) {
+							nTotal++;
+							w.write(r1, r2);
+							if (nTotal >= MAX_E) {
+								return nTotal;
+							}
+						} else {
+							nDupl++;
 						}
 					}
 				}
 			}
 			
-			System.out.println("LinearRing: " + nLinearRing);
-			System.out.println("Rectangles: " + pos/4);
+			System.out.println();
+			//System.out.println("LinearRing: " + nLinearRing);
+			System.out.println("Rectangles: " + nTotal + ";  duplicates: " + nDupl);
 			
 		} catch (NumberFormatException e) {
 			System.err.println("File: " + fFile.getAbsolutePath());
@@ -373,7 +280,7 @@ public class TigerKmlRect2D {
 		if (hasFailed) {
 			System.out.println("FAILED !!!!!!!!!!!!!!!!!!!!!!!!!");
 		}
-		return pos;
+		return nTotal;
 	}
 
 	private static void readPoint(String line, double[] point, int pos) {

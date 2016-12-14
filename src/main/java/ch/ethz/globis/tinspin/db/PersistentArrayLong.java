@@ -4,7 +4,7 @@
  * This software is the proprietary information of ETH Zurich.
  * Use is subject to license terms.
  */
-package ch.ethz.globis.tinspin.data.tiger;
+package ch.ethz.globis.tinspin.db;
 
 import org.zoodb.jdo.spi.PersistenceCapableImpl;
 

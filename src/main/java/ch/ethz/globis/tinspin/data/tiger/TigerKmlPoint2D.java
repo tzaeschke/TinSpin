@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.jdo.Extent;
@@ -21,11 +20,11 @@ import javax.jdo.PersistenceManagerFactory;
 import org.zoodb.jdo.ZooJdoProperties;
 import org.zoodb.tools.ZooHelper;
 
-import ch.ethz.globis.phtree.PhTree;
-import ch.ethz.globis.phtree.PhTree.PhExtent;
-import ch.ethz.globis.phtree.util.BitTools;
-import ch.ethz.globis.phtree.util.Tools;
+import ch.ethz.globis.phtree.PhTreeF;
 import ch.ethz.globis.tinspin.TestStats;
+import ch.ethz.globis.tinspin.db.DbWriter;
+import ch.ethz.globis.tinspin.db.PersistentArrayDouble;
+import ch.ethz.globis.tinspin.db.PersistentArrayDoubleParent;
 
 /**
  * Reads data from TIGER files and, if desired buffers them in a ZooDB file.
@@ -48,7 +47,6 @@ public class TigerKmlPoint2D {
 		if (ts.cfgNDims != 2) {
 			throw new IllegalArgumentException();
 		}
-		PhTree<Object> idx = null;
 
 		//2016 (without alaska, hawaii, cuba):
 		//Entries (done): 18351888
@@ -60,9 +58,8 @@ public class TigerKmlPoint2D {
 			if (ts.isRangeData) {
 				throw new UnsupportedOperationException("Please use Rectangle reader");
 			}
-			double[] data = readFolder(TIGER_PATH, ts.cfgNDims, ts.cfgNEntries);
-			idx = buildIndexPHT(data, ts, Integer.MAX_VALUE); 
-			storeToDB(idx, dbName);
+			
+			readFolder(TIGER_PATH, dbName, ts);
 		} 
 		
 		//read from DB
@@ -81,99 +78,6 @@ public class TigerKmlPoint2D {
 //			TestDraw.draw(data, 2);
 //		}
 		return data;
-	}
-	
-	private static PhTree<Object> buildIndexPHT(double[] data, 
-			TestStats ts, int MAX_ENTRIES) {
-		log("Building index");
-		int dims = ts.cfgNDims;
-		int N = data.length/(dims);
-        long memTree = Tools.getMemUsed();
-		long t1 = System.currentTimeMillis();
-		PhTree<Object> ind = PhTree.create(dims);
-		Object OBJ = new Object();
-		long[] l = new long[dims];
-		int nDupl = 0;
-		int n = 0;
-		for (int i = 0; i < data.length; ) {
-			l[0] = f2l(data[i++]);
-			l[1] = f2l(data[i++]);
-			minMax( data[i-2], data[i-1] );
-			if (ind.put(l, OBJ) != null) {
-				nDupl++;
-			} else {
-				n++;
-			}
-			if (n%100000 == 0) {
-				System.out.print('.');
-				if (n%10000000 == 0) {
-					System.out.println();
-				}
-			}
-			if (n >= MAX_ENTRIES) {
-				break;
-			}
-		}
-		long t2 = System.currentTimeMillis();
-		ts.cfgNEntries = n;
-		//ts.statTLoad = t2-t1;
-		System.out.println("Duplicates: " + nDupl);
-		System.out.println("Entries (max): " + (N-nDupl));
-		System.out.println("Entries (done): " + n);
-		System.out.println("Build-index time: " + (t2-t1)/1000.);
-		Tools.cleanMem(n, memTree);
-		return ind;
-	}
-
-	private static long f2l(double f) {
-		return BitTools.toSortableLong(f);
-	}
-
-	private static double l2f(long l) {
-		return BitTools.toDouble(l);
-	}
-	
-	private static void storeToDB(PhTree<Object> idx, String dbName) {
-		log("Storing to database");
-		ZooHelper.getDataStoreManager().createDb(dbName);
-		
-		ZooJdoProperties prop = new ZooJdoProperties(dbName);
-		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(prop);
-		pmf.setRetainValues(true);
-		PersistenceManager pm = pmf.getPersistenceManager();
-		pm.currentTransaction().begin();
-		
-		PersistentArrayDoubleParent list = 
-				new PersistentArrayDoubleParent(idx.size(), idx.getDim());
-		pm.makePersistent(list);
-		
-		double[] data = list.getNextForWrite().getData();
-		int pos = 0;
-		
-		int n = 0;
-		final int dims = idx.getDim(); 
-		PhExtent<Object> it = idx.queryExtent();
-		while (it.hasNext()) {
-			long[] v = it.nextEntryReuse().getKey();
-			for (int k = 0; k < dims; k++) {
-				data[pos++] = l2f(v[k]); 
-			}
-			
-			if (++n % 100000 == 0) {
-				System.out.print(".");
-			}
-			if (n % PersistentArrayDoubleParent.CHUNK_SIZE == 0) {
-				data = list.getNextForWrite().getData();
-				pos = 0;
-			}
-		}
-		System.out.println();
-		
-		log("comitting...");
-		pm.currentTransaction().commit();
-		log("done");
-		pm.close();
-		pmf.close();
 	}
 	
 	private static double min(double d1, double d2) {
@@ -235,13 +139,18 @@ public class TigerKmlPoint2D {
 	}
 	
 	
-	private static double[] readFolder(String pathName, int DIM, int MAX_E) {
+	private static void readFolder(String pathName, String dbName, TestStats ts) {
 		File dir = new File(pathName);
 		if (!dir.exists()) {
-			return null;
+			return;
 		}
-		double[] data = new double[DIM*MAX_E];
-		int pos = 0;
+
+		int MAX_E = ts.cfgNEntries;
+		DbWriter w = new DbWriter(dbName);
+		w.init(ts.cfgNDims);
+		PhTreeF<Object> idxF = PhTreeF.create(ts.cfgNDims);
+
+		int n = 0;
 		for (File f: dir.listFiles()) {
 			log("Reading file: " + f.getName());
 
@@ -256,16 +165,14 @@ public class TigerKmlPoint2D {
 				continue;
 			}
 
-			pos = readFile(f, data, pos, MAX_E);
+			n = readFile(f, n, MAX_E, idxF, w);
 
-			if (pos >= MAX_E) {
+			if (n >= MAX_E) {
 				break;
 			}
 		}
-		data = Arrays.copyOf(data, pos);
-		System.out.println("RF: doubles: " + pos);
-		System.out.println("RF: Points: " + pos/2);
-		return data;
+		w.close();
+		System.out.println("RF: Points: " + n);
 	}
 	
 	
@@ -274,8 +181,9 @@ public class TigerKmlPoint2D {
 	 * @param b2 
 	 * @param entries2 
 	 */
-	private static final int readFile(File fFile, double[] data, int pos, int MAX_E) {
-		//log("Loading...");
+	private static final int readFile(File fFile, int nTotal, int MAX_E, 
+			PhTreeF<Object> idxF, DbWriter w) {
+		Object DUMMY = new Object();
 		//Note that FileReader is used, not File, since File is not Closeable
 		Scanner scanner;
 		try {
@@ -287,8 +195,10 @@ public class TigerKmlPoint2D {
 		//log("Header");
 		String nl = null;
 		boolean hasFailed = false;
+		int nDupl = 0;
 		try {
 			int nLinearRing = 0;
+			double[] point = new double[idxF.getDim()];
 			while ( scanner.hasNext()) {
 				String line = scanner.nextLine();
 				if (line.equals("<LinearRing>")) {
@@ -304,23 +214,30 @@ public class TigerKmlPoint2D {
 					}
 					
 					while (!line.startsWith("<")) {
-						readPoint(line, data, pos);
+						readPoint(line, point);
 						line = scanner.next();
-						if (data[pos] > 0 || data[pos] < -130 || data[pos+1] < 20) {
+						if (point[0] > 0 || point[0] < -130 || 
+								point[1] < 20) {
 							hasFailed = true;
 							continue;
 						}
-						pos+=2;
 						
-						if (pos/2 >= MAX_E) {
-							return pos;
+						if (idxF.put(point, DUMMY) == null) {
+							nTotal++;
+							w.write(point);
+							if (nTotal >= MAX_E) {
+								return nTotal;
+							}
+						} else {
+							nDupl++;
 						}
 					}
 				}
 			}
 			
-			System.out.println("LinearRing: " + nLinearRing);
-			System.out.println("Points: " + pos/2);
+			System.out.println();
+			//System.out.println("LinearRing: " + nLinearRing);
+			System.out.println("Points: " + nTotal + ";  duplicates: " + nDupl);
 			
 		} catch (NumberFormatException e) {
 			System.err.println("File: " + fFile.getAbsolutePath());
@@ -335,11 +252,11 @@ public class TigerKmlPoint2D {
 		if (hasFailed) {
 			System.out.println("FAILED !!!!!!!!!!!!!!!!!!!!!!!!!");
 		}
-		return pos;
+		return nTotal;
 	}
 
 
-	private static void readPoint(String line, double[] point, int pos) {
+	private static void readPoint(String line, double[] point) {
 		int k1 = line.indexOf(',');
 		int k2 = line.indexOf(',', k1+1);
 		double f1 = Double.parseDouble(line.substring(0, k1));
@@ -354,8 +271,8 @@ public class TigerKmlPoint2D {
 			//throw new IllegalArgumentException("f1/f2=" + f1 + " / " + f2);
 		}
 
-		point[pos+0] = f1;
-		point[pos+1] = f2;
+		point[0] = f1;
+		point[1] = f2;
 	}
 
 	private static void log(Object aObject){

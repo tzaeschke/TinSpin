@@ -4,7 +4,7 @@
  * This software is the proprietary information of ETH Zurich.
  * Use is subject to license terms.
  */
-package ch.ethz.globis.tinspin.data.tiger;
+package ch.ethz.globis.tinspin.db;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +23,12 @@ public class PersistentArrayDoubleParent extends PersistenceCapableImpl {
 	@SuppressWarnings("unused")
 	private PersistentArrayDoubleParent() {
 		// for ZooDB
+	}
+	
+	public PersistentArrayDoubleParent(int doublesPerRow) {
+		this.totalEntryCount = -1;
+		this.dims = doublesPerRow;
+		data = new ArrayList<PersistentArrayDouble>();
 	}
 	
 	public PersistentArrayDoubleParent(int totalEntryCount, int dims) {
@@ -44,6 +50,23 @@ public class PersistentArrayDoubleParent extends PersistenceCapableImpl {
 		return ret;
 	}
 	
+	public PersistentArrayDouble getNextForWrite2() {
+		zooActivateWrite();
+		int len = CHUNK_SIZE * dims;
+		PersistentArrayDouble ret = new PersistentArrayDouble(len);
+		data.add(ret);
+		return ret;
+	}
+	
+	public void adjustSize(int totalSize) {
+		zooActivateWrite();
+		totalEntryCount = totalSize;
+		if (totalSize % PersistentArrayDoubleParent.CHUNK_SIZE != 0) {
+			int newSize = totalSize % PersistentArrayDoubleParent.CHUNK_SIZE;
+			data.get(data.size()-1).truncate(newSize*dims);
+		}
+	}
+	
 	public List<PersistentArrayDouble> getData() {
 		zooActivateRead();
 		return Collections.unmodifiableList(data);
@@ -59,4 +82,5 @@ public class PersistentArrayDoubleParent extends PersistenceCapableImpl {
 		return dims;
 	}
 	
+
 }

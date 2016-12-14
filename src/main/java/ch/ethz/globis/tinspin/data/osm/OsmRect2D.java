@@ -27,8 +27,8 @@ import ch.ethz.globis.phtree.PhTreeSolidF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhEntrySF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhIteratorSF;
 import ch.ethz.globis.tinspin.TestStats;
-import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDouble;
-import ch.ethz.globis.tinspin.data.tiger.PersistentArrayDoubleParent;
+import ch.ethz.globis.tinspin.db.PersistentArrayDouble;
+import ch.ethz.globis.tinspin.db.PersistentArrayDoubleParent;
 
 /**
  * OSM XML rectangle (line segment) reader.
