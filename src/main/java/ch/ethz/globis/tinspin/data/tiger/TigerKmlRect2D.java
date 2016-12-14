@@ -50,10 +50,8 @@ public class TigerKmlRect2D {
 		}
 		
 		//2016 (without Hawaii, Alaska, Cuba, ...):
-		//Duplicates: 12638343
-		//Entries (max): 38378183
-		//Entries (done): 12869920
-		//min/max X= -124.703541/-79.974306   Y=24.396308/49.00139
+		//Rectangles: 18424029
+		//min/max X= -124.848974/-66.885444   Y=24.396308/49.384358
 
 		if (!ZooHelper.dbExists(dbName)) {
 			//read from file

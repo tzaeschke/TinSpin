@@ -24,9 +24,8 @@ import org.zoodb.jdo.ZooJdoProperties;
 import org.zoodb.tools.ZooHelper;
 
 import ch.ethz.globis.phtree.PhTreeSolidF;
-import ch.ethz.globis.phtree.PhTreeSolidF.PhEntrySF;
-import ch.ethz.globis.phtree.PhTreeSolidF.PhIteratorSF;
 import ch.ethz.globis.tinspin.TestStats;
+import ch.ethz.globis.tinspin.db.DbWriter;
 import ch.ethz.globis.tinspin.db.PersistentArrayDouble;
 import ch.ethz.globis.tinspin.db.PersistentArrayDoubleParent;
 
@@ -52,8 +51,6 @@ public class OsmRect2D {
 
 	public static String OSM_PATH = "F:\\data\\OSM";
 	
-	private static final Object DUMMY = new Object();
-	
 	private static final int DIM = 2;
 	
 	public OsmRect2D() {
@@ -75,7 +72,6 @@ public class OsmRect2D {
 		if (ts.cfgNDims != DIM) {
 			throw new IllegalArgumentException();
 		}
-		PhTreeSolidF<Object> idx = null;
 
 		if (!ZooHelper.dbExists(dbName)) {
 			//read from file
@@ -85,20 +81,16 @@ public class OsmRect2D {
 			} 
 
 			System.out.println("Allocating arrays ...");
-			int nPoints = ts.cfgNEntries * 2;//two point per segment, max
+			//int nPoints = ts.cfgNEntries * 2;//two point per segment, max
+			int nPoints = Integer.MAX_VALUE; //load all points
 			
 			System.out.println("Reading points ...");
 			PrimLongMapLI<double[]> map = new PrimLongMapLI<>(nPoints);
 			readFolderPoints(OSM_PATH, map, nPoints);
 			
 			System.out.println("Reading ways ...");
-			idx = PhTreeSolidF.create(DIM);
-			readFolderWays(OSM_PATH, map, idx, ts.cfgNEntries);
-			ts.cfgNEntries = idx.size();
+			readFolderWays(OSM_PATH, map, dbName, ts);
 			map = null;
-				
-			System.out.println("Writing DB file: " + dbName);
-			storeToDB(idx, dbName);
 		} 
 
 		//read from DB
@@ -120,56 +112,6 @@ public class OsmRect2D {
 		return data;
 	}
 
-	private void storeToDB(PhTreeSolidF<Object> idx, String dbName) {
-		log("Storing to database");
-		ZooHelper.getDataStoreManager().createDb(dbName);
-		
-		ZooJdoProperties prop = new ZooJdoProperties(dbName);
-		PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(prop);
-		//pmf.setRetainValues(true);
-		pmf.setRetainValues(false);
-		PersistenceManager pm = pmf.getPersistenceManager();
-		pm.currentTransaction().begin();
-		
-		//use size*2 for storing two vectors per rectangle
-		PersistentArrayDoubleParent list = 
-				new PersistentArrayDoubleParent(idx.size(), DIM*2);
-		pm.makePersistent(list);
-		
-		int n = 0;
-		int pos = 0;
-		PhIteratorSF<Object> it = idx.iterator();
-		PersistentArrayDouble pad = list.getNextForWrite();
-		double[] data = pad.getData();
-		while (it.hasNext()) {
-			PhEntrySF<?> e = it.nextEntryReuse();
-			for (int k = 0; k < DIM; k++) {
-				data[pos++] = e.lower()[k]; 
-			}
-			for (int k = 0; k < DIM; k++) {
-				data[pos++] = e.upper()[k]; 
-			}
-			
-			printProgress(++n);
-
-			if (n % PersistentArrayDoubleParent.CHUNK_SIZE == 0) {
-				pm.currentTransaction().commit();
-				pm.currentTransaction().begin();
-				pm.evict(pad);
-				pad = list.getNextForWrite();
-				data = pad.getData();
-				pos = 0;
-			}
-		}
-		System.out.println();
-		
-		log("comitting...");
-		pm.currentTransaction().commit();
-		log("done");
-		pm.close();
-		pmf.close();
-	}
-	
 	private static double min(double d1, double d2) {
 		return d1<d2 ? d1 : d2;
 	}
@@ -436,14 +378,18 @@ public class OsmRect2D {
 	}
 
 	private void readFolderWays(String pathName, 
-			PrimLongMapLI<double[]> map,
-			PhTreeSolidF<Object> idx,
-			int MAX_E) {
+			PrimLongMapLI<double[]> map, String dbName, TestStats ts) {
 		File dir = new File(pathName);
 		if (!dir.exists()) {
 			return;
 		}
-		int pos = 0;
+		
+		int MAX_E = ts.cfgNEntries;
+		DbWriter w = new DbWriter(dbName);
+		w.init(ts.cfgNDims*2);
+		PhTreeSolidF<Object> idxF = PhTreeSolidF.create(ts.cfgNDims);
+
+		int n = 0;
 		for (File f: dir.listFiles()) {
 			log("Reading file: " + f.getName());
 
@@ -453,14 +399,14 @@ public class OsmRect2D {
 				continue;
 			}
 
-			pos = readFile_R(f, map, idx, pos, MAX_E);
+			n = readFile_R(f, map, idxF, n, MAX_E, w);
 
-			if (pos >= MAX_E) {
+			if (n >= MAX_E) {
 				break;
 			}
 		}
-
-		System.out.println("RF: Rectangles: " + pos);
+		w.close();
+		System.out.println("RF: Rectangles: " + n);
 	}
 	
 	
@@ -471,10 +417,14 @@ public class OsmRect2D {
 	 * @param entries2 
 	 */
 	private final int readFile_R(File fFile, PrimLongMapLI<double[]> map,
-			PhTreeSolidF<Object> idx, int pos, int MAX_E) {
+			PhTreeSolidF<Object> idx, int nTotal, int MAX_E, 
+			DbWriter w) {
+		Object DUMMY = new Object();
 		//Note that FileReader is used, not File, since File is not Closeable
 		BufferedReader scanner;
 		try {
+			//TODO instead of going through the file again, we should
+			//     continue using the scanner from the point reader.
 			scanner = new BufferedReader(new FileReader(fFile));
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException(e);
@@ -491,10 +441,9 @@ public class OsmRect2D {
 			final double[] lo = new double[DIM];
 			final double[] hi = new double[DIM];
 			while ( (line = scanner.readLine()) != null ) {//hasNext()) {
-				line = line.trim();
+				line = line.trim(); 
 				nL++;
 				//System.out.println(line);
-				line = line.trim();
 				if (line.startsWith("<nd")) {
 					long id = readOSM_R(line);
 					double[] node = map.get(id);
@@ -504,7 +453,7 @@ public class OsmRect2D {
 						prevNode = null;
 						continue;
 					}
-					if (prevNode != null) {
+					if (prevNode != null) {//TODO remove
 //						dataR[pos*4+0] = min(node[0], prevNode[0]);
 //						dataR[pos*4+1] = min(node[1], prevNode[1]);
 //						dataR[pos*4+2] = max(node[0], prevNode[0]);
@@ -513,22 +462,27 @@ public class OsmRect2D {
 						lo[1] = min(node[1], prevNode[1]);
 						hi[0] = max(node[0], prevNode[0]);
 						hi[1] = max(node[1], prevNode[1]);
-						if (idx.put(lo, hi, DUMMY) != null) {
+						if (idx.put(lo, hi, DUMMY) == null) {
+							nTotal++;
+							w.write(lo, hi);
+							if (nTotal >= MAX_E) {
+								return nTotal;
+							}
+						} else {
 							nDuplicates++;
 						}
 						nRect++;
-						printProgress(nRect);
 					}
 					prevNode = node;
 					
-					pos++;
-					if (nRect >= MAX_E) {
+					if (nTotal >= MAX_E) {
+						System.out.println();
 						System.out.println("Rects: " + nRect);
-						System.out.println("Points: " + pos);
+						System.out.println("Rects total: " + nTotal);
 						System.out.println("Lines: " + nL);
 						System.out.println("Missing nodes: " + nNotFound);
 						System.out.println("Duplicates: " + nDuplicates);
-						return pos;
+						return nTotal;
 					}
 				} else { 
 					prevNode = null;
@@ -539,8 +493,9 @@ public class OsmRect2D {
 				}
 			}
 			
+			System.out.println();
 			System.out.println("Rects: " + nRect);
-			System.out.println("Points: " + pos);
+			System.out.println("Rects total: " + nTotal);
 			System.out.println("Lines: " + nL);
 			System.out.println("Missing nodes: " + nNotFound);
 			System.out.println("Duplicates: " + nDuplicates);
@@ -560,7 +515,7 @@ public class OsmRect2D {
 				throw new RuntimeException(e);
 			}
 		}
-		return pos;
+		return nTotal;
 	}
 
 	private long readOSM_R(String line) {
