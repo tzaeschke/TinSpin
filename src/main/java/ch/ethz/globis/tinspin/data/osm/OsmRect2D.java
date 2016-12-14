@@ -214,6 +214,7 @@ public class OsmRect2D {
 				if (ret.length-pos > 0) {
 					System.arraycopy(da, 0, ret, pos, ret.length-pos);
 				}
+				break;
 			}
 			pos += da.length;
 		}

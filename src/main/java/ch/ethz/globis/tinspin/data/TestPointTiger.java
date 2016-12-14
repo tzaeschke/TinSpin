@@ -9,7 +9,7 @@ package ch.ethz.globis.tinspin.data;
 import java.util.Random;
 
 import ch.ethz.globis.tinspin.TestStats;
-import ch.ethz.globis.tinspin.data.tiger.TigerKmlIO;
+import ch.ethz.globis.tinspin.data.tiger.TigerKmlPoint2D;
 
 /**
  * Data from Tiger/LINE: http://www2.census.gov/geo/tiger/KML/2010_Proto/2010tract_dt/
@@ -18,7 +18,7 @@ import ch.ethz.globis.tinspin.data.tiger.TigerKmlIO;
  */
 public class TestPointTiger extends TestPoint {
 
-	private static final String dbName = "TigerKmlArrayND-2D";
+	private static final String dbName = "TigerKmlPoint-2D";
 
 	protected TestPointTiger(Random R, TestStats S) {
 		super(R, S);
@@ -30,11 +30,22 @@ public class TestPointTiger extends TestPoint {
 	@Override
 	public double[] generate() {
 		log("Running: TestTiger(" + getN() + ")");
-		double[] data = TigerKmlIO.readAndBuffer(dbName, S);
-		globalMin[0] = TigerKmlIO.minX;
-		globalMax[0] = TigerKmlIO.maxX;
-		globalMin[1] = TigerKmlIO.minY;
-		globalMax[1] = TigerKmlIO.maxY;
+		double[] data = TigerKmlPoint2D.readAndBuffer(dbName, S);
+		globalMin[0] = TigerKmlPoint2D.minX;
+		globalMax[0] = TigerKmlPoint2D.maxX;
+		globalMin[1] = TigerKmlPoint2D.minY;
+		globalMax[1] = TigerKmlPoint2D.maxY;
 		return data;
 	}
+	
+	@Override
+	public double maxUpdateDistance() {
+		double d = globalMax[0]-globalMin[0];
+		d /= 10000;
+		if (d < 0.00000001) {
+			throw new IllegalStateException("d=" + d);
+		}
+		return d;
+	}
+
 }

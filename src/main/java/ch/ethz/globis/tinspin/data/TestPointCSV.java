@@ -16,7 +16,6 @@ import java.util.Random;
 import java.util.Scanner;
 
 import ch.ethz.globis.tinspin.TestStats;
-import ch.ethz.globis.tinspin.data.tiger.TigerKmlIO;
 
 /**
  * @author Tilmann Zaeschke
@@ -48,10 +47,6 @@ public class TestPointCSV extends TestPoint {
 		log("Running: TestCSV(" + paramStr + ")");
 		
 		double[] data = readFile(paramStr, Integer.MAX_VALUE);
-		globalMin[0] = TigerKmlIO.minX;
-		globalMax[0] = TigerKmlIO.maxX;
-		globalMin[1] = TigerKmlIO.minY;
-		globalMax[1] = TigerKmlIO.maxY;
 		return data;
 	}
 
