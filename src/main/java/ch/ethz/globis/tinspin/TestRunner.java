@@ -59,12 +59,12 @@ public class TestRunner {
 						
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, true, 1.0);
-		TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0E-5);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0E-5);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
-		//TestStats s0 = new TestStats(TST.CUBE, IDX.STRZ, N, DIM, false, 1.0);
-		//TestStats s0 = new TestStats(TST.OSM, IDX.QKDZ, N, 2, false, 1.0);
+		TestStats s0 = new TestStats(TST.CUBE, IDX.RSS, N, DIM, false, 1.0);
+		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
 		s0.cfgWindowQueryRepeat = 1000;
-		s0.cfgPointQueryRepeat = 10000;
+		s0.cfgPointQueryRepeat = 1000000;
 		s0.cfgUpdateSize = 1000;
 
 //		s0.cfgWindowQuerySize = 1;
@@ -369,7 +369,7 @@ public class TestRunner {
 		long t2 = System.currentTimeMillis();
 		log("Elements found: " + n + " -> " + n/(double)repeat);
 		log("Query time: " + (t2-t1) + " ms -> " + (t2-t1)/(double)repeat + " ms/q -> " +
-				(t2-t1)*1000*1000/(double)n + " ns/q/r");
+				(t2-t1)*1000*1000/(double)repeat + " ns/q");
 		if (round == 0) {
 			S.statTqp1 = (t2-t1);
 			S.statTqp1E = (long) ((t2-t1)*1000*1000/(double)repeat);

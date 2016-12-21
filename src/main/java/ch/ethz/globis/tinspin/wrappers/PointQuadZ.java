@@ -145,7 +145,7 @@ public class PointQuadZ extends Candidate {
 
 	@Override
 	public boolean supportsKNN() {
-		return true;
+		return dims <= 15;
 	}
 	
 	@Override
