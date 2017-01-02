@@ -89,7 +89,7 @@ public class RectangleQuadZ extends Candidate {
 
 	@Override
 	public boolean supportsPointQuery() {
-		return false;
+		return true;
 	}
 	
 	@Override
