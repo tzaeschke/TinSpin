@@ -172,7 +172,7 @@ public class OsmRect2D {
 	private void readFolderPoints(String pathName, PrimLongMapLI<double[]> map, int MAX_E) {
 		File dir = new File(pathName);
 		if (!dir.exists()) {
-			return;
+			throw new IllegalArgumentException("OSM file not found: " + pathName);
 		}
 		int pos = 0;
 		for (File f: dir.listFiles()) {

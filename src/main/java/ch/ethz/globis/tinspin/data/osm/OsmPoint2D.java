@@ -163,7 +163,7 @@ public class OsmPoint2D {
 	private void readFolder(String pathName, String dbName, TestStats ts) {
 		File dir = new File(pathName);
 		if (!dir.exists()) {
-			return;
+			throw new IllegalArgumentException("OSM file not found: " + pathName);
 		}
 		
 		int MAX_E = ts.cfgNEntries;
