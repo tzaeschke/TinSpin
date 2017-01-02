@@ -77,6 +77,11 @@ public class TestRectangleCluster extends TestRectangle {
 	private double[] generateHorizontal(final double LEN, double offsYZ) {
 		double MICROBOX_LEN = BOX_LEN * 0.001;
 		int N_C = getN()/BOX_N; //=points per cluster (10000 clusters)
+		if (getN() < BOX_N) {
+			logWarning("WARNING Too few points, using 1 point per cluster!");
+			N_C = 1;
+			BOX_N = getN();
+		}
 		double[] data = new double[getN()*DIM*2];
 
 		//loop over clusters
@@ -92,7 +97,6 @@ public class TestRectangleCluster extends TestRectangle {
 				int ii = (c*N_C+p) * DIM * 2;
 				for (int d = 0; d < DIM; d++) {
 					data[ii + d] = LEN * (R.nextDouble()-0.5)*BOX_LEN; //confine to small rectangle
-					//data[ii + d] += 0.00005;  TODO difference between 1.5 and 9.9 million nodes per 10 million entries (for offs=0.5).
 					if (d==0) {
 						data[ii+d] += x0;
 					} else {

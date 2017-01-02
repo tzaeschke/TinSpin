@@ -59,6 +59,10 @@ public abstract class AbstractTest {
 		System.out.println(str);
 	}
 	
+	public void logWarning(String str) {
+		System.err.println(str);
+	}
+	
 	public TestStats getTestStats() {
 		return S;
 	}

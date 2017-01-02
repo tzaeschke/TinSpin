@@ -43,7 +43,7 @@ public class RectangleQuadZ extends Candidate {
 		double[] max = new double[dims];
 		Arrays.fill(min, Double.POSITIVE_INFINITY);
 		Arrays.fill(max, Double.NEGATIVE_INFINITY);
-		for (int i = 0; i < N; i+=dims) {
+		for (int i = 0; i < 2*N; i+=dims) {
 			for (int d = 0; d < dims; d++) {
 				double x = data[i*dims+d];
 				if (x > max[d]) {
