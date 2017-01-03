@@ -38,7 +38,7 @@ public class TestRectangleWrappers extends AbstractWrapperTest {
 		expectedCube = createUnitTestStats(candidate, TST.CUBE, N, dims, true, 1.0);
 		new TestRunner(expectedCube).run();
 
-		expectedCluster = createUnitTestStats(candidate, TST.CLUSTER, N, dims, true, 3.4);
+		expectedCluster = createUnitTestStats(candidate, TST.CLUSTER, N, dims, true, 5.0);
 		new TestRunner(expectedCluster).run();
 	}
 	
@@ -70,7 +70,7 @@ public class TestRectangleWrappers extends AbstractWrapperTest {
 	@Test
 	@Parameters
     public void testCluster() {
-		TestStats ts = createUnitTestStats(candidate, TST.CLUSTER, N, dims, true, 3.4);
+		TestStats ts = createUnitTestStats(candidate, TST.CLUSTER, N, dims, true, 5.0);
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 

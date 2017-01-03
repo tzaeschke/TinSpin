@@ -37,15 +37,4 @@ public class TestPointTiger extends TestPoint {
 		globalMax[1] = TigerKmlPoint2D.maxY;
 		return data;
 	}
-	
-	@Override
-	public double maxUpdateDistance() {
-		double d = globalMax[0]-globalMin[0];
-		d /= 10000;
-		if (d < 0.00000001) {
-			throw new IllegalStateException("d=" + d);
-		}
-		return d;
-	}
-
 }

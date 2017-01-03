@@ -172,11 +172,6 @@ public class TestRectangleTOUCH extends TestRectangle {
 		//System.out.println("q: " + Arrays.toString(min) + " / " + Arrays.toString(max));
 	}
 
-	@Override
-	public double maxUpdateDistance() {
-		return BOX_LEN/100;
-	}
-	
 	private static void runWithArgs(String[] args) {
 		if (args.length < 5) {
 			System.out.println("ERROR: At least 5 arguemnts required, found: " + args.length);
@@ -466,6 +461,7 @@ public class TestRectangleTOUCH extends TestRectangle {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	private double[] readFromFileResults(String pathName) {
 		File f = new File(pathName);
 		double[] data = new double[100*1000];

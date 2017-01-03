@@ -54,23 +54,23 @@ public class TestRunner {
 			return;
 		}
 		
-		final int DIM = 3;
-		final int N = 1*1000*1000;
+		final int DIM = 2;
+		final int N = 10*1000*1000;
 						
-		TestStats s0 = new TestStats(TST.CLUSTER, IDX.QKDZ, N, DIM, true, 3.4);
+		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QKDZ, N, DIM, true, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, true, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0E-5);
-		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QKDZ, N, DIM, false, 3.4);
-		//TestStats s0 = new TestStats(TST.CUBE, IDX.RSS, N, DIM, false, 1.0);
+		TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC_IPP, N, DIM, false, 5);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
-		s0.cfgWindowQueryRepeat = 1000;
-		s0.cfgPointQueryRepeat = 1000000;
-		s0.cfgUpdateSize = 1000;
+//		s0.cfgWindowQueryRepeat = 1000;
+//		s0.cfgPointQueryRepeat = 1000000;
+//		s0.cfgUpdateSize = 1000;
 
 //		s0.cfgWindowQuerySize = 1;
 
-		s0.setSeed(0);
+		s0.setSeed(2);
 		TestRunner test = new TestRunner(s0);
 		TestStats s = test.run();
 		System.out.println(s);
@@ -173,6 +173,7 @@ public class TestRunner {
 		
 		//update
 		if (tree.supportsUpdate()) {
+			S.assortedInfo += " UPD_DIST=" + test.maxUpdateDistance();
 			resetR();
 			update(0);
 			update(1);
@@ -211,7 +212,7 @@ public class TestRunner {
 	
 	private int getKnnRepeat(int dims) {
 		if (S.TEST == TestStats.TST.CLUSTER) {
-			S.cfgKnnQueryBaseRepeat /= 100;
+			S.cfgKnnQueryBaseRepeat /= 10;//100;
 		}
 		if (dims <= 3) {
 			return S.cfgKnnQueryBaseRepeat;
@@ -352,14 +353,7 @@ public class TestRunner {
 	private void repeatPointQuery(int repeat, int round) {
 		log(time() + "point queries ...");
 		//prepare query
-		//TODO
-		//TODO
-		//TODO
-		//TODO
 		//TODO return only double[], convert inside query function!
-		//TODO
-		//TODO
-		//TODO
 		double[][] qDA = preparePointQuery(repeat);
 		Object q = tree.preparePointQuery(qDA);
 		JmxTools.reset();

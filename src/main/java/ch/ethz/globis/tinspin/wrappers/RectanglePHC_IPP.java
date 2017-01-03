@@ -17,7 +17,6 @@ import ch.ethz.globis.phtree.PhTreeSolidF.PhEntrySF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhKnnQuerySF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhQuerySF;
 import ch.ethz.globis.phtree.pre.PreProcessorRangeF;
-import ch.ethz.globis.phtree.util.PhMapperKey;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.tinspin.TestStats;
 

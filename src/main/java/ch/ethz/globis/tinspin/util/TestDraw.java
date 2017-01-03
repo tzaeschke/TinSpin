@@ -146,6 +146,7 @@ public class TestDraw extends JPanel {
 	/** 
 	 * This gets called automatically whenever the panel needs to be redrawn.
 	 */
+	@Override
 	public void paintComponent(Graphics g) {
 		int MAX = (int) min(10*1000*1000, data.length);
 		int n = 0;

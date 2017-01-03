@@ -50,7 +50,15 @@ public abstract class AbstractTest {
 	 * 
 	 * @return Maximum distance for each update().
 	 */
-	public abstract double maxUpdateDistance();
+	public double maxUpdateDistance() {
+		double d = 0;
+		for (int i = 0; i < globalMin.length; i++) {
+			if (d < globalMax[i]-globalMin[i]) {
+				d = globalMax[i]-globalMin[i];
+			}
+		}
+		return d * 10e-5;
+	}
 
 	public abstract double[] generate();
 	public abstract double[][] generateUpdates(int n, double[] data, double[][] ups);

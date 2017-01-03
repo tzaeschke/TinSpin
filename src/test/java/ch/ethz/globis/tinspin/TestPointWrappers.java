@@ -38,7 +38,7 @@ public class TestPointWrappers extends AbstractWrapperTest {
 		expectedCube = createUnitTestStats(candidate, TST.CUBE, N, dims, false, 1.0);
 		new TestRunner(expectedCube).run();
 
-		expectedCluster = createUnitTestStats(candidate, TST.CLUSTER, N, dims, false, 3.4);
+		expectedCluster = createUnitTestStats(candidate, TST.CLUSTER, N, dims, false, 5.0);
 		new TestRunner(expectedCluster).run();
 	}
 	
@@ -50,7 +50,6 @@ public class TestPointWrappers extends AbstractWrapperTest {
 		l.add(new Object[]{IDX.PHC2.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.PHCF.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.PHC_IPP.getCandidateClassNamePoint()});
-		l.add(new Object[]{IDX.PHC2_IPP.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.QKDZ.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.RSZ.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.STRZ.getCandidateClassNamePoint()});
@@ -71,7 +70,7 @@ public class TestPointWrappers extends AbstractWrapperTest {
 	@Test
 	@Parameters
     public void testCluster() {
-		TestStats ts = createUnitTestStats(candidate, TST.CLUSTER, N, dims, false, 3.4);
+		TestStats ts = createUnitTestStats(candidate, TST.CLUSTER, N, dims, false, 5.0);
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 

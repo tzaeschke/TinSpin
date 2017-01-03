@@ -32,15 +32,6 @@ public abstract class TestPoint extends AbstractTest {
 		return null;
 	}
 	
-	/**
-	 * 
-	 * @return Maximum distance for each update().
-	 */
-	@Override
-	public double maxUpdateDistance() {
-		return 0.00001;
-	}
-
 	@Override
 	public final double[][] generateUpdates(int n, double[] data, double[][] ups) {
 		double maxD = maxUpdateDistance();

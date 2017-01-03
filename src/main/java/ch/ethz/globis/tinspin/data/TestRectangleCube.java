@@ -45,10 +45,4 @@ public class TestRectangleCube extends TestRectangle {
 		} 
 		return data;
 	}
-	
-
-	@Override
-	public double maxUpdateDistance() {
-		return S.param1/100;
-	}
 }

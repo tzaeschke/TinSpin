@@ -88,12 +88,13 @@ public class TestPerf {
 		Arrays.fill(MAX, Long.MAX_VALUE);
 		long t1nd = System.currentTimeMillis();
 		for (int i = 0; i < N_QUERY; i++) {
-			long v0 = i;
+			//long v0 = i;
 			//get single by value
 			int nnn = createIntValue(-1, 3);
 			MIN[3] = nnn;
 			MAX[3] = nnn;
 			//Iterator<long[]> res = ind.querySingle(3, nnn, nnn);
+			@SuppressWarnings("unused")
 			PhQuery<Object> res = ind.query(MIN, MAX);
 			//get single value by id
 			//Iterator<long[]> res = ind.querySingle(0, v0, v0);

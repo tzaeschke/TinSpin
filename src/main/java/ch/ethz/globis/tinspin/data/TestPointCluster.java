@@ -11,6 +11,7 @@ import java.util.Random;
 import ch.ethz.globis.tinspin.TestStats;
 
 /**
+ * CLUSTER 3.4/3.5 are introduced by:
  * [1] L. Arge, M. de Berg, H. J. Haverkort and K. Yi: 
  * "The Priority R-Tree: A Practically Efficient and Worst-Case Optimal R-Tree"
  * 
@@ -25,13 +26,16 @@ public class TestPointCluster extends TestPoint {
 	private static double BOX_YZ_OFFS = 0.01; //0.5;
 	private static int BOX_N = 10*1000;
 	private static final double BOX_LEN = 0.00001;
+	private static int GAUSS_N = 1000;
+	private static final double GAUSS_SIGMA = 0.001;
 	
 	private static enum TYPE {
 		ORIGINAL(2),
 		HORIZONTAL05(3.5),
 		HORIZONTAL04(3.4),
 		HORIZONTAL001(3.01),
-		DIAGONAL(4);
+		DIAGONAL(4),
+		GAUSS(5);
 		final double x;
 		TYPE(double x) {
 			this.x = x;
@@ -56,8 +60,8 @@ public class TestPointCluster extends TestPoint {
 	 * in Section 2. It consists of 10 000 clusters with centers
 	 * equally spaced on a horizontal line. Each cluster
 	 * consists of 1000 points uniformly distributed in a
-	 * 0.000 01 * 0.000 01 square surrounding its center. Figure
-	 * 8 shows a part of the cluster dataset.
+	 * 0.000 01 * 0.000 01 square surrounding its center. 
+	 * 
 	 * @return Elements
 	 */
 	//diagonal version
@@ -71,13 +75,13 @@ public class TestPointCluster extends TestPoint {
 		case HORIZONTAL04: return generateHorizontal(len, 0.4); 
 		case HORIZONTAL001: return generateHorizontal(len, 0.01);
 		case DIAGONAL: return generateDiagonal(len);
+		case GAUSS: return generateGauss(len);
 		}
 		throw new IllegalArgumentException("param1=" + param1);
 	}
 	
 	private double[] generateDiagonal(final double LEN) {
 		int N_C = getN()/BOX_N; //=points per cluster (10000 clusters)
-		
 		double[] data = new double[getN()*DIM];
 
 		//loop over clusters
@@ -87,7 +91,6 @@ public class TestPointCluster extends TestPoint {
 				int ii = (c*N_C+p) * DIM;
 				for (int d = 0; d < DIM; d++) {
 					data[ii + d] = x0 + LEN * (R.nextDouble()-0.5)*BOX_LEN; //confine to small rectangle
-					//data[ii + d] += 0.00005;  TODO difference between 1.5 and 9.9 million nodes per 10 million entries (for offs=0.5).
 				}
 			}
 		}
@@ -150,6 +153,29 @@ public class TestPointCluster extends TestPoint {
 	}
 	
 	
+	private double[] generateGauss(final double domainLength) {
+		int N_C = getN()/GAUSS_N; //=points per cluster (10000 clusters)
+		double[] data = new double[getN()*DIM];
+
+		//loop over clusters
+		double[] cp = new double[DIM]; //center point of cluster
+		for (int c = 0; c < GAUSS_N; c++) {
+			for (int d = 0; d < DIM; d++) {
+				cp[d] = R.nextDouble() * domainLength;
+			}
+			for (int p = 0; p < N_C; p++) { 
+				int ii = (c*N_C+p) * DIM;
+				for (int d = 0; d < DIM; d++) {
+					double x = (R.nextGaussian()-0.5)*GAUSS_SIGMA; //confine to small rectangle
+					x *= domainLength; //stretch if domain>1.0
+					x += cp[d]; //offset of cluster
+					data[ii + d] = x;
+				}
+			}
+		}
+		return data;
+	}
+	
 	@Override
 	public void generateQuery(double[] min, double[] max, 
 			final double maxLen, final double avgQVol) {
@@ -159,6 +185,7 @@ public class TestPointCluster extends TestPoint {
 		case HORIZONTAL05: queryCuboidHorizontalNormal(min, max); break;
 		case HORIZONTAL001: queryCuboidHorizontal001(min, max); break;
 		case DIAGONAL: queryCuboidDiag(min, max); break;
+		case GAUSS: super.generateQuery(min, max, maxLen, avgQVol); break;
 		default: throw new IllegalArgumentException("param1=" + param1);
 		}
 	}
@@ -206,6 +233,16 @@ public class TestPointCluster extends TestPoint {
 			max[i] = 1;//R.nextDouble();  //0..1
 //			xyz[i] = cOffs - (R.nextDouble()*0.5);  
 //			len[i] = Math.abs(cOffs-xyz[i]) + R.nextDouble()*0.5;
+		}
+	}
+
+	@Override
+	public double maxUpdateDistance() {
+		switch (TYPE.toType(param1)) {
+		case HORIZONTAL04:
+		case HORIZONTAL05: return BOX_LEN/100;
+		case GAUSS: return super.maxUpdateDistance();//GAUSS_SIGMA/10;
+		default: throw new IllegalArgumentException("param1=" + param1);
 		}
 	}
 

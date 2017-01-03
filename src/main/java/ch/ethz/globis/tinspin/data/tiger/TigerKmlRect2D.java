@@ -201,14 +201,12 @@ public class TigerKmlRect2D {
 		boolean hasFailed = false;
 		int nDupl = 0;
 		try {
-			int nLinearRing = 0;
 			double[] r1 = new double[idxF.getDims()];
 			double[] r2 = new double[idxF.getDims()];
 			ArrayList<double[]> points = new ArrayList<>();
 			while ( scanner.hasNext()) {
 				String line = scanner.nextLine();
 				if (line.equals("<LinearRing>")) {
-					nLinearRing++;
 					line = scanner.next();
 					if (!line.startsWith("<coordinates>")) {
 						throw new IllegalStateException();
