@@ -1,3 +1,7 @@
+2017-01-03
+==========
+- (TZ) Added CLUSTER Gauss generators, cleaned up update distance, general cleanup
+
 2016-09-18
 ==========
 - (TZ) Refactored random number generation to be reinitialized for each task.
