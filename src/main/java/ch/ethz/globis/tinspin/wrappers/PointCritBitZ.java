@@ -139,4 +139,9 @@ public class PointCritBitZ extends Candidate {
 		}
 		return n;
 	}
+	
+	@Override
+	public String toString() {
+		return "CritBitKD";
+	}
 }
