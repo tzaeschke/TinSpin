@@ -23,6 +23,8 @@ public class PointCritBitZ extends Candidate {
 	
 	private double[] data;
 	
+	private double OFS = 0;
+	
 	public PointCritBitZ(TestStats ts) {
 		this.dims = ts.cfgNDims;
 		this.N = ts.cfgNEntries;
@@ -31,13 +33,25 @@ public class PointCritBitZ extends Candidate {
 	@Override
 	public void load(double[] data, int idxDim) {
 		this.data = data;
+		
+		//calculate offset, because CritBit window queries
+		//don't work well with negative values
+		double min = 0; 
+		for (int i = 0; i < data.length; i++) {
+			if (data[i] < min) {
+				min = data[i];
+			}
+		}
+		//multiply by 1.1 to ensure that all query rectangles are positive as well
+		OFS = Math.abs(min)*1.1;
+		
 		sfc = CritBit.createKD(64, dims);
 		int j = 0;
 		Object dummy = new Object();
 		long[] val = new long[dims];
 		for (int i = 0; i < N; i++) {
 			for (int d = 0; d < idxDim; d++) {
-				val[d] = BitTools.toSortableLong(data[idxDim*i+d]); 
+				val[d] = BitTools.toSortableLong(data[idxDim*i+d]+OFS); 
 			}
 			
 			// insert new point
@@ -52,7 +66,9 @@ public class PointCritBitZ extends Candidate {
 	public long[][] preparePointQuery(double[][] qA) {
 		long[][] r = new long[qA.length][dims];
 		for (int i = 0; i < qA.length; i++) {
-			BitTools.toSortableLong(qA[i], r[i]);
+			for (int d = 0; d < dims; d++) {
+				r[i][d] = BitTools.toSortableLong(qA[i][d]+OFS);
+			}
 		}
 		return r;
 	}
@@ -75,8 +91,8 @@ public class PointCritBitZ extends Candidate {
 		long[] lower = new long[dims];
 		long[] upper = new long[dims];
 		for (int i = 0; i < dims; i++) {
-			lower[i] = BitTools.toSortableLong(min[i]);
-			upper[i] = BitTools.toSortableLong(max[i]);
+			lower[i] = BitTools.toSortableLong(min[i]+OFS);
+			upper[i] = BitTools.toSortableLong(max[i]+OFS);
 		}
 		int n = 0;
 
@@ -109,7 +125,7 @@ public class PointCritBitZ extends Candidate {
 
 	private long[] getEntryDPR(long[] e, int pos) {
 		for (int d = 0; d < dims; d++) {
-			e[d] = BitTools.toSortableLong( data[pos*dims+d] );
+			e[d] = BitTools.toSortableLong( data[pos*dims+d]+OFS );
 		}
 		return e;
 	}
@@ -130,9 +146,13 @@ public class PointCritBitZ extends Candidate {
 		for (int i = 0; i < updateTable.length; ) {
 			double[] p1 = updateTable[i++];
 			double[] p2 = updateTable[i++];
-			BitTools.toSortableLong(p1, val1);
+			for (int d = 0; d < dims; d++) {
+				val1[d] = BitTools.toSortableLong(p1[d] + OFS);
+			}
 			if (sfc.removeKD(val1) != null) {
-				BitTools.toSortableLong(p2, val2);
+				for (int d = 0; d < dims; d++) {
+					val2[d] = BitTools.toSortableLong(p2[d] + OFS);
+				}
 				sfc.putKD(val2, dummy);
 				n++;
 			}
@@ -142,6 +162,6 @@ public class PointCritBitZ extends Candidate {
 	
 	@Override
 	public String toString() {
-		return "CritBitKD";
+		return "CritBitKD;OFS="+OFS+";";
 	}
 }
