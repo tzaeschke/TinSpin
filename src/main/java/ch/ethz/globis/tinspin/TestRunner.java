@@ -54,16 +54,16 @@ public class TestRunner {
 			return;
 		}
 		
-		final int DIM = 2;
-		final int N = 21*1000*1000;
+		final int DIM = 3;
+		final int N = 1*1000*1000;
 						
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QKDZ, N, DIM, true, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, true, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0E-5);
-		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC_IPP, N, DIM, false, 5);
+		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.CBZ, N, DIM, false, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
-		TestStats s0 = new TestStats(TST.TIGER, IDX.QKDZ, N, 2, false, 1.0);
+		TestStats s0 = new TestStats(TST.TIGER, IDX.CBZ, N, 2, false, 1.0);
 //		s0.cfgWindowQueryRepeat = 1000;
 //		s0.cfgPointQueryRepeat = 1000000;
 //		s0.cfgUpdateSize = 1000;
@@ -702,7 +702,7 @@ public class TestRunner {
 		S.statGcDiffUl = JmxTools.getDiff();
 		S.statGcTimeUl = JmxTools.getTime();
 		if (S.cfgNEntries != n) {
-			System.err.println("N/n: " + S.cfgNEntries + "/" + n);
+			System.err.println("Delete N/n: " + S.cfgNEntries + "/" + n);
 			//throw new IllegalStateException("N/n: " + S.cfgNEntries + "/" + n);
 		}
 	}

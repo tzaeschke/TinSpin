@@ -12,7 +12,6 @@ import org.zoodb.index.critbit.CritBitKD;
 
 import ch.ethz.globis.phtree.util.BitTools;
 import ch.ethz.globis.tinspin.TestStats;
-import ch.ethz.globis.tinspin.wrappers.Candidate;
 
 public class PointCritBitZ extends Candidate {
 
@@ -23,7 +22,7 @@ public class PointCritBitZ extends Candidate {
 	
 	private double[] data;
 	
-	private double OFS = 0;
+	private double OFS = 1.0;
 	
 	public PointCritBitZ(TestStats ts) {
 		this.dims = ts.cfgNDims;
@@ -93,9 +92,11 @@ public class PointCritBitZ extends Candidate {
 		for (int i = 0; i < dims; i++) {
 			lower[i] = BitTools.toSortableLong(min[i]+OFS);
 			upper[i] = BitTools.toSortableLong(max[i]+OFS);
+			if (min[i] <= 0 || max[i] <=0) {
+				throw new IllegalArgumentException(); 
+			}
 		}
 		int n = 0;
-
 		QueryIteratorKD<Object> it = sfc.queryKD(lower, upper);
 		while (it.hasNext()) {
 			it.nextKey();
@@ -125,7 +126,7 @@ public class PointCritBitZ extends Candidate {
 
 	private long[] getEntryDPR(long[] e, int pos) {
 		for (int d = 0; d < dims; d++) {
-			e[d] = BitTools.toSortableLong( data[pos*dims+d]+OFS );
+			e[d] = BitTools.toSortableLong( data[pos*dims+d] + OFS );
 		}
 		return e;
 	}
@@ -147,11 +148,11 @@ public class PointCritBitZ extends Candidate {
 			double[] p1 = updateTable[i++];
 			double[] p2 = updateTable[i++];
 			for (int d = 0; d < dims; d++) {
-				val1[d] = BitTools.toSortableLong(p1[d] + OFS);
+				val1[d] = BitTools.toSortableLong(p1[d] + OFS );
 			}
 			if (sfc.removeKD(val1) != null) {
 				for (int d = 0; d < dims; d++) {
-					val2[d] = BitTools.toSortableLong(p2[d] + OFS);
+					val2[d] = BitTools.toSortableLong(p2[d] + OFS );
 				}
 				sfc.putKD(val2, dummy);
 				n++;
@@ -162,6 +163,6 @@ public class PointCritBitZ extends Candidate {
 	
 	@Override
 	public String toString() {
-		return "CritBitKD;OFS="+OFS+";";
+		return "CritBitKD;OFS=" + OFS + ";";
 	}
 }
