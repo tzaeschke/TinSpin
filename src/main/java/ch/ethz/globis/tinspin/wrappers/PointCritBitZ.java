@@ -92,7 +92,7 @@ public class PointCritBitZ extends Candidate {
 		for (int i = 0; i < dims; i++) {
 			lower[i] = BitTools.toSortableLong(min[i]+OFS);
 			upper[i] = BitTools.toSortableLong(max[i]+OFS);
-			if (min[i]+OFS <= 0 || max[i]+OFS <=0) {
+			if (min[i]+OFS < 0 || max[i]+OFS < 0) {
 				throw new IllegalArgumentException(); 
 			}
 		}
