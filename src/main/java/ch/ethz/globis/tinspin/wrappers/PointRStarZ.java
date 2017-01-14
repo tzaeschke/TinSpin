@@ -11,7 +11,7 @@ import java.util.Arrays;
 import org.zoodb.index.Index;
 import org.zoodb.index.rtree.RTree;
 import org.zoodb.index.rtree.RTreeIterator;
-import org.zoodb.index.rtree.RTreeIteratorKnn;
+import org.zoodb.index.rtree.RTreeIteratorKnnRS;
 
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -22,7 +22,7 @@ public class PointRStarZ extends Candidate {
 	private final int N;
 	private double[] data;
 	private RTreeIterator<double[]> it;
-	private RTreeIteratorKnn<double[]> itKnn;
+	private RTreeIteratorKnnRS<double[]> itKnn;
 
 	
 	/**
@@ -106,6 +106,9 @@ public class PointRStarZ extends Candidate {
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
+		if (k == 1) {
+			return phc.query1NN(center).dist();
+		}
 		if (itKnn == null) {
 			itKnn = phc.queryKNN(center, k, null);
 		} else {
@@ -158,6 +161,16 @@ public class PointRStarZ extends Candidate {
 			}
 		}
 		return n;
+	}
+	
+	@Override
+	public boolean supportsUpdate() {
+		return dims <= 16;
+	}
+
+	@Override
+	public boolean supportsUnload() {
+		return dims <= 16;
 	}
 	
 	@Override

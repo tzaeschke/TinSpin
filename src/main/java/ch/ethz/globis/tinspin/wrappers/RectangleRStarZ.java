@@ -12,7 +12,7 @@ import org.zoodb.index.Index;
 import org.zoodb.index.rtree.DistEntry;
 import org.zoodb.index.rtree.RTree;
 import org.zoodb.index.rtree.RTreeIterator;
-import org.zoodb.index.rtree.RTreeIteratorKnn;
+import org.zoodb.index.rtree.RTreeIteratorKnnRS;
 
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -24,7 +24,7 @@ public class RectangleRStarZ extends Candidate {
 	private double[] data;
 	private static final Object O = new Object();
 	private RTreeIterator<Object> query = null;
-	private RTreeIteratorKnn<Object> queryKnn = null;
+	private RTreeIteratorKnnRS<Object> queryKnn = null;
 	
 	/**
 	 * Setup of a native PH tree
@@ -115,6 +115,9 @@ public class RectangleRStarZ extends Candidate {
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
+		if (k == 1) {
+			return phc.query1NN(center).dist();
+		}
 		if (queryKnn == null) {
 			queryKnn = phc.queryKNN(center, k, null);
 		} else {
@@ -165,7 +168,12 @@ public class RectangleRStarZ extends Candidate {
 	
 	@Override
 	public boolean supportsUpdate() {
-		return true;
+		return dims <= 16;
+	}
+
+	@Override
+	public boolean supportsUnload() {
+		return dims <= 16;
 	}
 	
 	@Override

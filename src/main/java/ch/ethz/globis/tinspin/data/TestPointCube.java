@@ -27,12 +27,12 @@ public class TestPointCube extends TestPoint {
 	 */
 	@Override
 	public double[] generate() {
-		log("Running: TestCube(" + param1 + ")");
+		log("Running: TestCube(" + S.cfgDataLen + ")");
 		double[] data = new double[getN()*DIM];
 		for (int i = 0; i < getN(); i++) {
 			int pos = DIM*i;
 			for (int d = 0; d < DIM; d++) {
-				data[pos+d] = R.nextDouble() * param1;
+				data[pos+d] = R.nextDouble() * S.cfgDataLen;
 			}
 		}
 		return data;

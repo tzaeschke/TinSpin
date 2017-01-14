@@ -12,7 +12,7 @@ import org.zoodb.index.Index;
 import org.zoodb.index.rtree.Entry;
 import org.zoodb.index.rtree.RTree;
 import org.zoodb.index.rtree.RTreeIterator;
-import org.zoodb.index.rtree.RTreeIteratorKnn;
+import org.zoodb.index.rtree.RTreeIteratorKnnRS;
 
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -28,7 +28,7 @@ public class PointSTRZ extends Candidate {
 	private double[] data;
 	private static final Object O = new Object();
 	private RTreeIterator<Object> it;
-	private RTreeIteratorKnn<Object> itKnn;
+	private RTreeIteratorKnnRS<Object> itKnn;
 
 	
 	/**
@@ -118,6 +118,9 @@ public class PointSTRZ extends Candidate {
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
+		if (k == 1) {
+			return phc.query1NN(center).dist();
+		}
 		if (itKnn == null) {
 			itKnn = phc.queryKNN(center, k, null);
 		} else {
@@ -170,6 +173,16 @@ public class PointSTRZ extends Candidate {
 			}
 		}
 		return n;
+	}
+	
+	@Override
+	public boolean supportsUpdate() {
+		return dims <= 16;
+	}
+
+	@Override
+	public boolean supportsUnload() {
+		return dims <= 16;
 	}
 	
 	@Override
