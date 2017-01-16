@@ -73,10 +73,10 @@ public class RectangleSTRZ extends Candidate {
 		}
 		return n;
 	}
-
+	
 	@Override
 	public boolean supportsPointQuery() {
-		return true;
+		return dims <= 16;
 	}
 	
 	@Override

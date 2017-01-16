@@ -176,6 +176,11 @@ public class PointSTRZ extends Candidate {
 	}
 	
 	@Override
+	public boolean supportsPointQuery() {
+		return dims <= 16;
+	}
+	
+	@Override
 	public boolean supportsUpdate() {
 		return dims <= 16;
 	}

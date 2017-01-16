@@ -55,14 +55,14 @@ public class TestRunner {
 		}
 		
 		final int DIM = 3;
-		final int N = 1*1000*1000;
+		final int N = 25*1000*1000;
 						
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QKDZ, N, DIM, true, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QKDZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, true, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0E-5);
-		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.CBZ, N, DIM, false, 3.4);
-		TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
+		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.RSZ, N, DIM, false, 3.4);
+		TestStats s0 = new TestStats(TST.CUBE, IDX.RSZ, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.RSZ, N, 2, false, 1.0);
 		//s0.cfgWindowQueryRepeat = 1000;
 		//s0.cfgPointQueryRepeat = 1000000;
@@ -211,7 +211,7 @@ public class TestRunner {
 	}
 	
 	private int getKnnRepeat(int dims) {
-		if (S.TEST == TestStats.TST.CLUSTER) {
+		if (S.TEST == TestStats.TST.CLUSTER && S.cfgNDims > 5 ) {
 			S.cfgKnnQueryBaseRepeat /= 10;//100;
 		}
 		if (dims <= 3) {
