@@ -12,7 +12,7 @@ import org.zoodb.index.Index;
 import org.zoodb.index.rtree.Entry;
 import org.zoodb.index.rtree.RTree;
 import org.zoodb.index.rtree.RTreeIterator;
-import org.zoodb.index.rtree.RTreeIteratorKnnRS;
+import org.zoodb.index.rtree.RTreeQueryKnn;
 
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -28,7 +28,7 @@ public class PointSTRZ extends Candidate {
 	private double[] data;
 	private static final Object O = new Object();
 	private RTreeIterator<Object> it;
-	private RTreeIteratorKnnRS<Object> itKnn;
+	private RTreeQueryKnn<Object> itKnn;
 
 	
 	/**

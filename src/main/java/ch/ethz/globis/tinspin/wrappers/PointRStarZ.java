@@ -11,7 +11,7 @@ import java.util.Arrays;
 import org.zoodb.index.Index;
 import org.zoodb.index.rtree.RTree;
 import org.zoodb.index.rtree.RTreeIterator;
-import org.zoodb.index.rtree.RTreeIteratorKnnRS;
+import org.zoodb.index.rtree.RTreeQueryKnn;
 
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -22,7 +22,7 @@ public class PointRStarZ extends Candidate {
 	private final int N;
 	private double[] data;
 	private RTreeIterator<double[]> it;
-	private RTreeIteratorKnnRS<double[]> itKnn;
+	private RTreeQueryKnn<double[]> itKnn;
 
 	
 	/**

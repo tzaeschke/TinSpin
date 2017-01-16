@@ -13,7 +13,7 @@ import org.zoodb.index.rtree.DistEntry;
 import org.zoodb.index.rtree.Entry;
 import org.zoodb.index.rtree.RTree;
 import org.zoodb.index.rtree.RTreeIterator;
-import org.zoodb.index.rtree.RTreeIteratorKnnRS;
+import org.zoodb.index.rtree.RTreeQueryKnn;
 
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -25,7 +25,7 @@ public class RectangleSTRZ extends Candidate {
 	private double[] data;
 	private static final Object O = new Object();
 	private RTreeIterator<Object> query = null;
-	private RTreeIteratorKnnRS<Object> queryKnn = null;
+	private RTreeQueryKnn<Object> queryKnn = null;
 	
 	/**
 	 * Setup of a native PH tree
