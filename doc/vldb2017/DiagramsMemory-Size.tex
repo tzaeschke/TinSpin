@@ -1,0 +1,261 @@
+%\subsection{Memory Usage}
+%\label{sec:memory}
+
+%\begin{figure}[thb]
+\begin{figure*}[thb]
+\begin{subfigure}[t]{0.33\textwidth}
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.98)}, anchor=north west}}
+		\begin{axis}[ 
+		height=7cm, width=6.4cm, 
+		grid=major, 
+		xlabel=$10^6$ entries, ylabel={ns per entry},
+		%title={k=2, 64bit, TIGER/Line},
+		legend columns=3,
+		legend style={draw=none},
+		font=\scriptsize,
+		%ymode=log, 
+		ymin={0}, ymax={200},
+		xmode=log, 
+		] 
+	\addplot+[PH] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/PHC-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[RSS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/RSS-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/RSZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/PHC_IPP-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[STRZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/STRZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{STR} 
+	\addplot+[XTS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/XTS-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{XTS} 
+%	\addplot+[XTR] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/XTR-P-OSM(1.0,0.0,null).txt};
+%	\addlegendentry{XTR} 
+	\addplot+[CBF] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/CBF-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{CBF} 
+	\addplot+[CBZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/CBZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{CBZ} 
+	\addplot+[KDL] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/KD_LEVY-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{KDL} 
+	\addplot+[KDS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/KD_SAVA-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{KDS} 
+	\addplot+[QKDZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/QKDZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{QZ} 
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{Alps OSM-P}
+	\label{fig:memoryPerEntryOSM-P}
+%\end{figure}
+\end{subfigure}
+\begin{subfigure}[t]{0.33\textwidth}
+%\begin{figure}[thb]
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.95)}, anchor=north west}}
+		\begin{axis}[ 
+		height=7cm, width=6.4cm, 
+		grid=major, 
+		xlabel=$10^6$ entries, %ylabel={ns per entry},
+		%title={k=2, 64bit, TIGER/Line},
+		legend style={draw=none},
+		font=\scriptsize,
+		%ymode=log, 
+		ymin={0}, ymax={200},
+		xmode=log, 
+		] 
+	\addplot+[PH] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/PHC-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PH-P} 
+	\addplot+[RSS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/RSS-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSS-P} 
+	\addplot+[RSZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/RSZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSZ-P} 
+	\addplot+[PHM] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/PHC_IPP-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PHM-P} 
+	\addplot+[STRZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/STRZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{STR-P} 
+	\addplot+[XTS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/XTS-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{XTS-P} 
+	\addplot+[CBF] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/CBF-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{CBF-P} 
+	\addplot+[CBZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/CBZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{CBZ-P} 
+	\addplot+[KDL] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/KD_LEVY-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{KDL-P} 
+	\addplot+[KDS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/KD_SAVA-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{KDS-P} 
+	\addplot+[QKDZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/QKDZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{QZ-P} 
+	\legend{} %disable legend
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{CUBE-P}
+	\label{fig:memoryPerEntryCU-P}
+%\end{figure}
+\end{subfigure}
+\begin{subfigure}[t]{0.33\textwidth}
+%\begin{figure}[thb]
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.95)}, anchor=north west}}
+		\begin{axis}[ 
+		height=7cm, width=6.4cm, 
+		grid=major, 
+		xlabel=$10^6$ entries, %ylabel={ns per entry},
+		%title={k=2, 64bit, TIGER/Line},
+		legend style={draw=none},
+		font=\scriptsize,
+		%ymode=log, 
+		ymin={0}, ymax={200},
+		xmode=log, 
+		] 
+	\addplot+[PH] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/PHC-P-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{PH-P} 
+	\addplot+[RSS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/RSS-P-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{RSS-P} 
+	\addplot+[RSZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/RSZ-P-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{RSZ-P} 
+	\addplot+[PHM] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/PHC_IPP-P-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{PHM-P} 
+	\addplot+[STRZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/STRZ-P-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{STR-P} 
+	\addplot+[XTS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/XTS-P-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{XTS-P} 
+	\addplot+[CBF] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/CBF-P-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{CBF-P} 
+	\addplot+[CBZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/CBZ-P-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{CBZ-P} 
+	\addplot+[KDL] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/KD_LEVY-P-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{KDL-P} 
+	\addplot+[KDS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/KD_SAVA-P-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{KDS-P} 
+	\addplot+[QKDZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeP/QKDZ-P-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{QZ-P} 
+	\legend{} %disable legend
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{CLUSTER-P}
+	\label{fig:memoryPerEntryCL-P}
+%\end{figure}
+\end{subfigure}
+	\caption{Memory usage per point entry for the OSM Alps, CUBE and CLUSTER datasets}
+	\label{fig:memoryPerEntry}
+\end{figure*}
+
+
+\begin{figure*}[thb]
+\begin{subfigure}[t]{0.33\textwidth}
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.95)}, anchor=north west}}
+		\begin{axis}[ 
+		height=7cm, width=6.4cm, 
+		grid=major, 
+		xlabel=$10^6$ entries, ylabel={ns per entry},
+		%title={k=2, 64bit, TIGER/Line},
+		legend columns=3,
+		legend style={draw=none},
+		font=\scriptsize,
+		%ymode=log, 
+		ymin={0}, ymax={200},
+		xmode=log, 
+		] 
+	\addplot+[PH] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/PHC-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[RSS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/RSS-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/RSZ-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/PHC_IPP-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[STRZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/STRZ-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{STR} 
+%	\addplot+[XTS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/XTS-R-OSM(1.0,0.0,null).txt};
+%	\addlegendentry{XTS} 
+	\addplot+[QKDZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/QKDZ-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{QZ} 
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{Alps OSM-R}
+	\label{fig:memoryPerEntryOSM-R}
+%\end{figure}
+\end{subfigure}
+\begin{subfigure}[t]{0.33\textwidth}
+%\begin{figure}[thb]
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.95)}, anchor=north west}}
+		\begin{axis}[ 
+		height=7cm, width=6.4cm, 
+		grid=major, 
+		xlabel=$10^6$ entries, %ylabel={$\mu$s per entry},
+		%title={k=2, 64bit, TIGER/Line},
+		legend style={draw=none},
+		font=\scriptsize,
+		%ymode=log, 
+		ymin={0}, ymax={200},
+		xmode=log, 
+		] 
+	\addplot+[PH] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/PHC-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[RSS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/RSS-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/RSZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/PHC_IPP-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[STRZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/STRZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{STR} 
+%	\addplot+[XTS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/XTS-R-CUBE(1.0,0.0,null).txt};
+%	\addlegendentry{XTS} 
+	\addplot+[QKDZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/QKDZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{QZ} 
+	\legend{} %disable legend
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{CUBE-R}
+	\label{fig:memoryPerEntryCU-R}
+%\end{figure}
+\end{subfigure}
+\begin{subfigure}[t]{0.33\textwidth}
+%\begin{figure}[thb]
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.95)}, anchor=north west}}
+		\begin{axis}[ 
+		height=7cm, width=6.4cm, 
+		grid=major, 
+		xlabel=$10^6$ entries, %ylabel={$\mu$s per entry},
+		%title={k=2, 64bit, TIGER/Line},
+		legend style={draw=none},
+		font=\scriptsize,
+		%ymode=log, 
+		ymin={0}, ymax={200},
+		xmode=log, 
+		] 
+	\addplot+[PH] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/PHC-R-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[RSS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/RSS-R-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/RSZ-R-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/PHC_IPP-R-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[STRZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/STRZ-R-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{STR} 
+%	\addplot+[XTS] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/XTS-R-CLUSTER(3.5,0.0,null).txt};
+%	\addlegendentry{XTS} 
+	\addplot+[QKDZ] table [selectcoords={0}{7},x expr=\thisrow{N}/1000000,y=memory/n, col sep=tab] {sizeR/QKDZ-R-CLUSTER(3.5,0.0,null).txt};
+	\addlegendentry{QZ} 
+	\legend{} %disable legend
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{CLUSTER-R}
+	\label{fig:memoryPerEntryCL-R}
+%\end{figure}
+\end{subfigure}
+	\caption{Memory usage per rectangle entry for the OSM Alps, CUBE and CLUSTER datasets}
+	\label{fig:memoryPerEntry-R}
+\end{figure*}
+

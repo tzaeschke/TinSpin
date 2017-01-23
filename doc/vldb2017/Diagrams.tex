@@ -1,0 +1,445 @@
+% THIS IS SIGPROC-SP.TEX - VERSION 3.1
+% WORKS WITH V3.2SP OF ACM_PROC_ARTICLE-SP.CLS
+% APRIL 2009
+%
+% It is an example file showing how to use the 'acm_proc_article-sp.cls' V3.2SP
+% LaTeX2e document class file for Conference Proceedings submissions.
+% ----------------------------------------------------------------------------------------------------------------
+% This .tex file (and associated .cls V3.2SP) *DOES NOT* produce:
+%       1) The Permission Statement
+%       2) The Conference (location) Info information
+%       3) The Copyright Line with ACM data
+%       4) Page numbering
+% ---------------------------------------------------------------------------------------------------------------
+% It is an example which *does* use the .bib file (from which the .bbl file
+% is produced).
+% REMEMBER HOWEVER: After having produced the .bbl file,
+% and prior to final submission,
+% you need to 'insert'  your .bbl file into your source .tex file so as to provide
+% ONE 'self-contained' source file.
+%
+% Questions regarding SIGS should be sent to
+% Adrienne Griscti ---> griscti@acm.org
+%
+% Questions/suggestions regarding the guidelines, .tex and .cls files, etc. to
+% Gerald Murray ---> murray@hq.acm.org
+%
+% For tracking purposes - this is V3.1SP - APRIL 2009
+
+\documentclass{sig-alternate}
+%\documentclass{acm_proc_article-sp}
+%\documentclass{sig-alternate-2013}
+% http://sourceforge.net/projects/pgfplots/
+%\usepackage{subcaption}
+\usepackage{verbatim}
+\usepackage{pgfplots}
+\usepackage{url}
+\usepackage{listings}
+%\usepackage{amsthm} //\proof is already defined by SIGMOD :-(
+%\usepackage{showkeys}
+\usepackage{subcaption}
+\usepackage{url}
+\usepackage{xspace}
+%\usepackage{todonotes}
+\usepackage{tikz}
+\usetikzlibrary{shapes,decorations}
+\pgfplotsset{compat=1.12}
+
+
+
+
+\lstset{
+   language=Java,
+%   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+%   numbers=left,
+%   numberstyle=\footnotesize,
+%   numbersep=9pt,
+   tabsize=2,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+% Style to select only points from #1 to #2 (inclusive)
+\pgfplotsset{selectcoords/.style 2 args={
+    x filter/.code={
+        \ifnum\coordindex<#1\def\pgfmathresult{}\fi
+        \ifnum\coordindex>#2\def\pgfmathresult{}\fi
+    }
+}}
+
+\pgfplotsset{selectColN/.code 2 args={
+    x expr/.code={
+			\thisrow{#1}/#2
+		}
+}}
+
+%PH=circle, RT=square, XT=x, QT=+, KD=, CB=
+%xxxZ=blue, Seeger=brown
+\pgfplotsset{
+	PH/.style={blue, solid, mark=*, mark options={solid}},
+	PHM/.style={red, solid, mark=*, mark options={solid}},
+  RSZ/.style={blue, solid, mark=square*, mark options={blue,solid}},
+  STRZ/.style={blue, solid, mark=square, mark options={blue}},
+	RSS/.style={brown, dashed, mark=square*, mark options={brown,solid}},
+  XTS/.style={brown, solid, mark=x},
+  XTR/.style={red, dashed, mark=x},
+	QKDZ/.style={blue, solid, mark=+},
+	CBF/.style={red, dashed, mark=triangle},
+  CBZ/.style={black, solid, mark=triangle},
+  KDL/.style={red, solid, mark=diamond},
+  KDS/.style={black, dashed, mark=diamond}
+}
+
+% To avoid "coordinate has been dropped" warnings
+\pgfplotsset{filter discard warning=false}
+
+
+% TeXSupport
+\makeatletter
+\def\doi#1{\gdef\@doi{#1}}\def\@doi{}
+\toappear{\the\boilerplate\par{\confname{\the\conf}} \the\confinfo\par \the\copyrightetc.\ifx\@doi\@empty\else\par\@doi.\fi}
+%\global\copyrightetc{ACM \the\acmcopyr\ ...\$15.00}%
+\global\copyrightetc{T. Z\"{a}schke 2017}
+
+
+%License stuff
+\newfont{\mycrnotice}{ptmr8t at 7pt}
+\newfont{\myconfname}{ptmri8t at 7pt}
+\let\crnotice\mycrnotice%
+\let\confname\myconfname%
+
+%TODO permissions!
+%\permission{Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org.}
+\permission{License: CC BY-SA}
+%\conferenceinfo{SIGMOD'14,}{June 22--27, 2014, Snowbird, UT, USA. \\
+%{\mycrnotice{Copyright is held by the owner/author(s). Publication rights licensed to ACM.}}}
+%\copyrightetc{ACM \the\acmcopyr}
+%\crdata{978-1-4503-2376-5/14/06\ ...\$15.00.}%\\
+%Include the http://DOI string/url which is specific for your submission and included in the ACM rightsreview confirmation email upon completing your ACM form}
+%\doi{http://dx.doi.org/10.1145/2588555.2588564}
+
+\clubpenalty=10000
+\widowpenalty = 10000
+
+
+%http://www.acm.org/sigs/publications/sigguide-v2.2sp
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{coll}{Corollary}
+%\newtheorem{lemma}{Lemma}
+%\newdef{defn}{Definition}
+
+
+
+% Watermark
+%
+%\usepackage[scale=10,opacity=0.6,color=gray]{background}
+%\usepackage{varwidth}
+%\backgroundsetup{
+%contents={\begin{varwidth}{8cm}{%
+  %Draft \\
+  %Draft \\
+  %Draft Confidential \hspace{1cm} Draft Confidential\\ 
+  %Draft}\end{varwidth}}
+%}
+
+%\hyphenation{que-ries}
+
+
+
+%PODS requirement
+%\fontsize{10pt}{10.2pt} \selectfont
+
+
+\newcommand{\ttt}[1] {\texttt{#1}}
+%binary AND
+\newcommand{\band}{\&}
+%binary OR
+\newcommand{\bor}{\mid}
+%binary NOT
+\newcommand{\bnot}{\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}
+%binary XOR
+\newcommand{\bxor}{\oplus}
+
+
+\definecolor{todocolor}{rgb}{0.6,0,0}
+% SHOW Solutions
+\newcommand{\todo}[1]{\textbf{\textcolor{todocolor}{#1}}}
+
+
+%binary XOR
+\newcommand{\phr}{PHR-Tree\xspace}
+\newcommand{\ph}{PH-Tree\xspace}
+\newcommand{\fw}{TInSpIn\xspace}
+\newcommand{\mmi}{MMI\xspace}
+
+%
+\def\sharedaffiliation{%
+\end{tabular}
+\begin{tabular}{c}}
+%
+\begin{document}
+
+% Copyright
+%\setcopyright{acmcopyright}
+%\setcopyright{acmlicensed}
+%\setcopyright{rightsretained}
+%\setcopyright{usgov}
+%\setcopyright{usgovmixed}
+%\setcopyright{cagov}
+%\setcopyright{cagovmixed}
+
+
+% DOI
+%\doi{10.475/123_4}
+
+% ISBN
+%\isbn{123-4567-24-567/08/06}
+
+%Conference
+%\conferenceinfo{SIGMOD '17}{May 14--19, 2017, Raleigh, NC, USA}
+
+%\acmPrice{\$15.00}
+
+%
+% --- Author Metadata here ---
+%\conferenceinfo{SIGMOD}{'17 Raleigh, NC, USA}
+%\CopyrightYear{2007} % Allows default copyright year (20XX) to be over-ridden - IF NEED BE.
+%\crdata{0-12345-67-8/90/01}  % Allows default copyright data (0-89791-88-6/97/05) to be over-ridden - IF NEED BE.
+% --- End of Author Metadata ---
+
+\title{A Performance Comparison of General Purpose Multi-Dimensional In-Memory Indexes -- All Results
+%\titlenote{(Produces the permission block, and copyright information). For use with SIG-ALTERNATE.CLS. Supported by ACM.}
+}
+\subtitle{Revision 1.0 -- 18th January 2017}
+%\titlenote{A full version of this paper is available as \textit{Author's Guide to Preparing ACM SIG Proceedings Using \LaTeX$2_\epsilon$\ and BibTeX} at \texttt{www.acm.org/eaddress.htm}}}
+
+
+%
+% You need the command \numberofauthors to handle the 'placement
+% and alignment' of the authors beneath the title.
+%
+% For aesthetic reasons, we recommend 'three authors at a time'
+% i.e. three 'name/affiliation blocks' be placed beneath the title.
+%
+% NOTE: You are NOT restricted in how many 'rows' of
+% "name/affiliations" may appear. We just ask that you restrict
+% the number of 'columns' to three.
+%
+% Because of the available 'opening page real-estate'
+% we ask you to refrain from putting more than six authors
+% (two rows with three columns) beneath the article title.
+% More than six makes the first-page appear very cluttered indeed.
+%
+% Use the \alignauthor commands to handle the names
+% and affiliations for an 'aesthetic maximum' of six authors.
+% Add names, affiliations, addresses for
+% the seventh etc. author(s) as the argument for the
+% \additionalauthors command.
+% These 'additional authors' will be output/set for you
+% without further effort on your part as the last section in
+% the body of your article BEFORE References or any Appendices.
+
+\numberofauthors{2} %  in this sample file, there are a *total*
+% of EIGHT authors. SIX appear on the 'first-page' (for formatting
+% reasons) and the remaining two appear in the \additionalauthors section.
+%
+
+\author{
+% You can go ahead and credit any number of authors here,
+% e.g. one 'row of three' or two rows (consisting of one row of three
+% and a second row of one, two or three).
+%
+% The command \alignauthor (no curly braces needed) should
+% precede each author name, affiliation/snail-mail address and
+% e-mail address. Additionally, tag each line of
+% affiliation/address with \affaddr, and tag the
+% e-mail address with \email.
+%
+% 1st. author
+%\alignauthor
+%John Doe\\
+       %\affaddr{Institute for Information Systems}\\
+       %\affaddr{ETH Zurich}\\
+       %\affaddr{Zurich, Switzerland}\\
+       %\email{zaeschke@inf.ethz.ch}
+%\alignauthor
+%Original Paper Number: 40
+%------------------------------- TODO ---  DON'T FORGET TO REMOVE ACKNOLEDGEMENTS!!!! ------------------------------
+\alignauthor
+Tilmann Z\"aschke\\
+%      \affaddr{Institute for Information Systems}\\
+%      \affaddr{ETH Zurich}\\
+%      \affaddr{Zurich, Switzerland}\\
+       \email{zaeschke@inf.ethz.ch}
+% 2nd. author
+%\alignauthor
+%Christoph Zimmerli\\
+ %      \affaddr{Institute for Information Systems}\\
+ %      \affaddr{ETH Zurich}\\
+ %      \affaddr{Zurich, Switzerland}\\
+%       \email{zimmerli@inf.ethz.ch}
+% 3rd. author
+\alignauthor Moira C. Norrie\\
+       \email{norrie@inf.ethz.ch}
+%
+\sharedaffiliation
+       \affaddr{Institute for Information Systems, Department of Computer Science}\\%, ETH Zurich, Switzerland}\\
+       \affaddr{ETH Zurich, Switzerland}
+%       \affaddr{Switzerland}
+%------------------------------- TODO ---  DON'T FORGET TO REMOVE ACKNOLEDGEMENTS!!!! ------------------------------
+%\and  % use '\and' if you need 'another row' of author names
+%% 4th. author
+%\alignauthor Lawrence P. Leipuner\\
+       %\affaddr{Brookhaven Laboratories}\\
+       %\affaddr{Brookhaven National Lab}\\
+       %\affaddr{P.O. Box 5000}\\
+       %\email{xyz@inf.ethz.ch}
+}
+% There's nothing stopping you putting the seventh, eighth, etc.
+% author on the opening page (as the 'third row') but we ask,
+% for aesthetic reasons that you place these 'additional authors'
+% in the \additional authors block, viz.
+%\additionalauthors{Additional authors: John Smith (The Th{\o}rv{\"a}ld Group,
+%email: {\texttt{jsmith@affiliation.org}}) and Julius P.~Kumquat
+%(The Kumquat Consortium, email: {\texttt{jpkumquat@consortium.net}}).}
+\date{17 January 2017}
+% Just remember to make sure that the TOTAL number of authors
+% is the number that will appear on the first page PLUS the
+% number that will appear in the \additionalauthors section.
+
+
+%%SIGMOD/PODS'14, June 22 - 27 2014, Salt Lake City, UT, USA
+%%Copyright is held by the owner/author(s). Publication rights licensed to ACM.
+%%ACM 978-1-4503-2376-5/14/06…$15.00.
+%%http://dx.doi.org/10.1145/2588555.2588564 
+%\conferenceinfo{SIGMOD/PODS'14}{June 22 - 27 2014, Salt Lake City, UT, USA\\ 
+%Copyright is held by the owner/author(s). Publication rights licensed to ACM.}
+%\CopyrightYear{2014}
+%\crdata{978-1-4503-2376-5/14/06}
+%%\permission{Copyright is held by the owner/author(s). Publication rights licensed to ACM.}
+%% DOI
+%\doi{http://dx.doi.org/10.1145/2588555.2588564}
+
+
+%PODS requirement
+%\fontsize{10pt}{10.2pt} \selectfont
+
+
+\maketitle
+%\begin{abstract}
+%\end{abstract}
+
+\section{Introduction}
+
+This document contains all TinSpin\footnote{\url{http://www.tinspin.org}} test results from the test runs between November 2016 and January 2017.
+
+\section{Indexes}
+
+The following index implementations were tested:
+
+\begin{itemize}
+	\item CBF CritBit tree by J. Fager\footnote{\url{https://github.com/jfager/functional-critbit}}
+	\item CBZ CritBit tree by T. Z\"{a}schke\footnote{\url{http://www.tinspin.org}\label{foot:zdbi}}
+	\item KDL KD-Tree by Levy\footnote{\url{http://home.wlu.edu/~levys/software/kd/}}
+	\item KDS KD-Tree by Savarese\footnote{\url{https://www.savarese.com/software/libssrckdtree-j/}}
+	\item PH/PHM PH-Tree by T. Z\"{a}schke et al.\footnote{\url{http://www.phtree.org}}
+	\item QTZ Quadtree by T. Z\"{a}schke$^{\ref{foot:zdbi}}$
+	\item RSS R*Tree by N. Beckmann et al\footnote{\url{http://chorochronos.datastories.org}\label{foot:chorochronos}}, optimized for in-memory use by T. Z\"{a}schke
+	\item RSZ R*Tree by T. Z\"{a}schke$^{\ref{foot:zdbi}}$
+	\item STRZ R*Tree by T. Z\"{a}schke$^{\ref{foot:zdbi}}$
+	\item XTS X-Tree by S. Berchtold et al$^{\ref{foot:chorochronos}}$, optimized for in-memory use by T. Z\"{a}schke
+\end{itemize}
+
+%\section{Outlook}
+%\label{sec:outlook}
+%
+%\subsection{Optimisations}
+%
+%Numerous optimisations were \emph{not} done, for example:
+%
+%\begin{itemize}
+	%\item Rebalancing for KD-Trees. However a preliminary test indicated that the effect on performance would have been negligible.
+	%\item Variation of page sizes of R*Trees and X-Trees. These are known to have strong impact on performance. However we choose very small page sizes as these seemed to result in best performance across all scenarios. Note that these page sizes would have been unrealistically small for a persistent index, resulting in a page size of less than 256 byte (for smaller dimensions).
+	%\item The PH-tree performs generally better when used with a data preprocessor~\cite{phtreeRevisitedM}. This usually increases performance by 10\%-30\%, in rare cases by several orders of magnitude, see the 15D CLUSTER 0.5 dataset in~\cite{ZZN2014phtree}.
+%\end{itemize}
+%
+%\begin{itemize}
+	%\item Bitstreaming: This is mostly a memory optimisations. Earlier tests with 64bit alignment showed pretty much the same performance (reduced memory (v11) access is outweighted by reduced computation (v10)).
+	%\item Object pooling: This certainly makes a difference for the PH-Tree. However, since the PH-Tree has to create key instance for every extraction (queries, etc) and for every element that is inserted (array resizing), the PH-Tree would be unfairly bad. Memory pooling is likely to have much less impact for other index structures.
+%\end{itemize}
+
+
+
+%\subsection{More Tests}
+%
+%\begin{itemize}
+	%\item Vary overlap of rectangles
+	%\item Vary query shapes
+%\end{itemize}
+
+
+%\bibliographystyle{plain}
+%\bibliography{sigproc}  % sigproc.bib is the name of the Bibliography in this case
+
+
+\section{Results}
+Results are shown on in the following order:
+
+\begin{itemize}
+	\item Insertion: Figures~\ref{fig:loadPerEntry} --~\ref{fig:loadPerEntryDimCL-R}
+	\item Memory usage: Figures~\ref{fig:memoryPerEntry} --~\ref{fig:memoryPerEntryDimCL-R}
+	\item Window queries: Figures~\ref{fig:wQueryPerEntryP} --~\ref{fig:wqPerEntryDimCL-R}
+	\item Exact match queries (point queries): Figures~\ref{fig:pQueryPerEntryP} --~\ref{fig:pQueryDimCL-R}
+	\item $k$NN queries: Figures~\ref{fig:1NNQueryPerEntryP} --~\ref{fig:10NNQueryPerEntryDimCL-R}
+	\item Update: Figures~\ref{fig:updPerEntryP} --~\ref{fig:updPerEntryDimCL-R}
+	\item Remove: Figures~\ref{fig:remPerEntryP} --~\ref{fig:remPerEntryDimCL-R}
+\end{itemize}
+
+%\listoffigures
+%\newpage
+
+\input{DiagramsLoad-Size}
+\input{DiagramsLoad-Dims}
+\clearpage
+\newpage
+
+\input{DiagramsMemory-Size}
+\input{DiagramsMemory-Dims}
+\clearpage
+\newpage
+
+\input{DiagramsWindowQuery-Size}
+\input{DiagramsWindowQuery-WQS}
+\input{DiagramsWindowQuery-Dims}
+\clearpage
+\newpage
+
+\input{DiagramsPointQuery-Size}
+\input{DiagramsPointQuery-Dims}
+\clearpage
+\newpage
+
+\input{DiagramsKNN-Size}
+\input{DiagramsKNN-Dims}
+\clearpage
+\newpage
+
+\input{DiagramsUpdate-Size}
+\input{DiagramsUpdate-Dims}
+\clearpage
+\newpage
+
+\input{DiagramsRemove-Size}
+\input{DiagramsRemove-Dims}
+\clearpage
+\newpage
+
+
+
+
+\end{document}

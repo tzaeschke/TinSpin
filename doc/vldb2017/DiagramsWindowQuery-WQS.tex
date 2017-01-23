@@ -1,0 +1,333 @@
+%%%%%%%%%%%%%%%
+% Window queries
+%%%%%%%%%%%%%%%
+%\subsection{Window Query}
+
+
+
+%%%%%%%%%%%
+% W QUERY small/big
+%%%%%%%%%%%
+% BIG TRICK: for X we can use the query result column!!
+% -> We could divide this by 1000(?) to get average result size!
+%%%%%%%%%%%
+%\begin{figure}%[thb]
+%\begin{tikzpicture}
+	%\pgfplotsset{every axis legend/.append style={ at={(0.95,0.95)}, anchor=north east}}
+%\begin{axis}[ 
+		%height=7cm, width=6.4cm, 
+		%grid=major, 
+		%xlabel=Average query result size,ylabel={ns per returned entry},
+		%legend columns=2,
+		%legend style={draw=none},
+		%%title={k=2, 64bit, TIGER/Line},
+		%ymode=log,
+		%%width=6.4cm,ymin={0.08},
+		%%xmax=30000000,xmin=0,
+		%%scaled x ticks=base 10:6,
+		%font=\scriptsize,
+		%%log ticks with fixed point
+		%ymode=log, ymin={50}, ymax={10e4},
+		%xmode=log, 
+		%] 
+	%\addplot+[PH] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/PHC-P-CUBE(1.0,0.0,null).txt};
+	%\addlegendentry{PH} 
+	%\addplot+[RSS] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/RSS-P-CUBE(1.0,0.0,null).txt};
+	%\addlegendentry{RSS} 
+	%\addplot+[RSZ] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/RSZ-P-CUBE(1.0,0.0,null).txt};
+	%\addlegendentry{RSZ} 
+	%\addplot+[PHM] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/PHC_IPP-P-CUBE(1.0,0.0,null).txt};
+	%\addlegendentry{PHM} 
+%%	\addplot+[CBF] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/CBF-P-CUBE(1.0,0.0,null).txt};
+%%	\addlegendentry{CBF} 
+%%	\addplot+[CBZ] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/CBZ-P-CUBE(1.0,0.0,null).txt};
+%%	\addlegendentry{CBZ} 
+	%\addplot+[KDL] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/KD_LEVY-P-CUBE(1.0,0.0,null).txt};
+	%\addlegendentry{KDL} 
+	%\addplot+[KDS] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/KD_SAVA-P-CUBE(1.0,0.0,null).txt};
+	%\addlegendentry{KDS} 
+	%\addplot+[QKDZ] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/QKDZ-P-CUBE(1.0,0.0,null).txt};
+	%\addlegendentry{QZ} 
+	%\addplot+[STRZ] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/STRZ-P-CUBE(1.0,0.0,null).txt};
+	%\addlegendentry{STR} 
+	%\addplot+[XTS] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/XTS-P-CUBE(1.0,0.0,null).txt};
+	%\addlegendentry{XTS} 
+%%  \addplot+[XTR] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/1000,y=q2/n, col sep=tab] {sizePWQS/XTR-P-CUBE(1.0,0.0,null).txt};
+%%	\addlegendentry{XTR} 
+%\end{axis}
+%\end{tikzpicture}
+	%\centering
+	%\caption{Varying query result size with CU-P}
+	%\label{fig:wQueryVarSizeOSM-P}
+%\end{figure}
+
+\begin{figure*}%[thb]
+	\pgfplotsset{
+		every tick label/.append style={font=\scriptsize},
+		every axis/.append style={xmode=log, ymode=log, ymin={1e2}, ymax={1e7}, 
+				height=7cm, width=6.4cm, grid=major, xlabel={dataset size $N$}, font=\scriptsize, }
+	}
+\begin{subfigure}[t]{0.33\textwidth}
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ at={(0.98,0.98)}, anchor=north east, legend columns=2}}
+		\begin{axis}[ 
+			ylabel={queries per second},
+			legend columns=2,
+			legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/PHC-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[RSS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/RSS-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/RSZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/PHC_IPP-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+%	\addplot+[CBF] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/CBF-P-OSM(1.0,0.0,null).txt};
+%	\addlegendentry{CBF} 
+  \addplot+[CBZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/CBZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{CBZ} 
+	\addplot+[KDL] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/KD_LEVY-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{KDL} 
+	\addplot+[KDS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/KD_SAVA-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{KDS} 
+	\addplot+[QKDZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/QKDZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
+	\addplot+[STRZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/STRZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{STRZ} 
+	\addplot+[XTS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/XTS-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{XTS} 
+	\legend{} %disable legend
+\end{axis}
+\end{tikzpicture}
+	\centering
+	\caption{2D OSM-P}
+	\label{fig:wQueryVarSizeOSM-P}
+\end{subfigure}
+%
+%
+\begin{subfigure}[t]{0.33\textwidth}
+\begin{tikzpicture}
+	\begin{axis}[ 
+			legend columns=2,
+			legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/PHC-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[RSS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/RSS-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/RSZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/PHC_IPP-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+%	\addplot+[CBF] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/CBF-P-CUBE(1.0,0.0,null).txt};
+%	\addlegendentry{CBF} 
+	\addplot+[CBZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/CBZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{CBZ} 
+	\addplot+[KDL] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/KD_LEVY-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{KDL} 
+	\addplot+[KDS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/KD_SAVA-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{KDS} 
+	\addplot+[QKDZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/QKDZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
+	\addplot+[STRZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/STRZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{STRZ} 
+	\addplot+[XTS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/XTS-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{XTS} 
+\end{axis}
+\end{tikzpicture}
+	\centering
+	\caption{3D CUBE-P}
+	\label{fig:wQueryVarSizeCUBE-P}
+\end{subfigure}
+%
+%
+\begin{subfigure}[t]{0.33\textwidth}
+\begin{tikzpicture}
+\begin{axis}[ 
+		legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/PHC-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[RSS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/RSS-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/RSZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/PHC_IPP-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+%	\addplot+[CBF] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/CBF-P-CLUSTER(5.0,0.0,null).txt};
+%	\addlegendentry{CBF} 
+	\addplot+[CBZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/CBZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{CBZ} 
+	\addplot+[KDL] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/KD_LEVY-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{KDL} 
+	\addplot+[KDS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/KD_SAVA-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{KDS} 
+	\addplot+[QKDZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/QKDZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
+	\addplot+[STRZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/STRZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{STRZ} 
+	\addplot+[XTS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizePWQS/XTS-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{XTS} 
+	\legend{} %disable legend
+\end{axis}
+\end{tikzpicture}
+	\centering
+	\caption{3D CLUSTER-P}
+	\label{fig:wQueryVarSizeCL-P}
+\end{subfigure}
+	\caption{Varying query result size with the OSM Alps, CUBE and CLUSTER datasets}
+	\label{fig:wQueryVarSizePerEntryP}
+\end{figure*}
+
+
+%%%%%%%%%%%
+% W QUERY small/big
+%%%%%%%%%%%
+% BIG TRICK: for X we can use the query result column!!
+% -> We could divide this by 1000(?) to get average result size!
+%%%%%%%%%%%
+%\begin{figure}%[thb]
+%\begin{tikzpicture}
+	%\pgfplotsset{every axis legend/.append style={ at={(0.95,0.95)}, anchor=north east}}
+%\begin{axis}[ 
+		%height=7cm, width=6.4cm, 
+		%grid=major, 
+		%xlabel=Average query result size,ylabel={ns per returned entry},
+		%legend columns=2,
+		%legend style={draw=none},
+		%%title={k=2, 64bit, TIGER/Line},
+		%ymode=log,
+		%%width=6.4cm,ymin={0.08},
+		%%xmax=30000000,xmin=0,
+		%%scaled x ticks=base 10:6,
+		%font=\scriptsize,
+		%%log ticks with fixed point
+		%ymode=log, ymin={50}, ymax={10e4},
+		%xmode=log, 
+		%] 
+	%\addplot+[PH] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/PHC-R-CUBE(1.0E-5,0.0,null).txt};
+	%\addlegendentry{PH} 
+	%\addplot+[RSS] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/RSS-R-CUBE(1.0E-5,0.0,null).txt};
+	%\addlegendentry{RSS} 
+	%\addplot+[RSZ] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/RSZ-R-CUBE(1.0E-5,0.0,null).txt};
+	%\addlegendentry{RSZ} 
+	%\addplot+[PHM] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/PHC_IPP-R-CUBE(1.0E-5,0.0,null).txt};
+	%\addlegendentry{PHM} 
+%%	\addplot+[CBF] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/CBF-R-CUBE(1.0E-5,0.0,null).txt};
+%%	\addlegendentry{CBF} 
+%%	\addplot+[CBZ] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/CBZ-R-CUBE(1.0E-5,0.0,null).txt};
+%%	\addlegendentry{CBZ} 
+%%	\addplot+[KDL] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/KD_LEVY-R-CUBE(1.0E-5,0.0,null).txt};
+%%	\addlegendentry{KDL} 
+%%	\addplot+[KDS] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/KD_SAVA-R-CUBE(1.0E-5,0.0,null).txt};
+%%	\addlegendentry{KDS} 
+	%\addplot+[QKDZ] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/QKDZ-R-CUBE(1.0E-5,0.0,null).txt};
+	%\addlegendentry{QZ} 
+	%\addplot+[STRZ] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/STRZ-R-CUBE(1.0E-5,0.0,null).txt};
+	%\addlegendentry{STR} 
+%%	\addplot+[XTS] table [selectcoords={0}{5},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/XTS-R-CUBE(1.0E-5,0.0,null).txt};
+%%	\addlegendentry{XTS} 
+%\end{axis}
+%\end{tikzpicture}
+	%\centering
+	%\caption{Varying query result size with CU-R}
+	%\label{fig:wQueryVarSizeOSM-R}
+%\end{figure}
+
+
+\begin{figure*}[thb]
+	\pgfplotsset{
+		every tick label/.append style={font=\scriptsize},
+		every axis/.append style={xmode=log, ymode=log, ymin={1e2}, ymax={1e6}, 
+				height=7cm, width=6.4cm, grid=major, xlabel={dataset size $N$}, font=\scriptsize, }
+	}
+\begin{subfigure}[t]{0.33\textwidth}
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.05)}, anchor=south west}}
+		\begin{axis}[ 
+			ylabel={queries per second},
+			legend columns=2,
+			legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/PHC-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[RSS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/RSS-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/RSZ-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/PHC_IPP-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[STRZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/STRZ-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{STRZ} 
+%	\addplot+[XTS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/XTS-R-OSM(1.0,0.0,null).txt};
+%	\addlegendentry{XTS} 
+	\addplot+[QKDZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/QKDZ-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{Alps OSM-R}
+	\label{fig:wQueryVarSizeOSM-R}
+%\end{figure}
+\end{subfigure}
+\begin{subfigure}[t]{0.33\textwidth}
+%\begin{figure}[thb]
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.95)}, anchor=north west}}
+		\begin{axis}[ 
+		legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/PHC-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[RSS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/RSS-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/RSZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/PHC_IPP-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[STRZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/STRZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{STRZ} 
+%	\addplot+[XTS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/XTS-R-CUBE(1.0,0.0,null).txt};
+%	\addlegendentry{XTS} 
+	\addplot+[QKDZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/QKDZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
+	\legend{} %disable legend
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{CUBE-R}
+	\label{fig:wQueryVarSizeCU-R}
+%\end{figure}
+\end{subfigure}
+\begin{subfigure}[t]{0.33\textwidth}
+%\begin{figure}[thb]
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.95)}, anchor=north west}}
+		\begin{axis}[ 
+		legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/PHC-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[RSS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/RSS-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/RSZ-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/PHC_IPP-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[STRZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/STRZ-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{STRZ} 
+%	\addplot+[XTS] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/XTS-R-CLUSTER(3.5,0.0,null).txt};
+%	\addlegendentry{XTS} 
+	\addplot+[QKDZ] table [selectcoords={0}{4},x expr=\thisrow{q2-n}/10000,y expr=1e9/(\thisrow{q2/n}*\thisrow{q2-n})*10000, col sep=tab] {sizeRWQS/QKDZ-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
+	\legend{} %disable legend
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{CLUSTER-R}
+	\label{fig:wQueryVarSizeCL-R}
+\end{subfigure}
+	\caption{Varying query result size with the OSM Alps, CUBE and CLUSTER datasets}
+	\label{fig:wQueryVarSizePerEntryR}
+\end{figure*}

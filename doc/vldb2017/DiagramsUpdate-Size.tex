@@ -1,0 +1,228 @@
+%\subsection{Update}
+%\label{sec:ResUpdate}
+
+%%%%%%%%%%%%
+% update P
+%%%%%%%%%%%%
+\begin{figure*}[thb]
+	\pgfplotsset{
+		every tick label/.append style={font=\scriptsize},
+		every axis/.append style={xmode=log, ymode=log, ymin={1e3}, ymax={1e7}, 
+				height=7cm, width=6.4cm, grid=major, xlabel={dataset size $N$}, font=\scriptsize, }
+	}
+\begin{subfigure}[t]{0.33\textwidth}
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.02)}, anchor=south west}}
+\begin{axis}[ 
+			ylabel={updates per second},
+		legend columns=3,
+		legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/PHC-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+%	\addplot+[RSS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/RSS-P-OSM(1.0,0.0,null).txt};
+%	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/RSZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/PHC_IPP-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[CBF] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/CBF-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{CBF} 
+	\addplot+[CBZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/CBZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{CBZ} 
+	\addplot+[KDL] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/KD_LEVY-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{KDL} 
+	\addplot+[KDS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/KD_SAVA-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{KDS} 
+	\addplot+[QKDZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/QKDZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{QZ} 
+	\addplot+[STRZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/STRZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{STR} 
+%	\addplot+[XTS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/XTS-P-OSM(1.0,0.0,null).txt};
+%	\addlegendentry{XTS} 
+%	\legend{} %disable legend
+\end{axis}
+\end{tikzpicture}
+	\centering
+	\caption{2D OSM-P}
+	\label{fig:updOSM-P}
+\end{subfigure}
+%
+%
+\begin{subfigure}[t]{0.33\textwidth}
+\begin{tikzpicture}
+\begin{axis}[ 
+		legend columns=3,
+		legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/PHC-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+%	\addplot+[RSS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/RSS-P-CUBE(1.0,0.0,null).txt};
+%	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/RSZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/PHC_IPP-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[CBF] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/CBF-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{CBF} 
+	\addplot+[CBZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/CBZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{CBZ} 
+	\addplot+[KDL] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/KD_LEVY-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{KDL} 
+	\addplot+[KDS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/KD_SAVA-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{KDS} 
+	\addplot+[QKDZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/QKDZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{QZ} 
+	\addplot+[STRZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/STRZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{STR} 
+%	\addplot+[XTS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/XTS-P-CUBE(1.0,0.0,null).txt};
+%	\addlegendentry{XTS} 
+	\legend{} %disable legend
+\end{axis}
+\end{tikzpicture}
+	\centering
+	\caption{3D CUBE-P}
+	\label{fig:updCUBE-P}
+\end{subfigure}
+%
+%
+\begin{subfigure}[t]{0.33\textwidth}
+\begin{tikzpicture}
+\begin{axis}[ 
+		legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/PHC-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PH} 
+%  \addplot+[RSS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/RSS-P-CLUSTER(5.0,0.0,null).txt};
+%	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/RSZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/PHC_IPP-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[CBF] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/CBF-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{CBF} 
+	\addplot+[CBZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/CBZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{CBZ} 
+	\addplot+[KDL] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/KD_LEVY-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{KDL} 
+	\addplot+[KDS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/KD_SAVA-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{KDS} 
+	\addplot+[QKDZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/QKDZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{QZ} 
+	\addplot+[STRZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/STRZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{STR} 
+%	\addplot+[XTS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeP/XTS-P-CLUSTER(5.0,0.0,null).txt};
+%	\addlegendentry{XTS} 
+	\legend{} %disable legend
+\end{axis}
+\end{tikzpicture}
+	\centering
+	\caption{3D CLUSTER-P}
+	\label{fig:updCL-P}
+\end{subfigure}
+	\caption{Update rates for the OSM Alps, CUBE and CLUSTER datasets}
+	\label{fig:updPerEntryP}
+\end{figure*}
+
+
+%%%%%%%%%%%%%%
+% UPDATE R
+%%%%%%%%%%%%%%
+\begin{figure*}[thb]
+	\pgfplotsset{
+		every tick label/.append style={font=\scriptsize},
+		every axis/.append style={xmode=log, ymode=log, ymin={1e4}, ymax={1e7}, 
+				height=7cm, width=6.4cm, grid=major, xlabel={dataset size $N$}, font=\scriptsize, }
+	}
+\begin{subfigure}[t]{0.33\textwidth}
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.02)}, anchor=south west}}
+		\begin{axis}[ 
+			ylabel={updates per second},
+		legend columns=3,
+		legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{5},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/PHC-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+%	\addplot+[RSS] table [selectcoords={0}{5},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/RSS-R-OSM(1.0,0.0,null).txt};
+%	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{5},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/RSZ-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{5},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/PHC_IPP-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[STRZ] table [selectcoords={0}{5},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/STRZ-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{STR} 
+%	\addplot+[XTS] table [selectcoords={0}{5},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/XTS-R-OSM(1.0,0.0,null).txt};
+%	\addlegendentry{XTS} 
+	\addplot+[QKDZ] table [selectcoords={0}{5},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/QKDZ-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{QZ} 
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{2D OSM-R}
+	\label{fig:updOSM-R}
+%\end{figure}
+\end{subfigure}
+\begin{subfigure}[t]{0.33\textwidth}
+%\begin{figure}[thb]
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.95)}, anchor=north west}}
+		\begin{axis}[ 
+		legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/PHC-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+%	\addplot+[RSS] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/RSS-R-CUBE(1.0,0.0,null).txt};
+%	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/RSZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/PHC_IPP-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[STRZ] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/STRZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{STR} 
+%	\addplot+[XTS] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/XTS-R-CUBE(1.0,0.0,null).txt};
+%	\addlegendentry{XTS} 
+	\addplot+[QKDZ] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/QKDZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{QZ} 
+	\legend{} %disable legend
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{3D CUBE-R}
+	\label{fig:updCU-R}
+%\end{figure}
+\end{subfigure}
+\begin{subfigure}[t]{0.33\textwidth}
+%\begin{figure}[thb]
+	\begin{tikzpicture} 
+	\pgfplotsset{every axis legend/.append style={ at={(0.05,0.95)}, anchor=north west}}
+		\begin{axis}[ 
+		legend style={draw=none},
+		] 
+	\addplot+[PH] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/PHC-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PH} 
+%	\addplot+[RSS] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/RSS-R-CLUSTER(5.0,0.0,null).txt};
+%	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/RSZ-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/PHC_IPP-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[STRZ] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/STRZ-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{STR} 
+%	\addplot+[XTS] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/XTS-R-CLUSTER(3.5,0.0,null).txt};
+%	\addlegendentry{XTS} 
+	\addplot+[QKDZ] table [selectcoords={0}{4},x=N,y expr=1e9/\thisrow{up2/n}, col sep=tab] {sizeR/QKDZ-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{QZ} 
+	\legend{} %disable legend
+		\end{axis} 
+	\end{tikzpicture}
+	\centering
+	\caption{3D CLUSTER-R}
+	\label{fig:updCL-R}
+%\end{figure}
+\end{subfigure}
+	\caption{Update rates for the OSM Alps, CUBE and CLUSTER datasets}
+	\label{fig:updPerEntry-R}
+\end{figure*}
+
+

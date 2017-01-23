@@ -1,0 +1,159 @@
+
+
+
+
+%%%%%%%%%%%%%%%
+% PQ CU DIM P
+%%%%%%%%%%%%%%%
+\begin{figure}[thb]
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ at={(0.98,0.2)}, anchor=south east}}
+\begin{axis}[ 
+		%height=9cm, width=9cm, 
+		grid=major, 
+		xlabel=dimensions,ylabel={queries per second},
+		legend columns=2,
+		legend style={draw=none},
+		ymode=log,ymin={1e3},ymax={1e7},
+		font=\scriptsize,
+		] 
+	\addplot[CBF] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/CBF-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{CBF} 
+	\addplot[CBZ] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/CBZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{CBZ} 
+	\addplot[KDL] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/KD_LEVY-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{KDL} 
+	\addplot[KDS] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/KD_SAVA-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{KDS} 
+	\addplot[PH] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/PHC-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot[PHM] table [selectcoords={0}{15},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/PHC_IPP-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot[QKDZ] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/QKDZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
+	\addplot[RSS] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/RSS-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot[RSZ] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/RSZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot[STRZ] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/STRZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{STRZ} 
+	\addplot[XTS] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/XTS-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{XTS} 
+\end{axis}
+\end{tikzpicture}
+	\centering
+	\caption{DIM: Exact match query rates for CU-P}
+	\label{fig:pQueryDimCU-P}
+\end{figure}
+
+%%%%%%%%%%%%%%%
+% PQ CU DIM R
+%%%%%%%%%%%%%%%
+\begin{figure}[thb]
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ at={(0.98,0.2)}, anchor=south east}}
+\begin{axis}[ 
+		%height=9cm, width=9cm, 
+		grid=major, 
+		xlabel=dimensions,ylabel={queries per second},
+		legend columns=1,
+		legend style={draw=none},
+		ymode=log,ymin={1e3},ymax={1e7},
+		font=\scriptsize,
+		] 
+	\addplot+[PH] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/PHC-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[PHM] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/PHC_IPP-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[RSS] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/RSS-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/RSZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[STRZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/STRZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{STRZ} 
+	\addplot+[QKDZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/QKDZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
+\end{axis}
+\end{tikzpicture}
+	\centering
+	\caption{DIM: Exact match query rates for CU-R}
+	\label{fig:pQUeryDimCU-R}
+\end{figure}
+
+%%%%%%%%%%%%%%%
+% PQ CL DIM P
+%%%%%%%%%%%%%%%
+\begin{figure}[thb]
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ at={(0.98,0.98)}, anchor=north east}}
+\begin{axis}[ 
+		%height=9cm, width=9cm, 
+		grid=major, 
+		xlabel=dimensions,ylabel={queries per second},
+		legend columns=2,
+		legend style={draw=none},
+		ymode=log,ymin={1e5},ymax={1e7},
+		font=\scriptsize,
+		] 
+	\addplot[CBF] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/CBF-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{CBF} 
+	\addplot[CBZ] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/CBZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{CBZ} 
+	\addplot[KDL] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/KD_LEVY-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{KDL} 
+	\addplot[KDS] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/KD_SAVA-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{KDS} 
+	\addplot[PH] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/PHC-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot[PHM] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/PHC_IPP-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot[QKDZ] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/QKDZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
+	\addplot[RSS] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/RSS-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot[RSZ] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/RSZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot[STRZ] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/STRZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{STRZ} 
+	\addplot[XTS] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsP/XTS-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{XTS} 
+\end{axis}
+\end{tikzpicture}
+	\centering
+	\caption{DIM: Exact match query rates for CL-P}
+	\label{fig:pQueryDimCL-P}
+\end{figure}
+
+%%%%%%%%%%%%%%%
+% PQ CL DIM R
+%%%%%%%%%%%%%%%
+\begin{figure}[thb]
+\begin{tikzpicture}
+	\pgfplotsset{every axis legend/.append style={ at={(0.98,0.98)}, anchor=north east}}
+\begin{axis}[ 
+		%height=9cm, width=9cm, 
+		grid=major, 
+		xlabel=dimensions,ylabel={queries per second},
+		legend columns=2,
+		legend style={draw=none},
+		ymode=log,ymin={1e5},ymax={1e7},
+		font=\scriptsize,
+		] 
+	\addplot+[PH] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/PHC-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[PHM] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/PHC_IPP-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[RSS] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/RSS-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/RSZ-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[STRZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/STRZ-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{STRZ} 
+	\addplot+[QKDZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{pq2/n}, col sep=tab] {dimsR/QKDZ-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
+\end{axis}
+\end{tikzpicture}
+	\centering
+	\caption{DIM: Exact match query rates for CL-R}
+	\label{fig:pQueryDimCL-R}
+\end{figure}
