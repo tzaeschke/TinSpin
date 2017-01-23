@@ -9,10 +9,10 @@ package ch.ethz.globis.tinspin.wrappers;
 import java.util.Arrays;
 import java.util.List;
 
-import org.zoodb.index.quadtree2.QREntryDist;
-import org.zoodb.index.quadtree2.QuadTreeRKD;
-import org.zoodb.index.quadtree2.QuadTreeKD.QStats;
-import org.zoodb.index.quadtree2.QuadTreeRKD.QIterator;
+import org.zoodb.index.quadtree.QREntryDist;
+import org.zoodb.index.quadtree.QuadTreeKD.QStats;
+import org.zoodb.index.quadtree.QuadTreeRKD;
+import org.zoodb.index.quadtree.QuadTreeRKD.QRIterator;
 
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -23,7 +23,7 @@ public class RectangleQuadZ extends Candidate {
 	private final int N;
 	private double[] data;
 	private static final Object O = new Object();
-	private QIterator<Object> query = null;
+	private QRIterator<Object> query = null;
 	private final int maxNodeSize = 10;
 	
 	/**
