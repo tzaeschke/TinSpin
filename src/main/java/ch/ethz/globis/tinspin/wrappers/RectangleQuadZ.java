@@ -9,10 +9,10 @@ package ch.ethz.globis.tinspin.wrappers;
 import java.util.Arrays;
 import java.util.List;
 
-import org.zoodb.index.quadtree.QREntryDist;
-import org.zoodb.index.quadtree.QuadTreeKD.QStats;
-import org.zoodb.index.quadtree.QuadTreeRKD;
-import org.zoodb.index.quadtree.QuadTreeRKD.QRIterator;
+import org.tinspin.index.quadtree.QREntryDist;
+import org.tinspin.index.quadtree.QuadTreeRKD;
+import org.tinspin.index.quadtree.QuadTreeKD.QStats;
+import org.tinspin.index.quadtree.QuadTreeRKD.QRIterator;
 
 import ch.ethz.globis.tinspin.TestStats;
 

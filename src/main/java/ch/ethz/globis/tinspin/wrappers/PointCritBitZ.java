@@ -6,9 +6,9 @@
  */
 package ch.ethz.globis.tinspin.wrappers;
 
-import org.zoodb.index.critbit.CritBit;
-import org.zoodb.index.critbit.CritBit.QueryIteratorKD;
-import org.zoodb.index.critbit.CritBitKD;
+import org.tinspin.index.critbit.CritBit;
+import org.tinspin.index.critbit.CritBitKD;
+import org.tinspin.index.critbit.CritBit.QueryIteratorKD;
 
 import ch.ethz.globis.phtree.util.BitTools;
 import ch.ethz.globis.tinspin.TestStats;

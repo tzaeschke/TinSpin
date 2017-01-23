@@ -8,10 +8,10 @@ package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.Arrays;
 
-import org.zoodb.index.Index;
-import org.zoodb.index.rtree.RTree;
-import org.zoodb.index.rtree.RTreeIterator;
-import org.zoodb.index.rtree.RTreeQueryKnn;
+import org.tinspin.index.Index;
+import org.tinspin.index.rtree.RTree;
+import org.tinspin.index.rtree.RTreeIterator;
+import org.tinspin.index.rtree.RTreeQueryKnn;
 
 import ch.ethz.globis.tinspin.TestStats;
 
