@@ -1,46 +1,17 @@
-% THIS IS SIGPROC-SP.TEX - VERSION 3.1
-% WORKS WITH V3.2SP OF ACM_PROC_ARTICLE-SP.CLS
-% APRIL 2009
-%
-% It is an example file showing how to use the 'acm_proc_article-sp.cls' V3.2SP
-% LaTeX2e document class file for Conference Proceedings submissions.
-% ----------------------------------------------------------------------------------------------------------------
-% This .tex file (and associated .cls V3.2SP) *DOES NOT* produce:
-%       1) The Permission Statement
-%       2) The Conference (location) Info information
-%       3) The Copyright Line with ACM data
-%       4) Page numbering
-% ---------------------------------------------------------------------------------------------------------------
-% It is an example which *does* use the .bib file (from which the .bbl file
-% is produced).
-% REMEMBER HOWEVER: After having produced the .bbl file,
-% and prior to final submission,
-% you need to 'insert'  your .bbl file into your source .tex file so as to provide
-% ONE 'self-contained' source file.
-%
-% Questions regarding SIGS should be sent to
-% Adrienne Griscti ---> griscti@acm.org
-%
-% Questions/suggestions regarding the guidelines, .tex and .cls files, etc. to
-% Gerald Murray ---> murray@hq.acm.org
-%
-% For tracking purposes - this is V3.1SP - APRIL 2009
+% THIS IS AN EXAMPLE DOCUMENT FOR VLDB 2012
+% based on ACM SIGPROC-SP.TEX VERSION 2.7
+% Modified by  Gerald Weber <gerald@cs.auckland.ac.nz>
+% Removed the requirement to include *bbl file in here. (AhmetSacan, Sep2012)
+% Fixed the equation on page 3 to prevent line overflow. (AhmetSacan, Sep2012)
 
-\documentclass{sig-alternate}
-%\documentclass{acm_proc_article-sp}
-%\documentclass{sig-alternate-2013}
-% http://sourceforge.net/projects/pgfplots/
-%\usepackage{subcaption}
+\documentclass{vldb}
 \usepackage{verbatim}
 \usepackage{pgfplots}
 \usepackage{url}
 \usepackage{listings}
-%\usepackage{amsthm} //\proof is already defined by SIGMOD :-(
-%\usepackage{showkeys}
 \usepackage{subcaption}
 \usepackage{url}
 \usepackage{xspace}
-%\usepackage{todonotes}
 \usepackage{tikz}
 \usetikzlibrary{shapes,decorations}
 \pgfplotsset{compat=1.12}
@@ -88,7 +59,7 @@
 	RSS/.style={brown, dashed, mark=square*, mark options={brown,solid}},
   XTS/.style={brown, solid, mark=x},
   XTR/.style={red, dashed, mark=x},
-	QKDZ/.style={blue, solid, mark=+},
+	QTZ/.style={blue, solid, mark=+},
 	CBF/.style={red, dashed, mark=triangle},
   CBZ/.style={black, solid, mark=triangle},
   KDL/.style={red, solid, mark=diamond},
@@ -101,69 +72,29 @@
 
 % TeXSupport
 \makeatletter
-\def\doi#1{\gdef\@doi{#1}}\def\@doi{}
-\toappear{\the\boilerplate\par{\confname{\the\conf}} \the\confinfo\par \the\copyrightetc.\ifx\@doi\@empty\else\par\@doi.\fi}
+%\def\doi#1{\gdef\@doi{#1}}\def\@doi{}
+%\toappear{\the\boilerplate\par{\confname{\the\conf}} \the\confinfo\par \the\copyrightetc.\ifx\@doi\@empty\else\par\@doi.\fi}
+
 %\global\copyrightetc{ACM \the\acmcopyr\ ...\$15.00}%
-\global\copyrightetc{T. Z\"{a}schke 2017}
+%\global\copyrightetc{T. Z\"{a}schke 2017}
 
 
-%License stuff
-\newfont{\mycrnotice}{ptmr8t at 7pt}
-\newfont{\myconfname}{ptmri8t at 7pt}
-\let\crnotice\mycrnotice%
-\let\confname\myconfname%
+
+
+\global\boilerplate={This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.  To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/.  For any use beyond those covered by this license, obtain permission by emailing zoodb@gmx.de.}
+\global\conf{}%Proceedings of the VLDB Endowment,}
+\global\confinfo{}%Vol. 10, No. 6}
+
+\def\doi#1{\gdef\@doi{#1}}\def\@doi{}
+%\toappear{\the\boilerplate \the\copyrightetc.\ifx\@doi\@empty\else\par\@doi.\fi}
+
+%\newtoks\copyrightetc
+\global\copyrightetc{Copyright 2017 Tilmann Z\"{a}schke}
+
 
 %TODO permissions!
 %\permission{Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org.}
-\permission{License: CC BY-SA}
-%\conferenceinfo{SIGMOD'14,}{June 22--27, 2014, Snowbird, UT, USA. \\
-%{\mycrnotice{Copyright is held by the owner/author(s). Publication rights licensed to ACM.}}}
-%\copyrightetc{ACM \the\acmcopyr}
-%\crdata{978-1-4503-2376-5/14/06\ ...\$15.00.}%\\
-%Include the http://DOI string/url which is specific for your submission and included in the ACM rightsreview confirmation email upon completing your ACM form}
-%\doi{http://dx.doi.org/10.1145/2588555.2588564}
-
-\clubpenalty=10000
-\widowpenalty = 10000
-
-
-%http://www.acm.org/sigs/publications/sigguide-v2.2sp
-%\newtheorem{theorem}{Theorem}
-%\newtheorem{coll}{Corollary}
-%\newtheorem{lemma}{Lemma}
-%\newdef{defn}{Definition}
-
-
-
-% Watermark
-%
-%\usepackage[scale=10,opacity=0.6,color=gray]{background}
-%\usepackage{varwidth}
-%\backgroundsetup{
-%contents={\begin{varwidth}{8cm}{%
-  %Draft \\
-  %Draft \\
-  %Draft Confidential \hspace{1cm} Draft Confidential\\ 
-  %Draft}\end{varwidth}}
-%}
-
-%\hyphenation{que-ries}
-
-
-
-%PODS requirement
-%\fontsize{10pt}{10.2pt} \selectfont
-
-
-\newcommand{\ttt}[1] {\texttt{#1}}
-%binary AND
-\newcommand{\band}{\&}
-%binary OR
-\newcommand{\bor}{\mid}
-%binary NOT
-\newcommand{\bnot}{\raise.17ex\hbox{$\scriptstyle\mathtt{\sim}$}}
-%binary XOR
-\newcommand{\bxor}{\oplus}
+\permission{License: CC BY-SA 4.0}
 
 
 \definecolor{todocolor}{rgb}{0.6,0,0}
@@ -184,39 +115,9 @@
 %
 \begin{document}
 
-% Copyright
-%\setcopyright{acmcopyright}
-%\setcopyright{acmlicensed}
-%\setcopyright{rightsretained}
-%\setcopyright{usgov}
-%\setcopyright{usgovmixed}
-%\setcopyright{cagov}
-%\setcopyright{cagovmixed}
 
-
-% DOI
-%\doi{10.475/123_4}
-
-% ISBN
-%\isbn{123-4567-24-567/08/06}
-
-%Conference
-%\conferenceinfo{SIGMOD '17}{May 14--19, 2017, Raleigh, NC, USA}
-
-%\acmPrice{\$15.00}
-
-%
-% --- Author Metadata here ---
-%\conferenceinfo{SIGMOD}{'17 Raleigh, NC, USA}
-%\CopyrightYear{2007} % Allows default copyright year (20XX) to be over-ridden - IF NEED BE.
-%\crdata{0-12345-67-8/90/01}  % Allows default copyright data (0-89791-88-6/97/05) to be over-ridden - IF NEED BE.
-% --- End of Author Metadata ---
-
-\title{A Performance Comparison of General Purpose Multi-Dimensional In-Memory Indexes -- All Results
-%\titlenote{(Produces the permission block, and copyright information). For use with SIG-ALTERNATE.CLS. Supported by ACM.}
-}
-\subtitle{Revision 1.0 -- 18th January 2017}
-%\titlenote{A full version of this paper is available as \textit{Author's Guide to Preparing ACM SIG Proceedings Using \LaTeX$2_\epsilon$\ and BibTeX} at \texttt{www.acm.org/eaddress.htm}}}
+\title{A Performance Comparison of General Purpose Multi-Dimensional In-Memory Indexes -- All Results}
+\subtitle{Revision 1.0 -- 28th January 2017}
 
 
 %

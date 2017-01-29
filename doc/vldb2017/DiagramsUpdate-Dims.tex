@@ -25,9 +25,9 @@
 	\addlegendentry{KDS} 
 	\addplot[PH] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsP/PHC-P-CUBE(1.0,0.0,null).txt};
 	\addlegendentry{PH} 
-	\addplot[PHM] table [selectcoords={0}{15},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsP/PHC_IPP-P-CUBE(1.0,0.0,null).txt};
+	\addplot[PHM] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsP/PHC_IPP-P-CUBE(1.0,0.0,null).txt};
 	\addlegendentry{PHM} 
-	\addplot[QKDZ] table [selectcoords={0}{9},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsP/QKDZ-P-CUBE(1.0,0.0,null).txt};
+	\addplot[QTZ] table [selectcoords={0}{9},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsP/QTZ-P-CUBE(1.0,0.0,null).txt};
 	\addlegendentry{QTZ} 
 %	\addplot[RSS] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsP/RSS-P-CUBE(1.0,0.0,null).txt};
 %	\addlegendentry{RSS} 
@@ -69,7 +69,7 @@
 	\addlegendentry{RSZ} 
 	\addplot+[STRZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsR/STRZ-R-CUBE(1.0,0.0,null).txt};
 	\addlegendentry{STRZ} 
-	\addplot+[QKDZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsR/QKDZ-R-CUBE(1.0,0.0,null).txt};
+	\addplot+[QTZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsR/QTZ-R-CUBE(1.0,0.0,null).txt};
 	\addlegendentry{QTZ} 
 \end{axis}
 \end{tikzpicture}
@@ -105,7 +105,7 @@
 	\addlegendentry{PH} 
 	\addplot[PHM] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsP/PHC_IPP-P-CLUSTER(5.0,0.0,null).txt};
 	\addlegendentry{PHM} 
-	\addplot[QKDZ] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsP/QKDZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addplot[QTZ] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsP/QTZ-P-CLUSTER(5.0,0.0,null).txt};
 	\addlegendentry{QTZ} 
 %	\addplot[RSS] table [selectcoords={0}{13},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsP/RSS-P-CLUSTER(5.0,0.0,null).txt};
 %	\addlegendentry{RSS} 
@@ -147,7 +147,7 @@
 	\addlegendentry{RSZ} 
 	\addplot+[STRZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsR/STRZ-R-CLUSTER(5.0,0.0,null).txt};
 	\addlegendentry{STRZ} 
-	\addplot+[QKDZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsR/QKDZ-R-CLUSTER(5.0,0.0,null).txt};
+	\addplot+[QTZ] table [selectcoords={0}{11},x=dim,y expr=1e9/\thisrow{up2/n}, col sep=tab] {dimsR/QTZ-R-CLUSTER(5.0,0.0,null).txt};
 	\addlegendentry{QTZ} 
 \end{axis}
 \end{tikzpicture}

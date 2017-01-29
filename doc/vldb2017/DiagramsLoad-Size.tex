@@ -36,8 +36,8 @@
 	%\addlegendentry{KDL} 
 	%\addplot+[KDS] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/KD_SAVA-P-TIGER(1.0,0.0,null).txt};
 	%\addlegendentry{KDS} 
-	%\addplot+[QKDZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/QKDZ-P-TIGER(1.0,0.0,null).txt};
-	%\addlegendentry{QZ} 
+	%\addplot+[QTZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/QTZ-P-TIGER(1.0,0.0,null).txt};
+	%\addlegendentry{QTZ} 
 	%\legend{} %disable legend
 		%\end{axis} 
 	%\end{tikzpicture}
@@ -76,8 +76,8 @@
 	\addlegendentry{KDL} 
 	\addplot+[KDS] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/KD_SAVA-P-OSM(1.0,0.0,null).txt};
 	\addlegendentry{KDS} 
-	\addplot+[QKDZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/QKDZ-P-OSM(1.0,0.0,null).txt};
-	\addlegendentry{QZ} 
+	\addplot+[QTZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/QTZ-P-OSM(1.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
 		\end{axis} 
 	\end{tikzpicture}
 	\centering
@@ -93,29 +93,27 @@
 		legend style={draw=none},
 		] 
 	\addplot+[PH] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/PHC-P-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{PH-P} 
+	\addlegendentry{PH} 
 	\addplot+[RSS] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/RSS-P-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{RSS-P} 
+	\addlegendentry{RSS} 
 	\addplot+[RSZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/RSZ-P-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{RSZ-P} 
+	\addlegendentry{RSZ} 
 	\addplot+[PHM] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/PHC_IPP-P-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{PHM-P} 
+	\addlegendentry{PHM} 
 	\addplot+[STRZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/STRZ-P-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{STR-P} 
+	\addlegendentry{STR} 
 	\addplot+[XTS] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/XTS-P-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{XTS-P} 
-%	\addplot+[XTR] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/XTR-P-CUBE(1.0,0.0,null).txt};
-%	\addlegendentry{XTR-P} 
+	\addlegendentry{XTS} 
 	\addplot+[CBF] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/CBF-P-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{CBF-P} 
+	\addlegendentry{CBF} 
 	\addplot+[CBZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/CBZ-P-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{CBZ-P} 
+	\addlegendentry{CBZ} 
 	\addplot+[KDL] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/KD_LEVY-P-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{KDL-P} 
+	\addlegendentry{KDL} 
 	\addplot+[KDS] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/KD_SAVA-P-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{KDS-P} 
-	\addplot+[QKDZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/QKDZ-P-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{QZ-P} 
+	\addlegendentry{KDS} 
+	\addplot+[QTZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/QTZ-P-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
 	\legend{} %disable legend
 		\end{axis} 
 	\end{tikzpicture}
@@ -131,30 +129,28 @@
 		\begin{axis}[ 
 			legend style={draw=none},
 		] 
-	\addplot+[PH] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/PHC-P-CLUSTER(3.5,0.0,null).txt};
-	\addlegendentry{PH-P} 
-	\addplot+[RSS] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/RSS-P-CLUSTER(3.5,0.0,null).txt};
-	\addlegendentry{RSS-P} 
-	\addplot+[RSZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/RSZ-P-CLUSTER(3.5,0.0,null).txt};
-	\addlegendentry{RSZ-P} 
-	\addplot+[PHM] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/PHC_IPP-P-CLUSTER(3.5,0.0,null).txt};
-	\addlegendentry{PHM-P} 
-	\addplot+[STRZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/STRZ-P-CLUSTER(3.5,0.0,null).txt};
-	\addlegendentry{STR-P} 
-	\addplot+[XTS] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/XTS-P-CLUSTER(3.5,0.0,null).txt};
-	\addlegendentry{XTS-P} 
-%	\addplot+[XTR] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/XTR-P-CLUSTER(3.5,0.0,null).txt};
-%	\addlegendentry{XTR-P} 
-	\addplot+[CBF] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/CBF-P-CLUSTER(3.5,0.0,null).txt};
-	\addlegendentry{CBF-P} 
-	\addplot+[CBZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/CBZ-P-CLUSTER(3.5,0.0,null).txt};
-	\addlegendentry{CBZ-P} 
-	\addplot+[KDL] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/KD_LEVY-P-CLUSTER(3.5,0.0,null).txt};
-	\addlegendentry{KDL-P} 
-	\addplot+[KDS] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/KD_SAVA-P-CLUSTER(3.5,0.0,null).txt};
-	\addlegendentry{KDS-P} 
-	\addplot+[QKDZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/QKDZ-P-CLUSTER(3.5,0.0,null).txt};
-	\addlegendentry{QZ-P} 
+	\addplot+[PH] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/PHC-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PH} 
+	\addplot+[RSS] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/RSS-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSS} 
+	\addplot+[RSZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/RSZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{RSZ} 
+	\addplot+[PHM] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/PHC_IPP-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{PHM} 
+	\addplot+[STRZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/STRZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{STR} 
+	\addplot+[XTS] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/XTS-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{XTS} 
+	\addplot+[CBF] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/CBF-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{CBF} 
+	\addplot+[CBZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/CBZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{CBZ} 
+	\addplot+[KDL] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/KD_LEVY-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{KDL} 
+	\addplot+[KDS] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/KD_SAVA-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{KDS} 
+	\addplot+[QTZ] table [selectcoords={0}{7},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeP/QTZ-P-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
 	\legend{} %disable legend
 		\end{axis} 
 	\end{tikzpicture}
@@ -193,8 +189,8 @@
 	\addlegendentry{STR} 
 %	\addplot+[XTS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeR/XTS-R-OSM(1.0,0.0,null).txt};
 %	\addlegendentry{XTS} 
-	\addplot+[QKDZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeR/QKDZ-R-OSM(1.0,0.0,null).txt};
-	\addlegendentry{QZ} 
+	\addplot+[QTZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeR/QTZ-R-OSM(1.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
 		\end{axis} 
 	\end{tikzpicture}
 	\centering
@@ -221,8 +217,8 @@
 	\addlegendentry{STR} 
 %	\addplot+[XTS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeR/XTS-R-CUBE(1.0,0.0,null).txt};
 %	\addlegendentry{XTS} 
-	\addplot+[QKDZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeR/QKDZ-R-CUBE(1.0,0.0,null).txt};
-	\addlegendentry{QZ} 
+	\addplot+[QTZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeR/QTZ-R-CUBE(1.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
 	\legend{} %disable legend
 		\end{axis} 
 	\end{tikzpicture}
@@ -250,8 +246,8 @@
 	\addlegendentry{STR} 
 %	\addplot+[XTS] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeR/XTS-R-CLUSTER(5.0,0.0,null).txt};
 %	\addlegendentry{XTS} 
-	\addplot+[QKDZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeR/QKDZ-R-CLUSTER(5.0,0.0,null).txt};
-	\addlegendentry{QZ} 
+	\addplot+[QTZ] table [selectcoords={0}{6},x=N,y expr=1e9/\thisrow{load/n}, col sep=tab] {sizeR/QTZ-R-CLUSTER(5.0,0.0,null).txt};
+	\addlegendentry{QTZ} 
 	\legend{} %disable legend
 		\end{axis} 
 	\end{tikzpicture}
