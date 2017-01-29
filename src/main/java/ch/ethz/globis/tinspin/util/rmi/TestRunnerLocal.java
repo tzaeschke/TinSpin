@@ -6,6 +6,7 @@
  */
 package ch.ethz.globis.tinspin.util.rmi;
 
+import java.rmi.NoSuchObjectException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -35,8 +36,21 @@ public class TestRunnerLocal implements TestRunnerAPI {
 	
 	@Override
 	public TestStats executeTask(TestStats stats0) {
-        return test(stats0);
+		try {
+			return test(stats0);
+		} finally {
+			try {
+				UnicastRemoteObject.unexportObject(this, true);
+			} catch (NoSuchObjectException e) {
+				e.printStackTrace();
+			}
+		}
     }
+	
+	@Override
+	public boolean isAlive() {
+		return true;
+	}
 	
 	public static void main(String[] args) {
 		System.out.println("TestRunnerLocal: started: " + args[0] + " " + args[1] + " " + args[2]);

@@ -11,6 +11,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.rmi.ConnectException;
+import java.rmi.NotBoundException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,7 +65,23 @@ public class TestProcessLauncher implements Runnable {
 		return processBuilder;
 	}
 
-	public static Process launchRmiRegistry() {
+	public static void launchRmiRegistry() {
+		//check if it exists
+		try {
+			Registry registry = LocateRegistry.getRegistry();
+			registry.lookup("Hello");
+		} catch (ConnectException e) {
+			//that's fine, that means we need to start it
+		} catch (NotBoundException e) {
+			//that's fine, that means it's running
+			System.out.println("Found RMI process already running");
+			return;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+
+		
 		try {
 			ProcessBuilder processBuilder = createRmiProcess();
 			processBuilder.redirectErrorStream(true);
@@ -71,9 +91,19 @@ public class TestProcessLauncher implements Runnable {
 			//output monitor thread
 			new Thread(l).start();
 
-			return prc;
+			System.out.println("Waiting for RMI to start");
+			for (int i = 0; i < 5; i++) {
+				Thread.sleep(1000);
+				//TODO we could try a rebind here an stop sleeping if it succeeds 
+//				if (prc.isAlive()) {
+//					break;
+//				}
+//				System.out.println("WPPPP" + i);
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 		}
 	}
 

@@ -9,16 +9,16 @@ package ch.ethz.globis.tinspin.wrappers;
 import java.util.Arrays;
 import java.util.List;
 
-import org.tinspin.index.quadtree.QREntryDist;
-import org.tinspin.index.quadtree.QRIterator;
-import org.tinspin.index.quadtree.QuadTreeRKD;
-import org.tinspin.index.quadtree.QuadTreeKD.QStats;
+import org.tinspin.index.qtplain.QREntryDist;
+import org.tinspin.index.qtplain.QuadTreeRKD0;
+import org.tinspin.index.qtplain.QuadTreeKD0.QStats;
+import org.tinspin.index.qtplain.QuadTreeRKD0.QRIterator;
 
 import ch.ethz.globis.tinspin.TestStats;
 
-public class RectangleQuadZ extends Candidate {
+public class RectangleQuad0Z extends Candidate {
 	
-	private QuadTreeRKD<Object> phc;
+	private QuadTreeRKD0<Object> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
@@ -31,7 +31,7 @@ public class RectangleQuadZ extends Candidate {
 	 * 
 	 * @param ts test stats
 	 */
-	public RectangleQuadZ(TestStats ts) {
+	public RectangleQuad0Z(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
 		//this.phc = QuadTreeRKD.create(dims);
@@ -55,7 +55,7 @@ public class RectangleQuadZ extends Candidate {
 			}
 		}
 
-		this.phc = QuadTreeRKD.create(dims, maxNodeSize, min, max);
+		this.phc = QuadTreeRKD0.create(dims, maxNodeSize, min, max);
 		
 		int pos = 0;
 		for (int n = 0; n < N; n++) {
@@ -89,7 +89,7 @@ public class RectangleQuadZ extends Candidate {
 
 	@Override
 	public boolean supportsPointQuery() {
-		return true;
+		return dims <= 12;
 	}
 	
 	@Override
@@ -115,6 +115,10 @@ public class RectangleQuadZ extends Candidate {
 		return n;
 	}
 	
+	@Override
+	public boolean supportsUnload() {
+		return dims <= 12;
+	}
 	
 	@Override
 	public int query(double[] min, double[] max) {
@@ -152,7 +156,7 @@ public class RectangleQuadZ extends Candidate {
 		data = null;
 	}
 
-	public QuadTreeRKD<Object> getNative() {
+	public QuadTreeRKD0<Object> getNative() {
 		return phc;
 	}
 
@@ -182,7 +186,7 @@ public class RectangleQuadZ extends Candidate {
 	
 	@Override
 	public boolean supportsUpdate() {
-		return true;
+		return dims <= 12;
 	}
 	
 	@Override

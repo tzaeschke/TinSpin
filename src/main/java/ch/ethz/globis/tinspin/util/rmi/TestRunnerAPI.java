@@ -14,4 +14,7 @@ import ch.ethz.globis.tinspin.TestStats;
 public interface TestRunnerAPI extends Remote {
     TestStats executeTask(TestStats stats0) 
     		throws RemoteException;
+    boolean isAlive()
+    		throws RemoteException;
+
 }

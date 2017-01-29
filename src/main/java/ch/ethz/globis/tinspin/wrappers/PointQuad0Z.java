@@ -11,20 +11,21 @@ import java.util.List;
 
 import org.tinspin.index.PointEntry;
 import org.tinspin.index.QueryIterator;
-import org.tinspin.index.quadtree.QEntryDist;
-import org.tinspin.index.quadtree.QuadTreeKD;
-import org.tinspin.index.quadtree.QuadTreeKD.QStats;
+import org.tinspin.index.qtplain.QEntryDist;
+import org.tinspin.index.qtplain.QuadTreeKD0;
+import org.tinspin.index.qtplain.QuadTreeKD0.QStats;
 
 import ch.ethz.globis.tinspin.TestStats;
+
 /**
- * Quadtree with HypoercubeNacigation (HC).
+ * Plain MX-CIF quadtree
  * 
  * @author Tilmann Zäschke
  *
  */
-public class PointQuadZ extends Candidate {
+public class PointQuad0Z extends Candidate {
 	
-	private QuadTreeKD<double[]> phc;
+	private QuadTreeKD0<double[]> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
@@ -35,7 +36,7 @@ public class PointQuadZ extends Candidate {
 	 * 
 	 * @param ts test stats
 	 */
-	public PointQuadZ(TestStats ts) {
+	public PointQuad0Z(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
 		//phc = QuadTreeKD.create(dims);
@@ -69,7 +70,7 @@ public class PointQuadZ extends Candidate {
 			}
 		}
 		
-		phc = QuadTreeKD.create(dims, maxNodeSize, center, r);
+		phc = QuadTreeKD0.create(dims, maxNodeSize, center, r);
 
 		for (int i = 0; i < N; i++) {
 			double[] buf = new double[dims];
@@ -99,6 +100,11 @@ public class PointQuadZ extends Candidate {
 	}
 
 	@Override
+	public boolean supportsPointQuery() {
+		return dims <= 12;
+	}
+	
+	@Override
 	public int unload() {
 		int n = 0;
 		double[] l = new double[dims];
@@ -118,6 +124,11 @@ public class PointQuadZ extends Candidate {
 			val[d] = data[pos*dims+d];
 		}
 		return val;
+	}
+	
+	@Override
+	public boolean supportsUnload() {
+		return dims <= 12;
 	}
 	
 	private QueryIterator<PointEntry<double[]>> pit;
@@ -163,7 +174,7 @@ public class PointQuadZ extends Candidate {
 	/**
 	 * Used to test the native code during development process
 	 */
-	public QuadTreeKD<double[]> getNative() {
+	public QuadTreeKD0<double[]> getNative() {
 		return phc;
 	}
 
@@ -190,6 +201,11 @@ public class PointQuadZ extends Candidate {
 			}
 		}
 		return n;
+	}
+	
+	@Override
+	public boolean supportsUpdate() {
+		return dims <= 12;
 	}
 	
 	@Override

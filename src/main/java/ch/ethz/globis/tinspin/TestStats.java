@@ -20,6 +20,7 @@ import ch.ethz.globis.tinspin.wrappers.PointPHC;
 import ch.ethz.globis.tinspin.wrappers.PointPHC2;
 import ch.ethz.globis.tinspin.wrappers.PointPHCF;
 import ch.ethz.globis.tinspin.wrappers.PointPHC_IPP;
+import ch.ethz.globis.tinspin.wrappers.PointQuad0Z;
 import ch.ethz.globis.tinspin.wrappers.PointQuadZ;
 import ch.ethz.globis.tinspin.wrappers.PointRStarZ;
 import ch.ethz.globis.tinspin.wrappers.PointSTRZ;
@@ -28,6 +29,7 @@ import ch.ethz.globis.tinspin.wrappers.RectanglePHC;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHC2;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHCF;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHC_IPP;
+import ch.ethz.globis.tinspin.wrappers.RectangleQuad0Z;
 import ch.ethz.globis.tinspin.wrappers.RectangleQuadZ;
 import ch.ethz.globis.tinspin.wrappers.RectangleRStarZ;
 import ch.ethz.globis.tinspin.wrappers.RectangleSTRZ;
@@ -59,13 +61,15 @@ public class TestStats implements Serializable, Cloneable {
 		PHCF(PointPHCF.class.getName(), RectanglePHCF.class.getName()), 
 		/** PH-Tree with Integer pre-processor. */
 		PHC_IPP(PointPHC_IPP.class.getName(), RectanglePHC_IPP.class.getName()),
-		/** CritBit from ZooDB */
+		/** CritBit */
 		CBZ(PointCritBitZ.class.getName(), ""),
-		/** Quadtree from ZooDB */
-		QKDZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
-		/** RStarTree from ZooDB */
+		/** Quadtree */
+		QTZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
+		/** Quadtree */
+		QT0Z(PointQuad0Z.class.getName(), RectangleQuad0Z.class.getName()),
+		/** RStarTree */
 		RSZ(PointRStarZ.class.getName(), RectangleRStarZ.class.getName()),
-		/** STR-loaded RStarTree from ZooDB */
+		/** STR-loaded RStarTree */
 		STRZ(PointSTRZ.class.getName(), RectangleSTRZ.class.getName()),
 
 		//3rd party implementations

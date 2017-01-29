@@ -6,6 +6,8 @@
  */
 package ch.ethz.globis.tinspin.util.rmi;
 
+import java.rmi.ConnectException;
+import java.rmi.NotBoundException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
@@ -21,6 +23,24 @@ public class TestManagerRMI {
 	
 	
 	private static TestStats runRmiTest(TestStats stats0) {
+		TestProcessLauncher.launchRmiRegistry();
+
+		//Check whether there are already tests running
+		try {
+			Registry registry = LocateRegistry.getRegistry();
+			TestRunnerAPI comp = (TestRunnerAPI) registry.lookup(RMI_NAME);
+			if (comp.isAlive()) {
+				throw new IllegalStateException("Test process already running!");
+			}
+		} catch (NotBoundException e) {
+			//good!
+		} catch (ConnectException e) {
+			//good!
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		
 		// start test process
 		System.out.println("Manager: starting task.");
 		//TestProcessLauncher.launchProcess("rmigegistry", new String[]{});
@@ -41,9 +61,9 @@ public class TestManagerRMI {
 			TestRunnerAPI comp = (TestRunnerAPI) registry.lookup(RMI_NAME);
 			stats = comp.executeTask(stats0);
 		} catch (Exception e) {
-			e.printStackTrace();
 			stats = stats0;
 			stats.setFailed(e);
+			throw new RuntimeException(e);
 		}
 
 		//end process
@@ -58,7 +78,6 @@ public class TestManagerRMI {
 		
 		return stats;
 	}
-
 	
 	public static TestStats runTest(TestStats s1) {
 		if (USE_RMI) {
