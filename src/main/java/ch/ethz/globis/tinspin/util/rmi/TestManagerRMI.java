@@ -61,9 +61,9 @@ public class TestManagerRMI {
 			TestRunnerAPI comp = (TestRunnerAPI) registry.lookup(RMI_NAME);
 			stats = comp.executeTask(stats0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			stats = stats0;
 			stats.setFailed(e);
-			throw new RuntimeException(e);
 		}
 
 		//end process
