@@ -1,6 +1,8 @@
+**_This is the repository of the TinSpin benchmark framework. The TinSpin spatial index collection can be found [here](https://github.com/tzaeschke/tinspin-indexes)._**
+
 # TinSpin
 
-TinSpin is a framework for benchmarking in-memory spatial indexes.
+TinSpin is a framework for benchmarking in-memory spatial indexes. 
 
 TinSpin provides several dataset generators for point data and rectangle data. The datasets can be scaled with size and dimensionality. Each index can be tested with various loads, such as insertion, window queries, exact match queries, nearest neighbor queries, updates (moving objects) and removal. 
 
