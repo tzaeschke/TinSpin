@@ -13,7 +13,7 @@ TinSpin provides several dataset generators for point data and rectangle data. T
 
 The test data is written to tab-separated value files in target/logs.
 
-__** Folders **__
+_**Folders**_
 
 There are several possible subfolders, which are be defined in the `TestManager` class. The default folders are:
 
@@ -24,7 +24,7 @@ There are several possible subfolders, which are be defined in the `TestManager`
  * sizePWQS: Point data scaled with size of query window
  * sizeRWQS: Rectangle data scaled with size of query window 
 
-__** File Sections **__
+_**File Sections**_
 
  * column names: `Index data ...`
  * comment: `% Averages`
@@ -36,7 +36,7 @@ __** File Sections **__
  
 By default, TinSpin averages three consequtive test runs into one average. 
 
-__** File Columns **__
+_**File Columns**_
 
 
  * Index: Index and test descriptor, such as `RSZ-R` for rectangle index, see above
