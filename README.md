@@ -1,4 +1,4 @@
-**_This is the repository of the TinSpin benchmark framework. The TinSpin spatial index collection can be found [here](https://github.com/tzaeschke/tinspin-indexes)._**
+**_This is the repository of the TinSpin benchmark framework. [Click here for the TinSpin spatial index collection](https://github.com/tzaeschke/tinspin-indexes)._**
 
 # TinSpin
 
