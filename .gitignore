@@ -10,3 +10,8 @@ buildNumber.properties
 .classpath
 *.project
 .settings
+*.tmp
+doc/benchmark-2017-01/Diagrams.aux
+doc/benchmark-2017-01/Diagrams.log
+doc/benchmark-2017-01/Diagrams.blg
+doc/benchmark-2017-01/Diagrams.bbl

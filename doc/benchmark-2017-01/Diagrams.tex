@@ -117,7 +117,7 @@
 
 
 \title{A Performance Comparison of General Purpose Multi-Dimensional In-Memory Indexes -- All Results}
-\subtitle{Revision 1.0 -- 28th January 2017}
+\subtitle{Revision 1.1 -- 18th September 2017}
 
 
 %
@@ -176,6 +176,7 @@ Tilmann Z\"aschke\\
 %      \affaddr{Institute for Information Systems}\\
 %      \affaddr{ETH Zurich}\\
 %      \affaddr{Zurich, Switzerland}\\
+       \email{zoodb@gmx.de}\\
        \email{zaeschke@inf.ethz.ch}
 % 2nd. author
 %\alignauthor
@@ -185,12 +186,12 @@ Tilmann Z\"aschke\\
  %      \affaddr{Zurich, Switzerland}\\
 %       \email{zimmerli@inf.ethz.ch}
 % 3rd. author
-\alignauthor Moira C. Norrie\\
-       \email{norrie@inf.ethz.ch}
+%\alignauthor Moira C. Norrie\\
+%       \email{norrie@inf.ethz.ch}
 %
-\sharedaffiliation
-       \affaddr{Institute for Information Systems, Department of Computer Science}\\%, ETH Zurich, Switzerland}\\
-       \affaddr{ETH Zurich, Switzerland}
+%\sharedaffiliation
+%       \affaddr{Institute for Information Systems, Department of Computer Science}\\%, ETH Zurich, Switzerland}\\
+%       \affaddr{ETH Zurich, Switzerland}
 %       \affaddr{Switzerland}
 %------------------------------- TODO ---  DON'T FORGET TO REMOVE ACKNOLEDGEMENTS!!!! ------------------------------
 %\and  % use '\and' if you need 'another row' of author names
@@ -239,6 +240,11 @@ Tilmann Z\"aschke\\
 
 This document contains all TinSpin\footnote{\url{http://www.tinspin.org}} test results from the test runs between November 2016 and January 2017.
 
+\begin{itemize}
+	\item Revision 1.0 2017-01-28 Initial version.
+	\item Revision 1.1 2017-09-18 Added brief section on data.
+\end{itemize}
+
 \section{Indexes}
 
 The following index implementations were tested:
@@ -255,6 +261,92 @@ The following index implementations were tested:
 	\item STRZ R*Tree by T. Z\"{a}schke$^{\ref{foot:zdbi}}$
 	\item XTS X-Tree by S. Berchtold et al$^{\ref{foot:chorochronos}}$, optimized for in-memory use by T. Z\"{a}schke
 \end{itemize}
+
+
+\section{Test Data}
+\label{sec:data}
+
+
+The OSM-P (points) and OSM-R (rectangles) datasets are extracts from OpenStreetMap.org representing the European Alps\footnote{\url{http://download.geofabrik.de/europe/alps.html}}, extracted on 2016-11-09 %. It ranges from Vienna in the north east to almost Grenoble in the south west, thus including major point clusters (cities) such as Vienna, Munich and Zurich 
+(Fig.~\ref{fig:DSosmAlps}). The dataset consists of $\approx 2.1 \times 10^8$ points.
+%=215,981,638 points.
+% and extends from about min/max longitude=3.931094/20.2583918  latitude=37.7126446/49.1369103
+%Points are imported in the order they have in the original OSM file, which appears to be the order in which they were recorded. That means that using a bigger part of the dataset increases mostly the \emph{density} of points, not the spatial extent of the dataset.
+The rectangles (OSM-R) are bounding boxes for all line segments in the dataset.
+
+The synthetic CU-P/CU-R datasets (Fig.~\ref{fig:DScube}), have the shape of a cube filled with up to 50,000,000 elements that are distributed uniformly at random between 0.0 and 1.0 in every dimension. Each element has unique coordinates.
+
+The synthetic CL-P/CL-R datasets (Fig.~\ref{fig:DScluster}) consists of 1000 clusters that are distributed uniformly at random between 0.0 and 1.0. In each cluster, elements follow a Gaussian distribution with standard deviation $\sigma = 0.001$.
+The CLUSTER dataset contains up to 50,000,000 elements. 
+%An illustration of the CLUSTER dataset is depicted in Figure~\ref{fig:DScluster}. 
+
+%All points are generated randomly, however all tests use the same sets of randomly generated data. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{0.50\columnwidth}
+		\centering
+		\begin{tikzpicture} 
+			\begin{axis}[hide axis,enlargelimits=false,width=3.7cm,height=3.7cm] 
+				\addplot[only marks,mark size=0.2pt,mark color={black},samples=500] {rnd^1.0}; 
+			\end{axis} 
+		\end{tikzpicture}
+		\caption{2D CUBE}
+		\label{fig:DScube}
+	\end{subfigure}%
+	\begin{subfigure}{0.50\columnwidth}
+		\centering
+		\begin{tikzpicture} 
+			\begin{axis}[hide axis,enlargelimits=false,width=3.7cm,height=3.7cm] 
+%			\begin{axis}[hide axis,enlargelimits=false,width=4cm,height=4cm] 
+				\addplot[only marks,mark size=0.6pt,mark color={black},samples=250] {rnd^1.0}; 
+			\end{axis} 
+		\end{tikzpicture}
+		\caption{2D CLUSTER}
+		\label{fig:DScluster}
+	\end{subfigure}
+	\begin{subfigure}{\columnwidth}
+		\centering
+		%\includegraphics[width=0.58\textwidth,scale=4]{img/OSM-Alps.png}
+		\includegraphics[scale=0.4]{OSM-Alps.png}
+		%\epsfig{file=img/OSM-Alps.PNG, scale=0.58}
+		\caption{OSM Alps}
+		\label{fig:DSosmAlps}
+	\end{subfigure}
+	\caption{The CUBE, CLUSTER and OSM Alps datasets}
+	\label{fig:datasets}
+\end{figure}
+
+
+%\subsection{Rectangle Data}
+%The rectangle datasets are constructed in a similar way as the point datasets. 
+%For the OSM Alps dataset, we created rectangles as bounding boxes for all line segments in the dataset.
+%For the synthetic datasets, each data point becomes a rectangle with randomly generated edge length. Edge lengths vary between 0.0 and $10^{-5}$.
+%For CUBE datasets, this results in little to no overlap. CLUSTER data is much denser and therefore likely to overlap. We decided to keep the edge length constant with increasing dimensionality, this means that the probability of overlapping decreases with increasing dimensionality $d$.
+%All rectangles are axis-aligned rectangles defined by a 'lower left' and an 'upper right' corner point.
+
+
+%\todo{Give details to shape and overlap of rectangles}
+%
+%We also generated an overlap dataset. The idea is to keep the number of pairwise overlaps $o$ as a relative fraction $r$ of the number of elements $N$ with $r=o/N$. For example, assuming a constant $r=0.5$, a dataset with $N=10^6$ rectangles will have about $o=500,000$ pairwise overlaps.
+%
+%To achieve constant $r$ for datasets with varying size and dimensionality, we vary the average side length $l_{avg} = 1/2*l_{max}$ of the rectangles as follows.
+%
+%\begin{equation}
+		%r = 0.373 k N (l_{avg})^k 2^k \\
+		%\Rightarrow \\
+		%%\frac{r}{0.373 k N 2^k} = l_{avg}^k \\
+		%%\Rightarrow \\
+		%(\frac{r}{0.373 k N 2^k})^{1/k} = l_{avg} \\
+%\end{equation}
+%
+%The equation has been developed empirically based on 120 experiments with $100 \leq N \leq 10^6$, $1 \leq k \leq 10$ and $10^{-8} \leq l_{max} \leq 0.8$ for a rectangle cloud between $[0..1]$ in all dimensions. This results ranged between $10^{-6} \leq r \leq 10^3$ ($0 \leq o \leq 2*10^8$). For all our experiments we chose $r=0.5$.
+
+%\subsection{Conventions}
+%
+%For all diagrams, OSM Alps is abbreviated to OSM, CUBE to CU and CLUSTER to CL. The postfix `-P' indicates point data and `-R' indicates rectangle data. The size of the dataset is denoted by $N$ and the dimensionality by $d$. For all data, we use 64bit floating point values and we ensured that all data points have unique coordinates.
+
+
 
 %\section{Outlook}
 %\label{sec:outlook}
