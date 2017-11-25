@@ -11,65 +11,37 @@ import java.util.List;
 
 import org.tinspin.index.PointEntry;
 import org.tinspin.index.QueryIterator;
-import org.tinspin.index.qthypercube.QEntryDist;
-import org.tinspin.index.qthypercube.QuadTreeKD;
-import org.tinspin.index.qthypercube.QuadTreeKD.QStats;
+import org.tinspin.index.kdtree.KDEntryDist;
+import org.tinspin.index.kdtree.KDTree;
+import org.tinspin.index.kdtree.KDTree.KDStats;
 
 import ch.ethz.globis.tinspin.TestStats;
 /**
- * Quadtree with HypercubeNavigation (HC).
+ * KD-Tree.
  * 
  * @author Tilmann Zäschke
  *
  */
-public class PointQuadZ extends Candidate {
+public class PointKDZ extends Candidate {
 	
-	private QuadTreeKD<double[]> phc;
+	private KDTree<double[]> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private final int maxNodeSize = 10;
 	
 	/**
 	 * Setup of a native PH tree
 	 * 
 	 * @param ts test stats
 	 */
-	public PointQuadZ(TestStats ts) {
+	public PointKDZ(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
-		//phc = QuadTreeKD.create(dims);
 	}
 	
 	@Override
 	public void load(double[] data, int dims) {
-		double[] min = new double[dims];
-		double[] max = new double[dims];
-		Arrays.fill(min, Double.POSITIVE_INFINITY);
-		Arrays.fill(max, Double.NEGATIVE_INFINITY);
-		for (int i = 0; i < N; i+=dims) {
-			for (int d = 0; d < dims; d++) {
-				double x = data[i*dims+d];
-				if (x > max[d]) {
-					max[d] = x;
-				}
-				if (x < min[d]) {
-					min[d] = x;
-				}
-			}
-		}
-
-		double[] center = new double[dims];
-		double r = 0;
-		for (int i = 0; i < dims; i++) {
-			center[i] = (max[i]+min[i])/2;
-			double d = max[i]-min[i];
-			if (r < d) {
-				r = d;
-			}
-		}
-		
-		phc = QuadTreeKD.create(dims, maxNodeSize, center, r);
+		phc = KDTree.create(dims);
 
 		for (int i = 0; i < N; i++) {
 			double[] buf = new double[dims];
@@ -134,14 +106,15 @@ public class PointQuadZ extends Candidate {
 			pit.next();
 			n++;
 		}
-//		int n = ((PhTree7)phc).queryAll(min2, max2).size();
-		//log("q=" + Arrays.toString(q));
 		return n;
 	}
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
-		List<QEntryDist<double[]>> nn = phc.knnQuery(center, k);
+		if (k == 1) {
+			return phc.nnQuery(center).dist();
+		}
+		List<KDEntryDist<double[]>> nn = phc.knnQuery(center, k);
 		double ret = 0;
 		for (int i = 0; i < k; i++) {
 			ret += nn.get(i).dist();
@@ -151,7 +124,7 @@ public class PointQuadZ extends Candidate {
 
 	@Override
 	public boolean supportsKNN() {
-		return dims <= 15;
+		return true;
 	}
 	
 	@Override
@@ -163,22 +136,20 @@ public class PointQuadZ extends Candidate {
 	/**
 	 * Used to test the native code during development process
 	 */
-	public QuadTreeKD<double[]> getNative() {
+	public KDTree<double[]> getNative() {
 		return phc;
 	}
 
 	@Override
 	public void getStats(TestStats s) {
-		QStats qs = phc.getStats();
+		KDStats qs = phc.getStats();
 		s.statNnodes = qs.getNodeCount();
 		s.statNpostlen = qs.getMaxDepth();
-		//just for debugging...
-		s.statNNodeAHC = qs.getEntryCount();
 		//phc.printStats(N);
 		//phc.printQuality();
 		//PhTreeStats q = phc.getStats();
 		//S.setStats(q);
-		System.out.println(qs);
+		//System.out.println(phc.getQuality());
 	}
 	
 	@Override

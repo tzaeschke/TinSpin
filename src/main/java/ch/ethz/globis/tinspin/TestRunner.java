@@ -54,21 +54,22 @@ public class TestRunner {
 			return;
 		}
 		
-		final int DIM = 3;
+		final int DIM = 8;
 		final int N = 1*1000*1000;
 						
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QTZ, N, DIM, true, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QTZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, true, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0E-5);
-		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QTZ, N, DIM, false, 5.0);
-		TestStats s0 = new TestStats(TST.CUBE, IDX.QT0Z, N, DIM, false, 1.0);
+		TestStats s0 = new TestStats(TST.CLUSTER, IDX.KDZ, N, DIM, false, 5.0);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.KDZ, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
 		//s0.cfgWindowQueryRepeat = 1000;
 		//s0.cfgPointQueryRepeat = 1000000;
 		//s0.cfgUpdateSize = 1000;
 
-//		s0.cfgWindowQuerySize = 1;
+		//s0.cfgWindowQuerySize = 1;
+		//s0.cfgKnnQueryBaseRepeat = 1;
 
 		s0.setSeed(0);
 		TestRunner test = new TestRunner(s0);
@@ -139,9 +140,19 @@ public class TestRunner {
 		resetR();
 		load(S);
 		
-//		if (false) {
+//		if (!false) {
 //			TestDraw.draw(data, 2);
 //			return S;
+//		}
+		
+//		int resolution = 10000;
+//		for (int d = 0; d < S.cfgNDims; d++) {
+//			int[] histo = new int[resolution];
+//			for (int i = d; i < S.cfgNEntries; i+=S.cfgNDims) {
+//				double dat = data[i]; 
+//				histo[(int)(dat*resolution)]++;
+//			}
+//			System.out.println("histo(d=" + d + "): " + Arrays.toString(histo));
 //		}
 		
 		//window queries

@@ -9,10 +9,10 @@ package ch.ethz.globis.tinspin.wrappers;
 import java.util.Arrays;
 import java.util.List;
 
-import org.tinspin.index.quadtree.QREntryDist;
-import org.tinspin.index.quadtree.QRIterator;
-import org.tinspin.index.quadtree.QuadTreeRKD;
-import org.tinspin.index.quadtree.QuadTreeKD.QStats;
+import org.tinspin.index.qthypercube.QREntryDist;
+import org.tinspin.index.qthypercube.QRIterator;
+import org.tinspin.index.qthypercube.QuadTreeRKD;
+import org.tinspin.index.qthypercube.QuadTreeKD.QStats;
 
 import ch.ethz.globis.tinspin.TestStats;
 

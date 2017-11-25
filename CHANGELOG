@@ -1,3 +1,8 @@
+2017-11-13
+==========
+- (TZ) Updated reference to tinspin-indexes to 1.4.0
+- (TZ) Added Wrapper for TinSpin-Indexes KD-Tree
+
 2017-01-03
 ==========
 - (TZ) Added CLUSTER Gauss generators, cleaned up update distance, general cleanup

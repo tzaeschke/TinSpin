@@ -16,6 +16,7 @@ import ch.ethz.globis.tinspin.data.TestPoint;
 import ch.ethz.globis.tinspin.wrappers.Candidate;
 import ch.ethz.globis.tinspin.wrappers.PointArray;
 import ch.ethz.globis.tinspin.wrappers.PointCritBitZ;
+import ch.ethz.globis.tinspin.wrappers.PointKDZ;
 import ch.ethz.globis.tinspin.wrappers.PointPHC;
 import ch.ethz.globis.tinspin.wrappers.PointPHC2;
 import ch.ethz.globis.tinspin.wrappers.PointPHCF;
@@ -63,7 +64,9 @@ public class TestStats implements Serializable, Cloneable {
 		PHC_IPP(PointPHC_IPP.class.getName(), RectanglePHC_IPP.class.getName()),
 		/** CritBit */
 		CBZ(PointCritBitZ.class.getName(), ""),
-		/** Quadtree */
+		/** KD-Tree */
+		KDZ(PointKDZ.class.getName(), ""),
+		/** Quadtree with HC navigation */
 		QTZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
 		/** Quadtree */
 		QT0Z(PointQuad0Z.class.getName(), RectangleQuad0Z.class.getName()),
