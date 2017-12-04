@@ -68,6 +68,8 @@ public class TestStats implements Serializable, Cloneable {
 		KDZ(PointKDZ.class.getName(), ""),
 		/** Quadtree with HC navigation */
 		QTZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
+		/** Quadtree with HC navigation v2 */
+		QT2Z(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
 		/** Quadtree */
 		QT0Z(PointQuad0Z.class.getName(), RectangleQuad0Z.class.getName()),
 		/** RStarTree */
