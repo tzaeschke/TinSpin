@@ -69,6 +69,11 @@ public class PointQuadZ2 extends Candidate {
 			}
 		}
 		
+		int maxNodeSize = this.maxNodeSize;
+		if (2 * dims > maxNodeSize) {
+			maxNodeSize = 2*dims;
+		}
+		
 		phc = QuadTreeKD2.create(dims, maxNodeSize, center, r);
 
 		for (int i = 0; i < N; i++) {

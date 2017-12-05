@@ -23,6 +23,7 @@ import ch.ethz.globis.tinspin.wrappers.PointPHCF;
 import ch.ethz.globis.tinspin.wrappers.PointPHC_IPP;
 import ch.ethz.globis.tinspin.wrappers.PointQuad0Z;
 import ch.ethz.globis.tinspin.wrappers.PointQuadZ;
+import ch.ethz.globis.tinspin.wrappers.PointQuadZ2;
 import ch.ethz.globis.tinspin.wrappers.PointRStarZ;
 import ch.ethz.globis.tinspin.wrappers.PointSTRZ;
 import ch.ethz.globis.tinspin.wrappers.RectangleArray;
@@ -69,7 +70,7 @@ public class TestStats implements Serializable, Cloneable {
 		/** Quadtree with HC navigation */
 		QTZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
 		/** Quadtree with HC navigation v2 */
-		QT2Z(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
+		QT2Z(PointQuadZ2.class.getName(), ""),
 		/** Quadtree */
 		QT0Z(PointQuad0Z.class.getName(), RectangleQuad0Z.class.getName()),
 		/** RStarTree */
