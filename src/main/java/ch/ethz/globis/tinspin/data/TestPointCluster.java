@@ -35,7 +35,8 @@ public class TestPointCluster extends TestPoint {
 		HORIZONTAL04(3.4),
 		HORIZONTAL001(3.01),
 		DIAGONAL(4),
-		GAUSS(5);
+		GAUSS(5),
+		GAUSS2(6);
 		final double x;
 		TYPE(double x) {
 			this.x = x;
@@ -76,6 +77,7 @@ public class TestPointCluster extends TestPoint {
 		case HORIZONTAL001: return generateHorizontal(len, 0.01);
 		case DIAGONAL: return generateDiagonal(len);
 		case GAUSS: return generateGauss(len);
+		case GAUSS2: return generateGauss(len);
 		}
 		throw new IllegalArgumentException("param1=" + param1);
 	}
@@ -186,6 +188,7 @@ public class TestPointCluster extends TestPoint {
 		case HORIZONTAL001: queryCuboidHorizontal001(min, max); break;
 		case DIAGONAL: queryCuboidDiag(min, max); break;
 		case GAUSS: super.generateQuery(min, max, maxLen, avgQVol); break;
+		case GAUSS2: super.generateQuery2(min, max, maxLen, avgQVol); break;
 		default: throw new IllegalArgumentException("param1=" + param1);
 		}
 	}

@@ -1,3 +1,7 @@
+2018-05-18
+==========
+- (TZ) Fixed window query generator for dim>40
+
 2017-12-04
 ==========
 - (TZ) Updated reference to tinspin-indexes to 1.5.1

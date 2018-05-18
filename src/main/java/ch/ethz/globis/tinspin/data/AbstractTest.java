@@ -97,7 +97,7 @@ public abstract class AbstractTest {
 		//final double avgLenVar = 0.5*avgLen;
 		//final double minLen = 0.5*avgLen;
 		for (int i = 0; i < lower.length; i++) {
-			generateQuery(lower[i], upper[i], maxQueryLen, avgQueryVolume);
+			generateQuery2(lower[i], upper[i], maxQueryLen, avgQueryVolume);
 		}
 	}
 	
@@ -112,6 +112,11 @@ public abstract class AbstractTest {
 	 */
 	public void generateQuery(double[] min, double[] max, 
 			final double maxLen, final double avgQVol) {
+		if (DIM > 40) {
+			//DIM > 40 is problematic, so we use a different algorithm
+			generateQuery2(min, max, maxLen, avgQVol);
+			return;
+		}
 		int dims = DIM;
 		
 		//query create cube
@@ -126,7 +131,9 @@ public abstract class AbstractTest {
 				len[d] = (0.5*avgLen) + R.nextDouble()*(avgLen);
 				len[d] = len[d] > maxLen*0.99 ? maxLen*0.99 : len[d];
 				vol *= len[d];
+				System.out.println("xxx: v=" + vol + "  al=" + avgLen + "  l=" + len[d]);
 			}
+			
 			//create cuboid/box of desired size by dropping random length
 			len[dims-1] = avgQVol/vol;  //now the new len creates a rectangle/box of SIZE.
 			if (nTries++ > 100) {
@@ -135,6 +142,55 @@ public abstract class AbstractTest {
 			}
 		} while (len[dims-1] >= maxLen); //drop bad rectangles
 		
+		shuffle(len);
+		
+		//create location
+		for (int d = 0; d < dims; d++) {
+			min[d] = globalMin[d] + R.nextDouble()*(maxLen-len[d]);
+			max[d] = min[d]+len[d];
+			if (min[d]+len[d] >= globalMax[d]) {
+				//drop bad rectangles 
+				throw new RuntimeException();
+			}
+		}
+	}
+
+	/**
+	 * Generate query rectangle. THis is an improved version of the faulty 
+	 * {@link #generateQuery(double[], double[], double, double)}.
+	 * 
+	 * This method should be overwritten by tests that provide non-standard queries.
+	 * @param min output: query box minimum
+	 * @param max output: query box maximum
+	 * @param maxLen maximum allowed length for a query box in any dimension.
+	 * @param avgQVol Average expected volume of a query box
+	 */
+	public void generateQuery2(double[] min, double[] max, 
+			final double maxLen, final double avgQVol) {
+		int dims = DIM;
+		
+		//query create cube
+		double[] len = new double[min.length];
+		int nTries = 0;
+		do {
+			double vol = 1;
+			//Randomize 40 dimensions
+			for (int d = 0; d < dims-1; d++) {
+				//calculate the average required len 
+				final double avgLen = Math.pow(avgQVol/vol, 1./dims);
+				//create a len between 0.5 and 1.5 of the required length
+				double maxDelta = maxLen*0.99-avgLen;
+				len[d] = avgLen + (R.nextDouble()-0.5)*maxDelta;
+				vol *= len[d];
+			}
+			
+			//create cuboid/box of desired size by dropping random length
+			len[dims-1] = avgQVol/vol;  //now the new len creates a rectangle/box of SIZE.
+			if (nTries++ > 2) {
+				System.out.println(Arrays.toString(len) + " vol=" + vol + " aVol=" + avgQVol);
+				throw new IllegalStateException("dims=" + dims + "  N=" + S.cfgNEntries);
+			}
+		} while (len[dims-1] >= maxLen); //drop bad rectangles
 		
 		shuffle(len);
 		
