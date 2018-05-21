@@ -131,13 +131,13 @@ public abstract class AbstractTest {
 				len[d] = (0.5*avgLen) + R.nextDouble()*(avgLen);
 				len[d] = len[d] > maxLen*0.99 ? maxLen*0.99 : len[d];
 				vol *= len[d];
-				System.out.println("xxx: v=" + vol + "  al=" + avgLen + "  l=" + len[d]);
 			}
 			
 			//create cuboid/box of desired size by dropping random length
 			len[dims-1] = avgQVol/vol;  //now the new len creates a rectangle/box of SIZE.
+			//System.out.println("XXX2 " + Arrays.toString(len) + " vol=" + (vol*len[dims-1]) + " aVol=" + avgQVol);
 			if (nTries++ > 100) {
-				System.out.println(Arrays.toString(len) + " vol=" + vol + " aVol=" + avgQVol);
+				System.out.println(Arrays.toString(len) + " vol=" + (vol*len[dims-1]) + " aVol=" + avgQVol);
 				throw new IllegalStateException("dims=" + dims + "  N=" + S.cfgNEntries);
 			}
 		} while (len[dims-1] >= maxLen); //drop bad rectangles
@@ -174,20 +174,24 @@ public abstract class AbstractTest {
 		int nTries = 0;
 		do {
 			double vol = 1;
-			//Randomize 40 dimensions
 			for (int d = 0; d < dims-1; d++) {
 				//calculate the average required len 
-				final double avgLen = Math.pow(avgQVol/vol, 1./dims);
-				//create a len between 0.5 and 1.5 of the required length
-				double maxDelta = maxLen*0.99-avgLen;
-				len[d] = avgLen + (R.nextDouble()-0.5)*maxDelta;
+				final double avgLen = Math.pow(avgQVol/vol, 1./(dims-d));
+				//Can't be smaller than that if other lengths should be < maxLen
+				final double minLen = avgQVol/vol;  
+				double variationUp = maxLen-avgLen; // MAX - AVG
+				double variationDown = avgLen-minLen; // AVG - MIN
+				//0.999 to avoid queries outside the data domain
+				double variation = Math.min(variationUp, variationDown) * 0.999;  
+				len[d] = avgLen + (R.nextDouble()*2-1.)*variation;
 				vol *= len[d];
 			}
 			
 			//create cuboid/box of desired size by dropping random length
 			len[dims-1] = avgQVol/vol;  //now the new len creates a rectangle/box of SIZE.
-			if (nTries++ > 2) {
-				System.out.println(Arrays.toString(len) + " vol=" + vol + " aVol=" + avgQVol);
+			//System.out.println("XXX " + Arrays.toString(len) + " vol=" + (vol*len[dims-1]) + " aVol=" + avgQVol);
+			if (nTries++ > 3) {
+				System.out.println(Arrays.toString(len) + " vol=" + (vol*len[dims-1]) + " aVol=" + avgQVol);
 				throw new IllegalStateException("dims=" + dims + "  N=" + S.cfgNEntries);
 			}
 		} while (len[dims-1] >= maxLen); //drop bad rectangles
