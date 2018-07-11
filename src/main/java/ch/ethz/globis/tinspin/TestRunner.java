@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
-import java.util.function.Consumer;
 
 import ch.ethz.globis.phtree.PhTreeHelper;
 import ch.ethz.globis.tinspin.TestStats.IDX;
@@ -165,42 +164,36 @@ public class TestRunner {
 		
 		
 		//window queries
-		repeatMinimum(() -> {
-			if (tree.supportsWindowQuery()) {
-				resetR();
-				repeatQuery(S.cfgWindowQueryRepeat, 0);
-				repeatQuery(S.cfgWindowQueryRepeat, 1);
-				S.assortedInfo += " WINDOW_RESULTS=" + S.cfgWindowQuerySize;
-			} else {
-				System.err.println("WARNING: window queries disabled");
-			}
-		});
+		if (tree.supportsWindowQuery()) {
+			resetR();
+			repeatQuery(S.cfgWindowQueryRepeat, 0);
+			repeatQuery(S.cfgWindowQueryRepeat, 1);
+			S.assortedInfo += " WINDOW_RESULTS=" + S.cfgWindowQuerySize;
+		} else {
+			System.err.println("WARNING: window queries disabled");
+		}
 		
 		//point queries.
-		repeatMinimum(() -> {
-			if (tree.supportsPointQuery()) {
-				resetR();
-				repeatPointQuery(S.cfgPointQueryRepeat, 0);
-				repeatPointQuery(S.cfgPointQueryRepeat, 1);
-			} else {
-				System.err.println("WARNING: point queries disabled");
-			}
-		});
+		if (tree.supportsPointQuery()) {
+			resetR();
+			repeatPointQuery(S.cfgPointQueryRepeat, 0);
+			repeatPointQuery(S.cfgPointQueryRepeat, 1);
+		} else {
+			System.err.println("WARNING: point queries disabled");
+		}
 
 		//kNN queries
-		repeatMinimum(() -> {
-			if (tree.supportsKNN()) {
-				int repeat = getKnnRepeat(S.cfgNDims);
-				S.assortedInfo += " KNN_REPEAT=" + repeat;
-				resetR(12345);
-				repeatKnnQuery(repeat, 0, 1);
-				repeatKnnQuery(repeat, 1, 1);
-				repeatKnnQuery(repeat, 0, 10);
-				repeatKnnQuery(repeat, 1, 10);
-			} else {
-				System.err.println("WARNING: kNN queries disabled");
-			}
-		});
+		if (tree.supportsKNN()) {
+			int repeat = getKnnRepeat(S.cfgNDims);
+			S.assortedInfo += " KNN_REPEAT=" + repeat;
+			resetR(12345);
+			repeatKnnQuery(repeat, 0, 1);
+			repeatKnnQuery(repeat, 1, 1);
+			repeatKnnQuery(repeat, 0, 10);
+			repeatKnnQuery(repeat, 1, 10);
+		} else {
+			System.err.println("WARNING: kNN queries disabled");
+		}
 		
 		//update
 		if (tree.supportsUpdate()) {
@@ -226,17 +219,6 @@ public class TestRunner {
 		return S;
 	} 
 	
-	/**
-	 * We repeat all (repeatable) tests until a minimum amount of time has been spend, this should avoid problems
-	 * with warmup.
-	 * @param r
-	 */
-	private void repeatMinimum(Runnable r) {
-		long t1 = System.currentTimeMillis();
-		do {
-			r.run();
-		} while (System.currentTimeMillis() - t1 < minimumMS);
-	}
 	
 	/**
 	 * This method sets the random seed to the default seed plus a given delta.
@@ -370,15 +352,23 @@ public class TestRunner {
 		double[][] lower = new double[repeat][dims]; 
 		double[][] upper = new double[repeat][dims];
 		test.generateWindowQueries(lower, upper);
-		JmxTools.reset();
-		long t1 = System.currentTimeMillis();
-		int n = 0;
-		if (tree.supportsWindowQuery()) {
-			n = repeatQueries(lower, upper);
-		} else {
-			n = -1;
-		}
-		long t2 = System.currentTimeMillis();
+
+		long t00 = System.currentTimeMillis();
+		int n;
+		long t1, t2;
+		do {
+			JmxTools.reset();
+			t1 = System.currentTimeMillis();
+			n = 0;
+			if (tree.supportsWindowQuery()) {
+				n = repeatQueries(lower, upper);
+			} else {
+				n = -1;
+			}
+			t2 = System.currentTimeMillis();
+			logNLF("*");
+		} while (System.currentTimeMillis() - t00 < minimumMS);
+
 		log("Query time: " + (t2-t1) + " ms -> " + (t2-t1)/(double)repeat + " ms/q -> " +
 				(t2-t1)*1000*1000/(double)n + " ns/q/r  (n=" + n + ")");
 		if (round == 0) {
@@ -402,12 +392,20 @@ public class TestRunner {
 		//TODO return only double[], convert inside query function!
 		double[][] qDA = preparePointQuery(repeat);
 		Object q = tree.preparePointQuery(qDA);
-		JmxTools.reset();
-		
-		//query
-		long t1 = System.currentTimeMillis();
-		int n = tree.pointQuery(q);
-		long t2 = System.currentTimeMillis();
+
+		long t00 = System.currentTimeMillis();
+		int n;
+		long t1, t2;
+		do {
+			JmxTools.reset();
+
+			//query
+			t1 = System.currentTimeMillis();
+			n = tree.pointQuery(q);
+			t2 = System.currentTimeMillis();
+			logNLF("*");
+		} while (System.currentTimeMillis() - t00 < minimumMS);
+
 		log("Elements found: " + n + " -> " + n/(double)repeat);
 		log("Query time: " + (t2-t1) + " ms -> " + (t2-t1)/(double)repeat + " ms/q -> " +
 				(t2-t1)*1000*1000/(double)repeat + " ns/q");
@@ -451,15 +449,23 @@ public class TestRunner {
 		log(time() + "kNN queries ...");
 		//prepare query
 		double[][] q = prepareKnnQuery(repeat);
-		JmxTools.reset();
+
+		long t00 = System.currentTimeMillis();
+		long t1, t2;
+		double dist;
+		do {
+			JmxTools.reset();
+
+			//query
+			dist = 0;
+			t1 = System.currentTimeMillis();
+			for (int i = 0; i < repeat; i++) {
+				dist += tree.knnQuery(k, q[i]);
+			}
+			t2 = System.currentTimeMillis();
+			logNLF("*");
+		} while (System.currentTimeMillis() - t00 < minimumMS);
 		
-		//query
-		double dist = 0;
-		long t1 = System.currentTimeMillis();
-		for (int i = 0; i < repeat; i++) {
-			dist += tree.knnQuery(k, q[i]);
-		}
-		long t2 = System.currentTimeMillis();
 		double avgDist = dist/repeat/k;
 		log("Element distance: " + dist + " -> " + avgDist);
 		log("kNN query time (repeat=" + repeat + "): " + (t2-t1) + " ms -> " + (t2-t1)/(double)repeat + " ms/q -> " +
@@ -586,8 +592,8 @@ public class TestRunner {
 			n += tree.query(lower[i], upper[i]);
 			if (i%mod == 0) System.out.print('.');
 		}
-		System.out.println();
-		TestRunner.log("n=" + n/(double)lower.length);
+		//System.out.println();
+		TestRunner.log("n/q=" + n/(double)lower.length);
 		if (DEBUG) {
 			log(TestPerf.toStringOut());
 			TestPerf.resetStats();
@@ -597,6 +603,10 @@ public class TestRunner {
 	
 	static void log(String string) {
 		System.out.println(string);
+	}
+
+	static void logNLF(String string) {
+		System.out.print(string);
 	}
 
 
@@ -710,24 +720,30 @@ public class TestRunner {
 	
 	private void update(int round) {
 		log(time() + "updates ...");
-		
-		int n = 0;
-		long t = 0;
-		double[][] u = null; //2 points, 2 versions
-		int nUpdates = S.cfgUpdateSize > S.cfgNEntries/4 ? S.cfgNEntries/4 : S.cfgUpdateSize;
-		for (int i = 0; i < S.cfgUpdateRepeat; i++) {
-			//prepare query
-			u = test.generateUpdates(nUpdates, data, u);
-			JmxTools.reset();
-			//updates
-			long t1 = System.currentTimeMillis();
-			n += tree.update(u);
-			long t2 = System.currentTimeMillis();
-			t += t2-t1;
-			S.statGcDiffUp += JmxTools.getDiff();
-			S.statGcTimeUp += JmxTools.getTime();
-		}
-		
+
+//		long t00 = System.currentTimeMillis();
+		int n;
+		long t;
+//		do {
+			n = 0;
+			t = 0;
+			double[][] u = null; //2 points, 2 versions
+			int nUpdates = S.cfgUpdateSize > S.cfgNEntries/4 ? S.cfgNEntries/4 : S.cfgUpdateSize;
+			for (int i = 0; i < S.cfgUpdateRepeat; i++) {
+				//prepare query
+				u = test.generateUpdates(nUpdates, data, u);
+				JmxTools.reset();
+				//updates
+				long t1 = System.currentTimeMillis();
+				n += tree.update(u);
+				long t2 = System.currentTimeMillis();
+				t += t2-t1;
+				S.statGcDiffUp += JmxTools.getDiff();
+				S.statGcTimeUp += JmxTools.getTime();
+			}
+//			logNLF("*");
+//		} while (System.currentTimeMillis() - t00 < minimumMS);
+
 		log("Elements updated: " + n + " -> " + n);
 		log("Update time: " + t + " ms -> " + t*1000*1000/(double)n + " ns/update");
 		if (round == 0) {
