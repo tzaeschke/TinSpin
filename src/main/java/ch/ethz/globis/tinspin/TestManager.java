@@ -23,18 +23,80 @@ public class TestManager {
 		long t1 = System.currentTimeMillis();
 		try {
 	
-			int[] sizesQuery = {1, 10, 100, 1000, 10000};
-			double[] sizesData = new double[]{0.5, 1, 2.5, 5, 10};//, 25, 50};
+			int[] sizesQuery = {1};//, 10, 100, 1000};//, 10000};
+			double[] sizesData = new double[]{0.5, 1, 2.5, 5, 10, 25, 50};
 
+			testSeriesWQS(TST.CLUSTER, IDX.PHC2, 3, 5.0, 1, sizesQuery);
+
+			
+			testSeriesWQS(TST.CLUSTER, IDX.PHC, 3, 5.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CLUSTER, IDX.PHC2, 3, 5.0, 1, sizesQuery);
+			testSeriesWQS(TST.CLUSTER, IDX.PHC_IPP, 3, 5.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CLUSTER, IDX.RSZ, 3, 5.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CLUSTER, IDX.QT0Z, 3, 5.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CLUSTER, IDX.QT2Z, 3, 5.0, 1, sizesQuery);
+			testSeriesWQS(TST.CUBE, IDX.PHC, 3, 1.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CUBE, IDX.PHC2, 3, 1.0, 1, sizesQuery);
+			testSeriesWQS(TST.CUBE, IDX.PHC_IPP, 3, 1.0, 1, sizesQuery);
+			testSeriesWQS(TST.OSM, IDX.PHC, 2, 1.0, 1, sizesQuery);
+			testSeriesWQS(TST.OSM, IDX.PHC2, 2, 1.0, 1, sizesQuery);
+			testSeriesWQS(TST.OSM, IDX.PHC_IPP, 1, 5.0, 1, sizesQuery);
+			testSeriesWQSR(TST.CLUSTER, IDX.PHC, 3, 5.0, 1, sizesQuery);
+//			testSeriesWQSR(TST.CLUSTER, IDX.PHC2, 3, 5.0, 1, sizesQuery);
+			testSeriesWQSR(TST.CLUSTER, IDX.PHC_IPP, 3, 5.0, 1, sizesQuery);
+			testSeriesWQSR(TST.CUBE, IDX.PHC, 3, 1.0, 1, sizesQuery);
+//			testSeriesWQSR(TST.CUBE, IDX.PHC2, 3, 1.0, 1, sizesQuery);
+			testSeriesWQSR(TST.CUBE, IDX.PHC_IPP, 3, 1.0, 1, sizesQuery);
+			testSeriesWQSR(TST.OSM, IDX.PHC, 2, 1.0, 1, sizesQuery);
+			testSeriesWQSR(TST.OSM, IDX.PHC2, 2, 1.0, 1, sizesQuery);
+			testSeriesWQSR(TST.OSM, IDX.PHC_IPP, 2, 1.0, 1, sizesQuery);
+
+			if (true) return;
+			
 //			testP(TST.CUBE, IDX.RSS, 30, 1000000, 1.0);
 //			testP(TST.CUBE, IDX.RSS, 40, 1000000, 1.0);
 //			log.writeLogFileForTestSeries("dimsP");
-//			
+
+			testP(TST.CLUSTER, IDX.PHC2, 8, 1_000_000, 5.0);
+			testP(TST.CLUSTER, IDX.PHC2, 8, 1_000_000, 5.0);
+
+			
+			suiteDims(TST.CLUSTER, IDX.PHC2, 1, 5.0);
+			suiteDims(TST.CUBE, IDX.PHC2, 1, 1.0);
+			
 
 //			suiteDims(TST.CUBE, IDX.PHC_IPP, 1, 1.0);
 //			suiteDims(TST.CUBE, IDX.QT0Z, 1, 1.0);
 //			suiteDims(TST.CLUSTER, IDX.QT0Z, 1, 5.0);
 
+			testSeriesWQS(TST.CLUSTER, IDX.PHC, 3, 5.0, 1, sizesQuery);
+			testSeriesWQS(TST.CUBE, IDX.PHC, 3, 1.0, 1, sizesQuery);
+			testSeriesWQS(TST.OSM, IDX.PHC, 2, 1.0, 1, sizesQuery);
+			testSeriesWQS(TST.CLUSTER, IDX.PHC_IPP, 3, 5.0, 1, sizesQuery);
+			testSeriesWQS(TST.CUBE, IDX.PHC_IPP, 3, 1.0, 1, sizesQuery);
+			testSeriesWQS(TST.OSM, IDX.PHC_IPP, 2, 1.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CLUSTER, IDX.PHC2, 3, 5.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CUBE, IDX.PHC2, 3, 1.0, 1, sizesQuery);
+//			testSeriesWQS(TST.OSM, IDX.PHC2, 2, 1.0, 1, sizesQuery);
+			
+			testSeries(TST.CLUSTER, IDX.PHC, 3, 5.0, sizesData);
+			testSeries(TST.CUBE, IDX.PHC, 3, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.PHC, 2, 1.0, sizesData);
+			testSeries(TST.CLUSTER, IDX.PHC_IPP, 3, 5.0, sizesData);
+			testSeries(TST.CUBE, IDX.PHC_IPP, 3, 1.0, sizesData);
+			testSeries(TST.OSM, IDX.PHC_IPP, 2, 1.0, sizesData);
+//			testSeries(TST.CLUSTER, IDX.PHC2, 3, 5.0, sizesData);
+//			testSeries(TST.CUBE, IDX.PHC2, 3, 1.0, sizesData);
+//			testSeries(TST.OSM, IDX.PHC2, 2, 1.0, sizesData);
+			
+			suiteDims(TST.CLUSTER, IDX.PHC, 1, 5.0);
+			suiteDims(TST.CUBE, IDX.PHC, 1, 1.0);
+			suiteDims(TST.CLUSTER, IDX.PHC_IPP, 1, 5.0);
+			suiteDims(TST.CUBE, IDX.PHC_IPP, 1, 1.0);
+//			suiteDims(TST.CLUSTER, IDX.PHC2, 1, 5.0);
+//			suiteDims(TST.CUBE, IDX.PHC2, 1, 1.0);
+			suiteDims(TST.CLUSTER, IDX.RSZ, 1, 5.0);
+			suiteDims(TST.CUBE, IDX.RSZ, 1, 1.0);
 			
 			testSeries(TST.CLUSTER, IDX.KDZ, 3, 5.0, sizesData);
 			testSeries(TST.CLUSTER, IDX.KD_SAVA, 3, 5.0, sizesData);
@@ -284,10 +346,10 @@ public class TestManager {
 
 		} finally {
 			log.printSummary();
+			long t2 = System.currentTimeMillis();
+			long t = t2-t1;
+			System.out.println("Total time: " + t + "[ms] = " + t/1000 + "[s] = " + t/60000 + "[m]");
 		}
-		long t2 = System.currentTimeMillis();
-		long t = t2-t1;
-		System.out.println("Total time: " + t + "[ms] = " + t/1000 + "[s] = " + t/60000 + "[m]");
 	}
 	
 	private static void suiteDims(TST test, IDX idx, double nEntries, double p1) {
@@ -313,10 +375,18 @@ public class TestManager {
 			testP(test, idx, 28, n, p1);
 		}
 
-//		testP(test, idx, 30, n, p1);
+		testP(test, idx, 30, n, p1);
 //		testP(test, idx, 40, n, p1);
 //		testP(test, idx, 50, n, p1);
+
 //		testP(test, idx, 60, n, p1);
+//		testP(test, idx, 80, n, p1);
+//		testP(test, idx, 100, n, p1);
+//		testP(test, idx, 150, n, p1);
+//		testP(test, idx, 200, n, p1);
+
+		
+		
 		log.writeLogFileForTestSeries("dimsP");
 	}
 	

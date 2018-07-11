@@ -98,6 +98,8 @@ public class TestStats implements Serializable, Cloneable {
 		KD_LEVY("ch.ethz.globis.tinspin.wrappers.PointKDL", null),
 		KD_SAVA("ch.ethz.globis.tinspin.wrappers.PointKDS", null),
 		KD_RED("ch.ethz.globis.tinspin.wrappers.PointKDRed", null),
+		WBT("ch.ethz.globis.tinspin.wrappers.PointWBT", null),
+		WCT("ch.ethz.globis.tinspin.wrappers.PointWCT", null),
 		
 		//Experimental implementations
 		//============================
@@ -219,6 +221,7 @@ public class TestStats implements Serializable, Cloneable {
 	Class<? extends Candidate> indexClass;
 
 	//results
+	//times
 	long statTGen;
 	long statTLoad;
 	long statTUnload;
@@ -242,6 +245,29 @@ public class TestStats implements Serializable, Cloneable {
 	long statTu1E;
 	long statTu2;
 	long statTu2E;
+	//per second
+	long statPSLoad;
+	long statPSUnload;
+	long statPSq1;
+	long statPSq1E;
+	long statPSq2;
+	long statPSq2E;
+	long statPSqp1;
+	long statPSqp1E;
+	long statPSqp2;
+	long statPSqp2E;
+	long statPSqk1_1;
+	long statPSqk1_1E;
+	long statPSqk1_2;
+	long statPSqk1_2E;
+	long statPSqk10_1;
+	long statPSqk10_1E;
+	long statPSqk10_2;
+	long statPSqk10_2E;
+	long statPSu1;
+	long statPSu1E;
+	long statPSu2;
+	long statPSu2E;
 	public int statNnodes;
 	public long statNpostlen;
 	public int statNNodeAHC;
@@ -301,13 +327,13 @@ public class TestStats implements Serializable, Cloneable {
 		}
 	}
 
-	public static String[] testHeader() {
+	public static String[] testHeaderOld() {
 		String D = "\t"; //delimiter
 
 		String[][] h2 = {
 //				{"", "", "",    "",     "",  "Space", "", "", "", "", 
 //					"Times", "", "", "", "", "", "", "", "", "", "", "", 
-//					"Stats", "", "", "", "", "Result sizes for verification", 
+//					"BSTStats", "", "", "", "", "Result sizes for verification", 
 //					"", "", "", "", "", "", "", "", "", "", "", "", "GC"},
 				{"Index", "data", "dim", "bits", "N", "calcMem", 
 						"memory", "memory/n", "gen", 
@@ -317,6 +343,51 @@ public class TestStats implements Serializable, Cloneable {
 						"nodes", "postLen", "AHC", "NT", "NTinternal", 
 						"q1-n", "q2-n", "q1p-n", "q2p-n", "up1-n", "up2-n", 
 						"d1-1NN", "d2-1NN", "d1-kNN", "d2-kNN", 
+						"load-s", "load-t", "w-query-s", "w-query-t", 
+						"p-query-s", "p-query-t", "update-s", "update-t", 
+						"1-NN-s", "1-NN-t", "10-NN-s", "10-NN-t", 
+						"unload-s", "unload-t", "msg"},	
+//				{"", "", "",    "",     "",  "MiB", "MiB", "MiB", "bytes", 
+//							"[ms]", "[ms]", 
+//							"[ns/result]", "[ns/call]", "[ns/call]", "[ns/call]", 
+//							"[ns/call]", "", "", "", "", "", "", "", "", "", "", 
+//							"", "", "", "", "", "", "", "", 
+//							"[MB]", "[ms]", "[MB]", "[ms]", 
+//							"[MB]", "[ms]", "[MB]", "[ms]", 
+//							"[MB]", "[ms]", "[MB]", "[ms]", "[MB]", "[ms]"}		
+		};
+		
+		String[] ret = new String[h2.length];
+		for (int i = 0; i < h2.length; i++) {
+			StringBuilder sb = new StringBuilder();
+			for (String col: h2[i]) {
+				sb.append(col);
+				sb.append(D);
+			}
+			ret[i] = sb.toString();
+		}
+		return ret;
+	}
+	
+	public static String[] testHeaderNew() {
+		String D = "\t"; //delimiter
+
+		String[][] h2 = {
+//				{"", "", "",    "",     "",  "Space", "", "", "", "", 
+//					"Times", "", "", "", "", "", "", "", "", "", "", "", 
+//					"BSTStats", "", "", "", "", "Result sizes for verification", 
+//					"", "", "", "", "", "", "", "", "", "", "", "", "GC"},
+				{"Index", "data", "dim", "bits", "N", 
+						"memory", "memory/n", "gen", 
+						"load/s", "wq1/s", "wq2/s", "pq1/s", "pq2/s", 
+						"1-NN1/s", "1-NN2/s", "10-NN1/s", "10-NN2/s",
+						"up1/s", "up2/s",
+						"unload/s", 
+						"nodes", "postLen", "AHC", "NT", "NTinternal", 
+						"q1-n", "q2-n", "q1p-n", "q2p-n", 
+						"d1-1NN", "d2-1NN", "d1-kNN", "d2-kNN", 
+						"up1-n", "up2-n",
+						"dummy", "dummy", "dummy", "dummy",
 						"load-s", "load-t", "w-query-s", "w-query-t", 
 						"p-query-s", "p-query-t", "update-s", "update-t", 
 						"1-NN-s", "1-NN-t", "10-NN-s", "10-NN-t", 
@@ -356,6 +427,10 @@ public class TestStats implements Serializable, Cloneable {
 	
 	@Override
 	public String toString() {
+		return toStringOld();
+	}
+	
+	public String toStringOld() {
 		String D = "\t"; //delimiter
 		String ret = "";
 
@@ -395,12 +470,61 @@ public class TestStats implements Serializable, Cloneable {
 		}
 		return ret;
 	}
+	
+	public String toStringNew() {
+		String D = "\t"; //delimiter
+		String ret = "";
+
+		ret += testDescription1() + "-" + SEEDmsg + D;
+		ret += testDescription2() + D;
+
+		ret += cfgNDims + D + cfgNBits + D + cfgNEntries + D; 
+		ret += statSjvmF + D + statSjvmE + D; 
+		ret += statTGen + D;
+		
+		//throughput
+		ret += statPSLoad + D;
+		//			ret += statTq1 + D + statTq1E + D + statTq2 + D + statTq2E + D + statTqp1 + D + statTqp1E + D + statTqp2 + D + statTqp2E + D;
+		ret += statPSq1 + D + statPSq2 + D;
+		ret += statPSqp1 + D + statPSqp2 + D; 
+		ret += statPSqk1_1 + D + statPSqk1_2 + D;
+		ret += statPSqk10_1 + D + statPSqk10_2 + D;
+		ret += statPSu1E + D + statPSu2E + D;
+		ret += statPSUnload + D;
+		ret += 0 + D + 0 + D;  //Dummy
+		ret += 0 + D + 0 + D;  //Dummy
+		
+		//Result sizes, etc
+		ret += statNnodes + D + statNpostlen + D + statNNodeAHC + D + statNNodeNT + D + statNNodeInternalNT + D;
+		ret += statNq1 + D + statNq2 + D + statNqp1 + D + statNqp2 + D;
+		ret += statDqk1_1 + D + statDqk1_2 + D + statDqk10_1 + D + statDqk10_2 + D;
+		ret += statNu1 + D + statNu2 + D;
+		ret += 0 + D + 0 + D;  //Dummy
+		ret += 0 + D + 0 + D;  //Dummy
+
+		//GC
+		ret += statGcDiffL/1000000 + D + statGcTimeL + D;
+		ret += statGcDiffWq/1000000 + D + statGcTimeWq + D;
+		ret += statGcDiffPq/1000000 + D + statGcTimePq + D;
+		ret += statGcDiffUp/1000000 + D + statGcTimeUp + D;
+		ret += statGcDiffK1/1000000 + D + statGcTimeK1 + D;
+		ret += statGcDiffK10/1000000 + D + statGcTimeK10 + D;
+		ret += statGcDiffUl/1000000 + D + statGcTimeUl + D;
+		ret += assortedInfo;
+		if (exception != null) {
+			ret += D + exception.getMessage();
+		}
+		return ret;
+	}
+	
 	public void setN(int N) {
 		cfgNEntries = N;
 	}
+	
 	public int getN() {
 		return cfgNEntries;
 	}
+	
 	public void setStats(PhTreeStats q) {
 		statNnodes = q.getNodeCount();
 		statSCalc = q.getCalculatedMemSize();
@@ -410,6 +534,7 @@ public class TestStats implements Serializable, Cloneable {
 		statNNodeInternalNT = q.getNtInternalNodeCount();
 		cfgNBits = q.getBitDepth();
 	}
+	
 	public static TestStats aggregate(List<TestStats> stats) {
 		TestStats t1 = stats.get(0);
 		//TestStats avg = new TestStats(t1.TEST, t1.INDEX, t1.cfgNEntries, t1.cfgNDims, 

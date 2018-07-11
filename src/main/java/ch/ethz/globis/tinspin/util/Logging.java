@@ -36,15 +36,25 @@ public class Logging {
 	 * Prints all results to console.
 	 */
 	public void printSummary() {
+		System.out.println("Summary-Avg OLD:");
+		System.out.println("================");
+		for (TestStats s: avgStats) {
+			System.out.println(s.toStringOld());
+		}
+		System.out.println("Summary OLD:");
+		System.out.println("============");
+		for (TestStats s: stats) {
+			System.out.println(s.toStringOld());
+		}
 		System.out.println("Summary-Avg:");
 		System.out.println("============");
 		for (TestStats s: avgStats) {
-			System.out.println(s);
+			System.out.println(s.toStringNew());
 		}
 		System.out.println("Summary:");
 		System.out.println("========");
 		for (TestStats s: stats) {
-			System.out.println(s);
+			System.out.println(s.toStringNew());
 		}
 	}
 
@@ -114,10 +124,13 @@ public class Logging {
 	 */
 	public void writeLogFileForTestSeries(String subDir) {
 		writeLogFileFull();
-		writeLogFileForSeries(subDir);
+		writeLogFileForSeriesOld(subDir + "old");
+		writeLogFileForSeriesNew(subDir);
+        logBufferAvgStats.clear();
+        logBufferStats.clear();
 	}
 	
-	private void writeLogFileForSeries(String subDir) {
+	private void writeLogFileForSeriesOld(String subDir) {
 		TestStats avg = logBufferAvgStats.get(0);
 		String name = avg.testDescription1() + "-" + avg.testDescription2();
 		
@@ -139,24 +152,62 @@ public class Logging {
 		}
 		
         try (PrintWriter out = new PrintWriter(file.toFile())) {
-        	for (String header: TestStats.testHeader()) {
+        	for (String header: TestStats.testHeaderOld()) {
         		out.println(header);
         	}
         	out.println("% Averages");
         	out.println("% ========");
         	for (TestStats ts: logBufferAvgStats) {
-        		out.println(ts);
+        		out.println(ts.toStringOld());
         	}
         	out.println("% Measurements");
         	out.println("% ============");
         	for (TestStats ts: logBufferStats) {
-        		out.println(ts);
+        		out.println(ts.toStringOld());
         	}
         } catch (IOException e) {
 			throw new RuntimeException(e);
         }
-        logBufferAvgStats.clear();
-        logBufferStats.clear();
+	}
+
+	private void writeLogFileForSeriesNew(String subDir) {
+		TestStats avg = logBufferAvgStats.get(0);
+		String name = avg.testDescription1() + "-" + avg.testDescription2();
+		
+		Path sub = Paths.get(logFolder.toString(), subDir);
+		Path file = Paths.get(sub.toString(), name + ".txt");
+		try {
+			if (!Files.exists(sub)) {
+				Files.createDirectory(sub);
+			}
+			
+			int i = 1;
+			while (Files.exists(file)) {
+				file = Paths.get(sub.toString(), name + "(" + i + ").txt");
+				i++;
+			}
+			Files.createFile(file);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		
+        try (PrintWriter out = new PrintWriter(file.toFile())) {
+        	for (String header: TestStats.testHeaderNew()) {
+        		out.println(header);
+        	}
+        	out.println("% Averages");
+        	out.println("% ========");
+        	for (TestStats ts: logBufferAvgStats) {
+        		out.println(ts.toStringNew());
+        	}
+        	out.println("% Measurements");
+        	out.println("% ============");
+        	for (TestStats ts: logBufferStats) {
+        		out.println(ts.toStringNew());
+        	}
+        } catch (IOException e) {
+			throw new RuntimeException(e);
+        }
 	}
 
 	private void writeLogFileFull() {
@@ -176,18 +227,31 @@ public class Logging {
 		}
 		
         try (PrintWriter out = new PrintWriter(file.toFile())) {
-        	for (String header: TestStats.testHeader()) {
+        	for (String header: TestStats.testHeaderOld()) {
+        		out.println(header);
+        	}
+        	out.println("% Averages OLD");
+        	out.println("% ============");
+        	for (TestStats ts: avgStats) {
+        		out.println(ts.toStringOld());
+        	}
+        	out.println("% Measurements OLD");
+        	out.println("% ================");
+        	for (TestStats ts: stats) {
+        		out.println(ts.toStringOld());
+        	}
+        	for (String header: TestStats.testHeaderNew()) {
         		out.println(header);
         	}
         	out.println("% Averages");
         	out.println("% ========");
         	for (TestStats ts: avgStats) {
-        		out.println(ts);
+        		out.println(ts.toStringNew());
         	}
         	out.println("% Measurements");
         	out.println("% ============");
         	for (TestStats ts: stats) {
-        		out.println(ts);
+        		out.println(ts.toStringNew());
         	}
         } catch (IOException e) {
 			throw new RuntimeException(e);

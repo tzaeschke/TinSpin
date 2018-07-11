@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
+import java.util.function.Consumer;
 
 import ch.ethz.globis.phtree.PhTreeHelper;
 import ch.ethz.globis.tinspin.TestStats.IDX;
@@ -37,6 +38,7 @@ public class TestRunner {
 	private static final boolean DEBUG = PhTreeHelper.DEBUG;
 	
 	public static boolean USE_NEW_QUERIES = true;
+	public static long minimumMS = 2000; 
 
 	private final TestStats S;
 	private Random R;
@@ -54,22 +56,28 @@ public class TestRunner {
 			return;
 		}
 		
-		final int DIM = 8;
+		final int DIM = 3;
 		final int N = 1*1000*1000;
 						
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QTZ, N, DIM, true, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QTZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, true, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0E-5);
-		TestStats s0 = new TestStats(TST.CLUSTER, IDX.KDZ, N, DIM, false, 5.0);
-		//TestStats s0 = new TestStats(TST.CUBE, IDX.KDZ, N, DIM, false, 1.0);
-		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
+		TestStats s0 = new TestStats(TST.CLUSTER, IDX.QT2Z, N, DIM, false, 5.0);
+		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
+		//TestStats s0 = new TestStats(TST.OSM, IDX.QT2Z, N, 2, false, 1.0);
 		//s0.cfgWindowQueryRepeat = 1000;
 		//s0.cfgPointQueryRepeat = 1000000;
 		//s0.cfgUpdateSize = 1000;
 
 		//s0.cfgWindowQuerySize = 1;
-		//s0.cfgKnnQueryBaseRepeat = 1;
+		//s0.cfgWindowQueryRepeat = 10_000;
+		
+		//s0.cfgWindowQuerySize = 1;
+		//s0.cfgKnnQueryBaseRepeat = 1000_000;
+		
+		//s0.cfgWindowQuerySize = 10000;
+		//s0.cfgWindowQueryRepeat = 10000;
 
 		s0.setSeed(0);
 		TestRunner test = new TestRunner(s0);
@@ -155,37 +163,44 @@ public class TestRunner {
 //			System.out.println("histo(d=" + d + "): " + Arrays.toString(histo));
 //		}
 		
+		
 		//window queries
-		if (tree.supportsWindowQuery()) {
-			resetR();
-			repeatQuery(S.cfgWindowQueryRepeat, 0);
-			repeatQuery(S.cfgWindowQueryRepeat, 1);
-			S.assortedInfo += " WINDOW_RESULTS=" + S.cfgWindowQuerySize;
-		} else {
-			System.err.println("WARNING: window queries disabled");
-		}
+		repeatMinimum(() -> {
+			if (tree.supportsWindowQuery()) {
+				resetR();
+				repeatQuery(S.cfgWindowQueryRepeat, 0);
+				repeatQuery(S.cfgWindowQueryRepeat, 1);
+				S.assortedInfo += " WINDOW_RESULTS=" + S.cfgWindowQuerySize;
+			} else {
+				System.err.println("WARNING: window queries disabled");
+			}
+		});
 		
 		//point queries.
-		if (tree.supportsPointQuery()) {
-			resetR();
-			repeatPointQuery(S.cfgPointQueryRepeat, 0);
-			repeatPointQuery(S.cfgPointQueryRepeat, 1);
-		} else {
-			System.err.println("WARNING: point queries disabled");
-		}
+		repeatMinimum(() -> {
+			if (tree.supportsPointQuery()) {
+				resetR();
+				repeatPointQuery(S.cfgPointQueryRepeat, 0);
+				repeatPointQuery(S.cfgPointQueryRepeat, 1);
+			} else {
+				System.err.println("WARNING: point queries disabled");
+			}
+		});
 
 		//kNN queries
-		if (tree.supportsKNN()) {
-			int repeat = getKnnRepeat(S.cfgNDims);
-			S.assortedInfo += " KNN_REPEAT=" + repeat;
-			resetR(12345);
-			repeatKnnQuery(repeat, 0, 1);
-			repeatKnnQuery(repeat, 1, 1);
-			repeatKnnQuery(repeat, 0, 10);
-			repeatKnnQuery(repeat, 1, 10);
-		} else {
-			System.err.println("WARNING: kNN queries disabled");
-		}
+		repeatMinimum(() -> {
+			if (tree.supportsKNN()) {
+				int repeat = getKnnRepeat(S.cfgNDims);
+				S.assortedInfo += " KNN_REPEAT=" + repeat;
+				resetR(12345);
+				repeatKnnQuery(repeat, 0, 1);
+				repeatKnnQuery(repeat, 1, 1);
+				repeatKnnQuery(repeat, 0, 10);
+				repeatKnnQuery(repeat, 1, 10);
+			} else {
+				System.err.println("WARNING: kNN queries disabled");
+			}
+		});
 		
 		//update
 		if (tree.supportsUpdate()) {
@@ -210,6 +225,18 @@ public class TestRunner {
 		
 		return S;
 	} 
+	
+	/**
+	 * We repeat all (repeatable) tests until a minimum amount of time has been spend, this should avoid problems
+	 * with warmup.
+	 * @param r
+	 */
+	private void repeatMinimum(Runnable r) {
+		long t1 = System.currentTimeMillis();
+		do {
+			r.run();
+		} while (System.currentTimeMillis() - t1 < minimumMS);
+	}
 	
 	/**
 	 * This method sets the random seed to the default seed plus a given delta.
@@ -319,6 +346,7 @@ public class TestRunner {
 		}
 		S.statSjvmE = S.statSjvmF / N;
 		S.statTLoad = t2-t1;
+		S.statPSLoad = (long) (N*1000)/(t2-t1);
 		
 		if (ts.INDEX == IDX.PHCC) {
 			// TODO: add pht-cpp statistics collection
@@ -356,10 +384,12 @@ public class TestRunner {
 		if (round == 0) {
 			S.statTq1 = (t2-t1);
 			S.statTq1E = (long) ((t2-t1)*1000*1000/(double)n);
+			S.statPSq1 = (long) (repeat*1000)/(t2-t1);
 			S.statNq1 = n;
 		} else {
 			S.statTq2 = (t2-t1);
 			S.statTq2E = (long) ((t2-t1)*1000*1000/(double)n);
+			S.statPSq2 = (long) (repeat*1000)/(t2-t1);
 			S.statNq2 = n;
 		}
 		S.statGcDiffWq = JmxTools.getDiff();
@@ -384,10 +414,12 @@ public class TestRunner {
 		if (round == 0) {
 			S.statTqp1 = (t2-t1);
 			S.statTqp1E = (long) ((t2-t1)*1000*1000/(double)repeat);
+			S.statPSqp1 = (long) (repeat*1000)/(t2-t1);
 			S.statNqp1 = n;
 		} else {
 			S.statTqp2 = (t2-t1);
 			S.statTqp2E = (long) ((t2-t1)*1000*1000/(double)repeat);
+			S.statPSqp2 = (long) (repeat*1000)/(t2-t1);
 			S.statNqp2 = n;
 		}
 		S.statGcDiffPq = JmxTools.getDiff();
@@ -430,16 +462,18 @@ public class TestRunner {
 		long t2 = System.currentTimeMillis();
 		double avgDist = dist/repeat/k;
 		log("Element distance: " + dist + " -> " + avgDist);
-		log("kNN query time: " + (t2-t1) + " ms -> " + (t2-t1)/(double)repeat + " ms/q -> " +
-				(t2-t1)*1000*1000/(double)k + " ns/q/r");
+		log("kNN query time (repeat=" + repeat + "): " + (t2-t1) + " ms -> " + (t2-t1)/(double)repeat + " ms/q -> " +
+				(t2-t1)*1000*1000/(double)(k*repeat) + " ns/q/r");
 		if (k == 1) {
 			if (round == 0) {
 				S.statTqk1_1 = t2-t1;
 				S.statTqk1_1E = (long) ((t2-t1)*1000*1000/(double)repeat);
+				S.statPSqk1_1 = (long) (repeat*1000)/(t2-t1);
 				S.statDqk1_1 = avgDist;
 			} else {
 				S.statTqk1_2 = t2-t1;
 				S.statTqk1_2E = (long) ((t2-t1)*1000*1000/(double)repeat);
+				S.statPSqk1_2 = (long) (repeat*1000)/(t2-t1);
 				S.statDqk1_2 = avgDist;
 			}
 			S.statGcDiffK1 = JmxTools.getDiff();
@@ -448,10 +482,12 @@ public class TestRunner {
 			if (round == 0) {
 				S.statTqk10_1 = t2-t1;
 				S.statTqk10_1E = (long) ((t2-t1)*1000*1000/(double)repeat);
+				S.statPSqk10_1 = (long) (repeat*1000)/(t2-t1);
 				S.statDqk10_1 = avgDist;
 			} else {
 				S.statTqk10_2 = t2-t1;
 				S.statTqk10_2E = (long) ((t2-t1)*1000*1000/(double)repeat);
+				S.statPSqk10_2 = (long) (repeat*1000)/(t2-t1);
 				S.statDqk10_2 = avgDist;
 			}
 			S.statGcDiffK10 = JmxTools.getDiff();
@@ -545,9 +581,10 @@ public class TestRunner {
 	
 	private int repeatQueries(double[][] lower, double[][] upper) {
 		int n=0;
+		int mod = lower.length / 100;
 		for (int i = 0; i < lower.length; i++) {
 			n += tree.query(lower[i], upper[i]);
-			if (i%10 == 0) System.out.print('.');
+			if (i%mod == 0) System.out.print('.');
 		}
 		System.out.println();
 		TestRunner.log("n=" + n/(double)lower.length);
@@ -696,10 +733,12 @@ public class TestRunner {
 		if (round == 0) {
 			S.statTu1 = t;
 			S.statTu1E = (long) (t*1000*1000/(double)n);
+			S.statPSu1E = (long) (n*1000)/t;
 			S.statNu1 = n;
 		} else {
 			S.statTu2 = t;
 			S.statTu2E = (long) (t*1000*1000/(double)n);
+			S.statPSu2E = (long) (n*1000)/t;
 			S.statNu2 = n;
 		}
 	}
@@ -715,6 +754,7 @@ public class TestRunner {
 		log("Deletion time: " + (t2-t1) + " ms -> " + 
 		(t2-t1)*1000*1000/(double)S.cfgNEntries + " ns/q/r");
 		S.statTUnload = t2-t1;
+		S.statPSUnload = (long) (n*1000)/(t2-t1);
 		S.statGcDiffUl = JmxTools.getDiff();
 		S.statGcTimeUl = JmxTools.getTime();
 		if (S.cfgNEntries != n) {
