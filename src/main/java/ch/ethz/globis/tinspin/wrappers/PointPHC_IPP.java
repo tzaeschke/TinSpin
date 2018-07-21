@@ -14,6 +14,9 @@ import ch.ethz.globis.phtree.PhTree.PhQuery;
 import ch.ethz.globis.phtree.pre.PreProcessorPointF;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.phtree.v11.PhTree11;
+import ch.ethz.globis.phtree.v13.PhTree13;
+import ch.ethz.globis.phtree.v16.PhTree16;
+import ch.ethz.globis.phtree.v16hd.PhTree16HD;
 import ch.ethz.globis.tinspin.TestStats;
 
 public class PointPHC_IPP extends Candidate {
@@ -45,8 +48,8 @@ public class PointPHC_IPP extends Candidate {
 	public PointPHC_IPP(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
-		//phc = PhTree.create(dims);
-		phc = new PhTree11<>(dims);
+		phc = PhTree.create(dims);
+		//phc = new PhTree16<>(dims);
 		qMin = new long[dims];
 		qMax = new long[dims];
 		knnCenter = new long[dims];
@@ -84,8 +87,8 @@ public class PointPHC_IPP extends Candidate {
 			}
 		};
 		double[] buf = new double[dims];
-		long[] buf2 = new long[dims];
 		for (int i = 0; i < N; i++) {
+			long[] buf2 = new long[dims];
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
@@ -217,10 +220,10 @@ public class PointPHC_IPP extends Candidate {
 	public int update(double[][] updateTable) {
 		int n = 0;
 		long[] oldL = new long[dims];
-		long[] newL = new long[dims];
 		for (int i = 0; i < updateTable.length; ) {
 			double[] pOld = updateTable[i++];
 			double[] pNew = updateTable[i++];
+			long[] newL = new long[dims];
 			pp.pre(pOld, oldL);
 			pp.pre(pNew, newL);
 			if (phc.update(oldL, newL) != null) {

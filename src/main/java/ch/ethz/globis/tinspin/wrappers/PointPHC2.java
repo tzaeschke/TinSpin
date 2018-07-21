@@ -6,12 +6,17 @@
  */
 package ch.ethz.globis.tinspin.wrappers;
 
+import ch.ethz.globis.phtree.PhDistance;
 import ch.ethz.globis.phtree.PhDistanceF;
+import ch.ethz.globis.phtree.PhDistanceF_L1;
 import ch.ethz.globis.phtree.PhTree;
 import ch.ethz.globis.phtree.PhTree.PhKnnQuery;
 import ch.ethz.globis.phtree.PhTree.PhQuery;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.phtree.v11.PhTree11;
+import ch.ethz.globis.phtree.v13.PhTree13;
+import ch.ethz.globis.phtree.v16.PhTree16;
+import ch.ethz.globis.phtree.v16hd.PhTree16HD;
 import ch.ethz.globis.tinspin.TestStats;
 
 /**
@@ -27,6 +32,7 @@ public class PointPHC2 extends Candidate {
 	private final int N;
 	private double[] data;
 	private PhQuery<Object> query;
+	private final PhDistance distanceKnn;
 	private long[] qMin;
 	private long[] qMax;
 	private PhKnnQuery<Object> knnQuery;
@@ -41,8 +47,10 @@ public class PointPHC2 extends Candidate {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
 		//phc = new PhTree8b<>(dims);
-		phc = new PhTree11<>(dims);
-		//phc = PhTree.create(dims);
+		//phc = new PhTree16HD<>(dims);
+		distanceKnn = PhDistanceF.THIS;
+		//distanceKnn = PhDistanceF_L1.THIS;
+		phc = PhTree.create(dims);
 //		Node.AHC_LHC_BIAS = 1*1000*1000;
 //		Node.NT_THRESHOLD = 2*1000*1000;
 //		PhTree11.HCI_ENABLED = false;
@@ -56,8 +64,8 @@ public class PointPHC2 extends Candidate {
 	
 	@Override
 	public void load(double[] data, int dims) {
-		long[] buf = new long[dims];
 		for (int i = 0; i < N; i++) {
+			long[] buf = new long[dims];
 			for (int d = 0; d < dims; d++) {
 				buf[d] = f2l(data[i*dims+d]); 
 			}
@@ -130,7 +138,7 @@ public class PointPHC2 extends Candidate {
 	@Override
 	public double knnQuery(int k, double[] center) {
 		f2l(center, knnCenter);
-		knnQuery.reset(k, PhDistanceF.THIS, knnCenter);
+		knnQuery.reset(k, distanceKnn, knnCenter);
 		double ret = 0;
 		double[] v2 = new double[dims];
 		int n = 0;
@@ -167,16 +175,17 @@ public class PointPHC2 extends Candidate {
 	public void getStats(TestStats S) {
 		PhTreeStats q = phc.getStats();
 		S.setStats(q);
+		System.out.println(q.toStringHist());
 	}
 	
 	@Override
 	public int update(double[][] updateTable) {
 		int n = 0;
-		long[] buf1 = new long[dims];
-		long[] buf2 = new long[dims];
 		for (int i = 0; i < updateTable.length; ) {
 			double[] p1 = updateTable[i++];
 			double[] p2 = updateTable[i++];
+			long[] buf1 = new long[dims];
+			long[] buf2 = new long[dims];
 			for (int d = 0; d < dims; d++) {
 				buf1[d] = f2l(p1[d]); 
 				buf2[d] = f2l(p2[d]); 
@@ -190,6 +199,6 @@ public class PointPHC2 extends Candidate {
 	
 	@Override
 	public String toString() {
-		return phc.toString(); 
+		return phc.toString() + "dist=" + distanceKnn; 
 	}
 }

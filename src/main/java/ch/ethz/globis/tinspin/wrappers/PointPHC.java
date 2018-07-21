@@ -11,6 +11,8 @@ import ch.ethz.globis.phtree.PhTree;
 import ch.ethz.globis.phtree.PhTree.PhKnnQuery;
 import ch.ethz.globis.phtree.PhTree.PhQuery;
 import ch.ethz.globis.phtree.util.PhTreeStats;
+import ch.ethz.globis.phtree.v11.PhTree11;
+import ch.ethz.globis.phtree.v13.PhTree13;
 import ch.ethz.globis.tinspin.TestStats;
 
 /**
@@ -38,7 +40,7 @@ public class PointPHC extends Candidate {
 	 * @param ts TestStats
 	 */
 	public PointPHC(TestStats ts) {
-//		phc = new PhTree8<Object>(ts.cfgNDims);
+//		phc = new PhTree13<Object>(ts.cfgNDims);
 		phc = PhTree.create(ts.cfgNDims);
 //		Node.AHC_LHC_BIAS = 1*1000*1000;
 //		Node.NT_THRESHOLD = 2*1000*1000;
