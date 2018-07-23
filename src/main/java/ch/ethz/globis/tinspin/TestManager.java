@@ -23,10 +23,31 @@ public class TestManager {
 		long t1 = System.currentTimeMillis();
 		try {
 	
-			int[] sizesQuery = {1};//, 10, 100, 1000};//, 10000};
+			int[] sizesQuery = {1, 10, 100, 1000};//, 10000};
 			double[] sizesData = new double[]{0.5, 1, 2.5, 5, 10, 25, 50};
 
+			testSeriesWQS(TST.CLUSTER, IDX.RSZ, 3, 5.0, 1, sizesQuery);
+			testSeriesWQS(TST.CLUSTER, IDX.QT0Z, 3, 5.0, 1, sizesQuery);
+			testSeriesWQS(TST.CLUSTER, IDX.QT2Z, 3, 5.0, 1, sizesQuery);
 			testSeriesWQS(TST.CLUSTER, IDX.PHC2, 3, 5.0, 1, sizesQuery);
+			testSeriesWQS(TST.CLUSTER, IDX.PHC_IPP, 3, 5.0, 1, sizesQuery);
+			testSeriesWQS(TST.CLUSTER, IDX.KDZ, 3, 5.0, 1, sizesQuery);
+
+			testSeries(TST.CLUSTER, IDX.RSZ, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER, IDX.PHC2, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER, IDX.PHC_IPP, 3, 5.0, sizesData);
+			
+			suiteDims(TST.CLUSTER, IDX.RSZ, 1, 5.0);
+			suiteDims(TST.CLUSTER, IDX.PHC2, 1, 5.0);
+			suiteDims(TST.CLUSTER, IDX.PHC_IPP, 1, 5.0);
+
+			testSeries(TST.CLUSTER, IDX.QT0Z, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER, IDX.QT2Z, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER, IDX.KDZ, 3, 5.0, sizesData);
+
+			suiteDims(TST.CLUSTER, IDX.QT0Z, 1, 5.0);
+			suiteDims(TST.CLUSTER, IDX.QT2Z, 1, 5.0);
+			suiteDims(TST.CLUSTER, IDX.KDZ, 1, 5.0);
 
 			
 			testSeriesWQS(TST.CLUSTER, IDX.PHC, 3, 5.0, 1, sizesQuery);
@@ -51,7 +72,7 @@ public class TestManager {
 			testSeriesWQSR(TST.OSM, IDX.PHC2, 2, 1.0, 1, sizesQuery);
 			testSeriesWQSR(TST.OSM, IDX.PHC_IPP, 2, 1.0, 1, sizesQuery);
 
-			if (true) return;
+//			if (true) return;
 			
 //			testP(TST.CUBE, IDX.RSS, 30, 1000000, 1.0);
 //			testP(TST.CUBE, IDX.RSS, 40, 1000000, 1.0);
@@ -372,18 +393,18 @@ public class TestManager {
 		case QT0Z:
 		default:
 			testP(test, idx, 24, n, p1);
-			testP(test, idx, 28, n, p1);
+//			testP(test, idx, 28, n, p1);
+			testP(test, idx, 30, n, p1);
+//			testP(test, idx, 40, n, p1);
+//			testP(test, idx, 50, n, p1);
+
+//			testP(test, idx, 60, n, p1);
+//			testP(test, idx, 80, n, p1);
+//			testP(test, idx, 100, n, p1);
+//			testP(test, idx, 150, n, p1);
+//			testP(test, idx, 200, n, p1);
 		}
 
-		testP(test, idx, 30, n, p1);
-//		testP(test, idx, 40, n, p1);
-//		testP(test, idx, 50, n, p1);
-
-//		testP(test, idx, 60, n, p1);
-//		testP(test, idx, 80, n, p1);
-//		testP(test, idx, 100, n, p1);
-//		testP(test, idx, 150, n, p1);
-//		testP(test, idx, 200, n, p1);
 
 		
 		

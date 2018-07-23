@@ -71,7 +71,7 @@ public class TestStats implements Serializable, Cloneable {
 		QTZ(PointQuadZ.class.getName(), RectangleQuadZ.class.getName()),
 		/** Quadtree with HC navigation v2 */
 		QT2Z(PointQuadZ2.class.getName(), ""),
-		/** Quadtree */
+		/** Plain Quadtree */
 		QT0Z(PointQuad0Z.class.getName(), RectangleQuad0Z.class.getName()),
 		/** RStarTree */
 		RSZ(PointRStarZ.class.getName(), RectangleRStarZ.class.getName()),
@@ -100,6 +100,8 @@ public class TestStats implements Serializable, Cloneable {
 		KD_RED("ch.ethz.globis.tinspin.wrappers.PointKDRed", null),
 		WBT("ch.ethz.globis.tinspin.wrappers.PointWBT", null),
 		WCT("ch.ethz.globis.tinspin.wrappers.PointWCT", null),
+		/** Faster Cover Tree by Christoph Conrads. */
+		FCT("ch.ethz.globis.tinspin.wrappers.PointFCT", null),
 		
 		//Experimental implementations
 		//============================
@@ -383,15 +385,20 @@ public class TestStats implements Serializable, Cloneable {
 						"1-NN1/s", "1-NN2/s", "10-NN1/s", "10-NN2/s",
 						"up1/s", "up2/s",
 						"unload/s", 
+						"dummy", "dummy", 
+						"dummy", "dummy",
 						"nodes", "postLen", "AHC", "NT", "NTinternal", 
 						"q1-n", "q2-n", "q1p-n", "q2p-n", 
 						"d1-1NN", "d2-1NN", "d1-kNN", "d2-kNN", 
 						"up1-n", "up2-n",
-						"dummy", "dummy", "dummy", "dummy",
+						"dummy", "dummy", 
+						"dummy", "dummy",
 						"load-s", "load-t", "w-query-s", "w-query-t", 
 						"p-query-s", "p-query-t", "update-s", "update-t", 
 						"1-NN-s", "1-NN-t", "10-NN-s", "10-NN-t", 
-						"unload-s", "unload-t", "msg"},	
+						"unload-s", "unload-t", 
+						"wq-size",
+						"msg"},	
 //				{"", "", "",    "",     "",  "MiB", "MiB", "MiB", "bytes", 
 //							"[ms]", "[ms]", 
 //							"[ns/result]", "[ns/call]", "[ns/call]", "[ns/call]", 
@@ -510,6 +517,7 @@ public class TestStats implements Serializable, Cloneable {
 		ret += statGcDiffK1/1000000 + D + statGcTimeK1 + D;
 		ret += statGcDiffK10/1000000 + D + statGcTimeK10 + D;
 		ret += statGcDiffUl/1000000 + D + statGcTimeUl + D;
+		ret += cfgWindowQuerySize + D;
 		ret += assortedInfo;
 		if (exception != null) {
 			ret += D + exception.getMessage();

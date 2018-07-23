@@ -55,14 +55,14 @@ public class TestRunner {
 			return;
 		}
 		
-		final int DIM = 3;
+		final int DIM = 30;
 		final int N = 1*1000*1000;
 						
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QTZ, N, DIM, true, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QTZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, true, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0E-5);
-		TestStats s0 = new TestStats(TST.CLUSTER, IDX.QT2Z, N, DIM, false, 5.0);
+		TestStats s0 = new TestStats(TST.CLUSTER, IDX.FCT, N, DIM, false, 5.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.QT2Z, N, 2, false, 1.0);
 		//s0.cfgWindowQueryRepeat = 1000;
@@ -81,7 +81,8 @@ public class TestRunner {
 		s0.setSeed(0);
 		TestRunner test = new TestRunner(s0);
 		TestStats s = test.run();
-		System.out.println(s);
+		System.out.println(s.toStringOld());
+		System.out.println(s.toStringNew());
 		//System.out.println(BitsLong.POOL.print());
 //		System.out.println("AMM: " + PhIteratorNoGC.AMM1 + " / " + PhIteratorNoGC.AMM2 + " / " + PhIteratorNoGC.AMM3 + " / " + PhIteratorNoGC.AMM4 + " / " + PhIteratorNoGC.AMM5 + " / ");
 //		System.out.println("VMM: " + PhIteratorNoGC.VMM1 + " / " + PhIteratorNoGC.VMM2 + " / " + PhIteratorNoGC.VMM3);
@@ -465,6 +466,9 @@ public class TestRunner {
 			t2 = System.currentTimeMillis();
 			logNLF("*");
 		} while (System.currentTimeMillis() - t00 < minimumMS);
+		if (t2 == t1) {
+			t2++;
+		}
 		
 		double avgDist = dist/repeat/k;
 		log("Element distance: " + dist + " -> " + avgDist);
