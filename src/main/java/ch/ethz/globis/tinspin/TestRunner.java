@@ -56,7 +56,7 @@ public class TestRunner {
 		}
 		
 		final int DIM = 30;
-		final int N = 1*1000*1000;
+		final int N = 1_000_000;
 						
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QTZ, N, DIM, true, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QTZ, N, DIM, true, 1.0);
@@ -329,7 +329,7 @@ public class TestRunner {
 		}
 		S.statSjvmE = S.statSjvmF / N;
 		S.statTLoad = t2-t1;
-		S.statPSLoad = (long) (N*1000)/(t2-t1);
+		S.statPSLoad = (long) (N*1000L)/(t2-t1);
 		
 		if (ts.INDEX == IDX.PHCC) {
 			// TODO: add pht-cpp statistics collection
@@ -375,12 +375,12 @@ public class TestRunner {
 		if (round == 0) {
 			S.statTq1 = (t2-t1);
 			S.statTq1E = (long) ((t2-t1)*1000*1000/(double)n);
-			S.statPSq1 = (long) (repeat*1000)/(t2-t1);
+			S.statPSq1 = (long) (repeat*1000L)/(t2-t1);
 			S.statNq1 = n;
 		} else {
 			S.statTq2 = (t2-t1);
 			S.statTq2E = (long) ((t2-t1)*1000*1000/(double)n);
-			S.statPSq2 = (long) (repeat*1000)/(t2-t1);
+			S.statPSq2 = (long) (repeat*1000L)/(t2-t1);
 			S.statNq2 = n;
 		}
 		S.statGcDiffWq = JmxTools.getDiff();
@@ -413,12 +413,12 @@ public class TestRunner {
 		if (round == 0) {
 			S.statTqp1 = (t2-t1);
 			S.statTqp1E = (long) ((t2-t1)*1000*1000/(double)repeat);
-			S.statPSqp1 = (long) (repeat*1000)/(t2-t1);
+			S.statPSqp1 = (long) (repeat*1000L)/(t2-t1);
 			S.statNqp1 = n;
 		} else {
 			S.statTqp2 = (t2-t1);
 			S.statTqp2E = (long) ((t2-t1)*1000*1000/(double)repeat);
-			S.statPSqp2 = (long) (repeat*1000)/(t2-t1);
+			S.statPSqp2 = (long) (repeat*1000L)/(t2-t1);
 			S.statNqp2 = n;
 		}
 		S.statGcDiffPq = JmxTools.getDiff();
@@ -478,12 +478,12 @@ public class TestRunner {
 			if (round == 0) {
 				S.statTqk1_1 = t2-t1;
 				S.statTqk1_1E = (long) ((t2-t1)*1000*1000/(double)repeat);
-				S.statPSqk1_1 = (long) (repeat*1000)/(t2-t1);
+				S.statPSqk1_1 = (long) (repeat*1000L)/(t2-t1);
 				S.statDqk1_1 = avgDist;
 			} else {
 				S.statTqk1_2 = t2-t1;
 				S.statTqk1_2E = (long) ((t2-t1)*1000*1000/(double)repeat);
-				S.statPSqk1_2 = (long) (repeat*1000)/(t2-t1);
+				S.statPSqk1_2 = (long) (repeat*1000L)/(t2-t1);
 				S.statDqk1_2 = avgDist;
 			}
 			S.statGcDiffK1 = JmxTools.getDiff();
@@ -492,12 +492,12 @@ public class TestRunner {
 			if (round == 0) {
 				S.statTqk10_1 = t2-t1;
 				S.statTqk10_1E = (long) ((t2-t1)*1000*1000/(double)repeat);
-				S.statPSqk10_1 = (long) (repeat*1000)/(t2-t1);
+				S.statPSqk10_1 = (long) (repeat*1000L)/(t2-t1);
 				S.statDqk10_1 = avgDist;
 			} else {
 				S.statTqk10_2 = t2-t1;
 				S.statTqk10_2E = (long) ((t2-t1)*1000*1000/(double)repeat);
-				S.statPSqk10_2 = (long) (repeat*1000)/(t2-t1);
+				S.statPSqk10_2 = (long) (repeat*1000L)/(t2-t1);
 				S.statDqk10_2 = avgDist;
 			}
 			S.statGcDiffK10 = JmxTools.getDiff();
@@ -753,12 +753,12 @@ public class TestRunner {
 		if (round == 0) {
 			S.statTu1 = t;
 			S.statTu1E = (long) (t*1000*1000/(double)n);
-			S.statPSu1E = (long) (n*1000)/t;
+			S.statPSu1E = (long) (n*1000L)/t;
 			S.statNu1 = n;
 		} else {
 			S.statTu2 = t;
 			S.statTu2E = (long) (t*1000*1000/(double)n);
-			S.statPSu2E = (long) (n*1000)/t;
+			S.statPSu2E = (long) (n*1000L)/t;
 			S.statNu2 = n;
 		}
 	}
@@ -774,7 +774,7 @@ public class TestRunner {
 		log("Deletion time: " + (t2-t1) + " ms -> " + 
 		(t2-t1)*1000*1000/(double)S.cfgNEntries + " ns/q/r");
 		S.statTUnload = t2-t1;
-		S.statPSUnload = (long) (n*1000)/(t2-t1);
+		S.statPSUnload = (long) (n*1000L)/(t2-t1);
 		S.statGcDiffUl = JmxTools.getDiff();
 		S.statGcTimeUl = JmxTools.getTime();
 		if (S.cfgNEntries != n) {
