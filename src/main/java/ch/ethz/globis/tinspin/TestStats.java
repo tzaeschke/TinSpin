@@ -397,7 +397,7 @@ public class TestStats implements Serializable, Cloneable {
 						"p-query-s", "p-query-t", "update-s", "update-t", 
 						"1-NN-s", "1-NN-t", "10-NN-s", "10-NN-t", 
 						"unload-s", "unload-t", 
-						"wq-size",
+						"wq-size", "wq-repeat",
 						"msg"},	
 //				{"", "", "",    "",     "",  "MiB", "MiB", "MiB", "bytes", 
 //							"[ms]", "[ms]", 
@@ -517,7 +517,7 @@ public class TestStats implements Serializable, Cloneable {
 		ret += statGcDiffK1/1000000 + D + statGcTimeK1 + D;
 		ret += statGcDiffK10/1000000 + D + statGcTimeK10 + D;
 		ret += statGcDiffUl/1000000 + D + statGcTimeUl + D;
-		ret += cfgWindowQuerySize + D;
+		ret += cfgWindowQuerySize + D + cfgWindowQueryRepeat + D;
 		ret += assortedInfo;
 		if (exception != null) {
 			ret += D + exception.getMessage();
@@ -588,6 +588,30 @@ public class TestStats implements Serializable, Cloneable {
 			avg.statTu1E += t.statTu1E;
 			avg.statTu2 += t.statTu2;
 			avg.statTu2E += t.statTu2E;
+
+			avg.statPSLoad += t.statPSLoad;
+			avg.statPSUnload += t.statPSUnload;
+			avg.statPSq1 += t.statPSq1;
+			avg.statPSq1E += t.statPSq1E;
+			avg.statPSq2 += t.statPSq2;
+			avg.statPSq2E += t.statPSq2E;
+			avg.statPSqp1 += t.statPSqp1;
+			avg.statPSqp1E += t.statPSqp1E;
+			avg.statPSqp2 += t.statPSqp2;
+			avg.statPSqp2E += t.statPSqp2E;
+			avg.statPSqk1_1 += t.statPSqk1_1;
+			avg.statPSqk1_1E += t.statPSqk1_1E;
+			avg.statPSqk1_2 += t.statPSqk1_2;
+			avg.statPSqk1_2E += t.statPSqk1_2E;
+			avg.statPSqk10_1 += t.statPSqk10_1;
+			avg.statPSqk10_1E += t.statPSqk10_1E;
+			avg.statPSqk10_2 += t.statPSqk10_2;
+			avg.statPSqk10_2E += t.statPSqk10_2E;
+			avg.statPSu1 += t.statPSu1;
+			avg.statPSu1E += t.statPSu1E;
+			avg.statPSu2 += t.statPSu2;
+			avg.statPSu2E += t.statPSu2E;
+
 			avg.statNnodes += t.statNnodes;
 			//avg.statNBits += t.statNBits;
 			//avg.statNDims += t.statNDims;
@@ -647,6 +671,30 @@ public class TestStats implements Serializable, Cloneable {
 		avg.statTu1E /= (double)cnt;
 		avg.statTu2 /= (double)cnt;
 		avg.statTu2E /= (double)cnt;
+
+		avg.statPSLoad /= (double)cnt;
+		avg.statPSUnload /= (double)cnt;
+		avg.statPSq1 /= (double)cnt;
+		avg.statPSq1E /= (double)cnt;
+		avg.statPSq2 /= (double)cnt;
+		avg.statPSq2E /= (double)cnt;
+		avg.statPSqp1 /= (double)cnt;
+		avg.statPSqp1E /= (double)cnt;
+		avg.statPSqp2 /= (double)cnt;
+		avg.statPSqp2E /= (double)cnt;
+		avg.statPSqk1_1 /= (double)cnt;
+		avg.statPSqk1_1E /= (double)cnt;
+		avg.statPSqk1_2 /= (double)cnt;
+		avg.statPSqk1_2E /= (double)cnt;
+		avg.statPSqk10_1 /= (double)cnt;
+		avg.statPSqk10_1E /= (double)cnt;
+		avg.statPSqk10_2 /= (double)cnt;
+		avg.statPSqk10_2E /= (double)cnt;
+		avg.statPSu1 /= (double)cnt;
+		avg.statPSu1E /= (double)cnt;
+		avg.statPSu2 /= (double)cnt;
+		avg.statPSu2E /= (double)cnt;
+
 		avg.statNnodes /= (double)cnt;
 		//avg.statNBits /= (double)cnt;
 		//avg.statNDims /= (double)cnt;

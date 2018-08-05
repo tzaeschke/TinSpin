@@ -56,15 +56,15 @@ public class TestRunner {
 		}
 		
 		final int DIM = 30;
-		final int N = 1_000_000;
+		final int N = 25_000_000;
 						
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QTZ, N, DIM, true, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QTZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, true, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0E-5);
-		TestStats s0 = new TestStats(TST.CLUSTER, IDX.FCT, N, DIM, false, 5.0);
+		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.FCT, N, DIM, false, 5.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
-		//TestStats s0 = new TestStats(TST.OSM, IDX.QT2Z, N, 2, false, 1.0);
+		TestStats s0 = new TestStats(TST.OSM, IDX.PHC2, N, 2, false, 1.0);
 		//s0.cfgWindowQueryRepeat = 1000;
 		//s0.cfgPointQueryRepeat = 1000000;
 		//s0.cfgUpdateSize = 1000;
@@ -370,6 +370,7 @@ public class TestRunner {
 			logNLF("*");
 		} while (System.currentTimeMillis() - t00 < minimumMS);
 
+		log("n/q=" + n/(double)lower.length);
 		log("Query time: " + (t2-t1) + " ms -> " + (t2-t1)/(double)repeat + " ms/q -> " +
 				(t2-t1)*1000*1000/(double)n + " ns/q/r  (n=" + n + ")");
 		if (round == 0) {
@@ -590,14 +591,13 @@ public class TestRunner {
 	}
 	
 	private int repeatQueries(double[][] lower, double[][] upper) {
+		long t0 = System.currentTimeMillis();
 		int n=0;
 		int mod = lower.length / 100;
 		for (int i = 0; i < lower.length; i++) {
 			n += tree.query(lower[i], upper[i]);
-			if (i%mod == 0) System.out.print('.');
+			if (i%mod == 0 && System.currentTimeMillis()-t0 > 1000) System.out.print('.');
 		}
-		//System.out.println();
-		TestRunner.log("n/q=" + n/(double)lower.length);
 		if (DEBUG) {
 			log(TestPerf.toStringOut());
 			TestPerf.resetStats();
