@@ -6,6 +6,7 @@ TinSpin is a framework for benchmarking in-memory spatial indexes.
 
 TinSpin provides several dataset generators for point data and rectangle data. The datasets can be scaled with size and dimensionality. Each index can be tested with various loads, such as insertion, window queries, exact match queries, nearest neighbor queries, updates (moving objects) and removal. 
 
+The framework was originally developed at ETH Zurich in the GlobIS group. It is now maintained by Tilmann Zäschke.
 
 
 
@@ -36,7 +37,7 @@ _**File Sections**_
  
 By default, TinSpin averages three consequtive test runs into one average. 
 
-_**File Columns**_
+_**File Columns in TinSpin 1.x**_
 
 
  * Index: Index and test descriptor, such as `RSZ-R` for rectangle index, see above
