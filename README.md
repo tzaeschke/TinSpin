@@ -35,7 +35,7 @@ _**File Sections**_
  * comment: `% ============`
  * results: `RSZ-R-0	CLUSTER(5.0,0.0,null) ...` (Index=RSZ, datatype=Rectangle, random seed=0 (equals test run ID)
  
-By default, TinSpin averages three consequtive test runs into one average. 
+By default, TinSpin averages three consecutive test runs into one average. 
 
 _**File Columns in TinSpin 1.x**_
 
@@ -49,7 +49,8 @@ _**File Columns in TinSpin 1.x**_
  * memory: Total measured JVM memory [bytes]
  * memory/n: Total measured JVM memory [bytes per entry]
  
-Timing. Most parts of the test are executed in two runs, each run consisting of a predefined number of execution. For example, each exact match run consists of 100,000 exact match queries as defined in the `TestStats` class.
+Timing. Most parts of the test are executed in two runs or more, each run consisting of a predefined number of execution. For example, each exact match run consists of 100,000 exact match queries as defined in the `TestStats` class.
+Except for load/unload, runs are repeated until at least 2 seconds (default) have passed, this is in order to give more precise timings for very short runs.
  
  * gen: time [ms] for dataset generation
  * load: total index loading time [ms]
@@ -75,7 +76,7 @@ Tree statistics. The following columns contain tree statistics, such as number o
  * NT: PH:Number of NT-Nodes
  * NTinternal: PH:Number of NT-subnodes in all NT-Nodes
  
-Result statistics. The following columns give an indicator of the result returned by the test runs. For averaged results they contain the averages. 
+Result statistics. The following columns give an indicator of the result returned by the _first_ test run, even if runs are repeated if they are faster than 2 seconds (default), see above. The counts should not vary much between runs, but using the first runs allows comparing the result counts of different tree as a basic form of correctness testing. 
  
  * q1-n: Number of returned objects
  * q2-n: Number of returned objects

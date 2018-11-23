@@ -24,7 +24,37 @@ public class TestManager {
 		try {
 	
 			int[] sizesQuery = {1, 10, 100, 1000};//, 10000};
-			double[] sizesData = new double[]{0.5, 1, 2.5, 5, 10, 25, 50};
+			//double[] sizesData = new double[]{0.5, 1};//, 2.5, 5, 10, 25, 50};
+			double[] sizesData = new double[]{0.001, 0.005, 0.01, 0.05};
+
+			double p1;
+			p1 = 2.0; //25 dim
+			sizesData = new double[]{0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0, 5.0};//, 2.5, 5, 10, 25, 50};
+			testSeries(TST.HDF5, IDX.PHC2, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.PHC_IPP, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.RSZ, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.KDZ, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.FCT, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.WCT, 3, p1, sizesData);
+			
+			p1 = 3.0; //128 dim
+			sizesData = new double[]{0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0};//, 2.5, 5, 10, 25, 50};
+			testSeries(TST.HDF5, IDX.PHC2, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.PHC_IPP, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.RSZ, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.KDZ, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.FCT, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.WCT, 3, p1, sizesData);
+
+			p1 = 1.0; //784 dim
+			sizesData = new double[]{0.001, 0.005, 0.01, 0.05, 0.1};
+			//testSeries(TST.HDF5, IDX.PHC2, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.PHC_IPP, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.RSZ, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.KDZ, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.FCT, 3, p1, sizesData);
+			testSeries(TST.HDF5, IDX.WCT, 3, p1, sizesData);
+
 
 			testSeriesWQS(TST.CLUSTER, IDX.RSZ, 3, 5.0, 1, sizesQuery);
 			testSeriesWQS(TST.CLUSTER, IDX.QT0Z, 3, 5.0, 1, sizesQuery);

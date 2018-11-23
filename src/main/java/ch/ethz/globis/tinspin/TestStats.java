@@ -98,10 +98,10 @@ public class TestStats implements Serializable, Cloneable {
 		KD_LEVY("ch.ethz.globis.tinspin.wrappers.PointKDL", null),
 		KD_SAVA("ch.ethz.globis.tinspin.wrappers.PointKDS", null),
 		KD_RED("ch.ethz.globis.tinspin.wrappers.PointKDRed", null),
-		WBT("ch.ethz.globis.tinspin.wrappers.PointWBT", null),
-		WCT("ch.ethz.globis.tinspin.wrappers.PointWCT", null),
+		WBT("org.tinspin.wrappers.PointWBT", null),
+		WCT("org.tinspin.wrappers.PointWCT", null),
 		/** Faster Cover Tree by Christoph Conrads. */
-		FCT("ch.ethz.globis.tinspin.wrappers.PointFCT", null),
+		FCT("org.tinspin.wrappers.PointFCT", null),
 		
 		//Experimental implementations
 		//============================
@@ -155,7 +155,8 @@ public class TestStats implements Serializable, Cloneable {
 		VORTEX,
 		CUSTOM,
 		TOUCH,
-		CSV;
+		CSV,
+		HDF5;
 	}
 
 	/** How often are tests repeated? */
@@ -216,6 +217,7 @@ public class TestStats implements Serializable, Cloneable {
 	public final double param1;
 	public double param2;
 	public String paramStr;
+	public String paramStr2;
 	public boolean paramEnforceGC = true;
 	public final boolean isRangeData;
 
@@ -429,7 +431,7 @@ public class TestStats implements Serializable, Cloneable {
 	}
 	
 	public String testDescription2() {
-		return TEST.name() + "(" + param1 + "," + param2 + "," + paramStr + ")";
+		return TEST.name() + "(" + param1 + "," + param2 + "," + paramStr + "," + paramStr2 + ")";
 	}
 	
 	@Override

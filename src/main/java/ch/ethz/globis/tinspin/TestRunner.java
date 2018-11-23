@@ -55,8 +55,8 @@ public class TestRunner {
 			return;
 		}
 		
-		final int DIM = 30;
-		final int N = 25_000_000;
+		final int DIM = 3;
+		final int N = 1_000;
 						
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QTZ, N, DIM, true, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QTZ, N, DIM, true, 1.0);
@@ -64,7 +64,8 @@ public class TestRunner {
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0E-5);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.FCT, N, DIM, false, 5.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
-		TestStats s0 = new TestStats(TST.OSM, IDX.PHC2, N, 2, false, 1.0);
+		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC2, N, 2, false, 1.0);
+		TestStats s0 = new TestStats(TST.HDF5, IDX.PHC_IPP, N, DIM, false, 2.0);
 		//s0.cfgWindowQueryRepeat = 1000;
 		//s0.cfgPointQueryRepeat = 1000000;
 		//s0.cfgUpdateSize = 1000;
@@ -165,11 +166,13 @@ public class TestRunner {
 		
 		
 		//window queries
-		if (tree.supportsWindowQuery()) {
+		if (S.cfgNDims <= 60 && tree.supportsWindowQuery()) {
 			resetR();
 			repeatQuery(S.cfgWindowQueryRepeat, 0);
 			repeatQuery(S.cfgWindowQueryRepeat, 1);
 			S.assortedInfo += " WINDOW_RESULTS=" + S.cfgWindowQuerySize;
+		} else if (S.cfgNDims > 60 ) {
+			System.err.println("WARNING: skipping window queries for dims=" + S.cfgNDims);
 		} else {
 			System.err.println("WARNING: window queries disabled");
 		}
@@ -266,6 +269,7 @@ public class TestRunner {
 		case CUBE:
 		case CLUSTER:
 		case CSV:
+		case HDF5:
 		case OSM:
 		case TIGER:
 		case TOUCH:
@@ -357,6 +361,8 @@ public class TestRunner {
 		long t00 = System.currentTimeMillis();
 		int n;
 		long t1, t2;
+		//Use result count from first run as control value
+		int control = -1;
 		do {
 			JmxTools.reset();
 			t1 = System.currentTimeMillis();
@@ -367,6 +373,9 @@ public class TestRunner {
 				n = -1;
 			}
 			t2 = System.currentTimeMillis();
+			if (control == -1) {
+				control = n;
+			}
 			logNLF("*");
 		} while (System.currentTimeMillis() - t00 < minimumMS);
 
@@ -377,12 +386,12 @@ public class TestRunner {
 			S.statTq1 = (t2-t1);
 			S.statTq1E = (long) ((t2-t1)*1000*1000/(double)n);
 			S.statPSq1 = (long) (repeat*1000L)/(t2-t1);
-			S.statNq1 = n;
+			S.statNq1 = control;
 		} else {
 			S.statTq2 = (t2-t1);
 			S.statTq2E = (long) ((t2-t1)*1000*1000/(double)n);
 			S.statPSq2 = (long) (repeat*1000L)/(t2-t1);
-			S.statNq2 = n;
+			S.statNq2 = control;
 		}
 		S.statGcDiffWq = JmxTools.getDiff();
 		S.statGcTimeWq = JmxTools.getTime();
@@ -398,6 +407,8 @@ public class TestRunner {
 		long t00 = System.currentTimeMillis();
 		int n;
 		long t1, t2;
+		//Use result count from first run as control value
+		int control = -1;
 		do {
 			JmxTools.reset();
 
@@ -405,6 +416,9 @@ public class TestRunner {
 			t1 = System.currentTimeMillis();
 			n = tree.pointQuery(q);
 			t2 = System.currentTimeMillis();
+			if (control == -1) {
+				control = n;
+			}
 			logNLF("*");
 		} while (System.currentTimeMillis() - t00 < minimumMS);
 
@@ -415,12 +429,12 @@ public class TestRunner {
 			S.statTqp1 = (t2-t1);
 			S.statTqp1E = (long) ((t2-t1)*1000*1000/(double)repeat);
 			S.statPSqp1 = (long) (repeat*1000L)/(t2-t1);
-			S.statNqp1 = n;
+			S.statNqp1 = control;
 		} else {
 			S.statTqp2 = (t2-t1);
 			S.statTqp2E = (long) ((t2-t1)*1000*1000/(double)repeat);
 			S.statPSqp2 = (long) (repeat*1000L)/(t2-t1);
-			S.statNqp2 = n;
+			S.statNqp2 = control;
 		}
 		S.statGcDiffPq = JmxTools.getDiff();
 		S.statGcTimePq = JmxTools.getTime();
@@ -455,6 +469,8 @@ public class TestRunner {
 		long t00 = System.currentTimeMillis();
 		long t1, t2;
 		double dist;
+		//Use average distance of first run as control value
+		double control = -1;
 		do {
 			JmxTools.reset();
 
@@ -465,14 +481,16 @@ public class TestRunner {
 				dist += tree.knnQuery(k, q[i]);
 			}
 			t2 = System.currentTimeMillis();
+			if (control == -1) {
+				control = dist/repeat/k;
+			}
 			logNLF("*");
 		} while (System.currentTimeMillis() - t00 < minimumMS);
 		if (t2 == t1) {
 			t2++;
 		}
 		
-		double avgDist = dist/repeat/k;
-		log("Element distance: " + dist + " -> " + avgDist);
+		log("Element distance: " + dist + " -> " + control);
 		log("kNN query time (repeat=" + repeat + "): " + (t2-t1) + " ms -> " + (t2-t1)/(double)repeat + " ms/q -> " +
 				(t2-t1)*1000*1000/(double)(k*repeat) + " ns/q/r");
 		if (k == 1) {
@@ -480,12 +498,12 @@ public class TestRunner {
 				S.statTqk1_1 = t2-t1;
 				S.statTqk1_1E = (long) ((t2-t1)*1000*1000/(double)repeat);
 				S.statPSqk1_1 = (long) (repeat*1000L)/(t2-t1);
-				S.statDqk1_1 = avgDist;
+				S.statDqk1_1 = control;
 			} else {
 				S.statTqk1_2 = t2-t1;
 				S.statTqk1_2E = (long) ((t2-t1)*1000*1000/(double)repeat);
 				S.statPSqk1_2 = (long) (repeat*1000L)/(t2-t1);
-				S.statDqk1_2 = avgDist;
+				S.statDqk1_2 = control;
 			}
 			S.statGcDiffK1 = JmxTools.getDiff();
 			S.statGcTimeK1 = JmxTools.getTime();
@@ -494,12 +512,12 @@ public class TestRunner {
 				S.statTqk10_1 = t2-t1;
 				S.statTqk10_1E = (long) ((t2-t1)*1000*1000/(double)repeat);
 				S.statPSqk10_1 = (long) (repeat*1000L)/(t2-t1);
-				S.statDqk10_1 = avgDist;
+				S.statDqk10_1 = control;
 			} else {
 				S.statTqk10_2 = t2-t1;
 				S.statTqk10_2E = (long) ((t2-t1)*1000*1000/(double)repeat);
 				S.statPSqk10_2 = (long) (repeat*1000L)/(t2-t1);
-				S.statDqk10_2 = avgDist;
+				S.statDqk10_2 = control;
 			}
 			S.statGcDiffK10 = JmxTools.getDiff();
 			S.statGcTimeK10 = JmxTools.getTime();
@@ -614,67 +632,6 @@ public class TestRunner {
 	}
 
 
-	/**
-	 * Generates a random cuboid with fixed size=0.1^DIM, for example 0.001 for DIM=2.
-	 * @param xyz lower left corner
-	 * @param len lengths of edges
-	 */
-//	private void generateQueryCorners(double[] min, double[] max) {
-//		if (test.getTestType() == TST.CLUSTER) {
-//			test.queryCuboid(S.cfgWindowQuerySize, min, max);
-//			return;
-//		} else if (test.getTestType() == TST.TIGER) {
-//			if (test.getTestStats().isRangeData) {
-//				test.queryCuboid(S.cfgWindowQuerySize, min, max);
-//			}
-//			return;
-//		} else if (test.getTestType() == TST.CUSTOM) {
-//			test.queryCuboid(S.cfgWindowQuerySize, min, max);
-//			return;
-//		}
-//
-//		if (USE_NEW_QUERIES) {
-//			generateQueryCornersNew(min, max);
-//		} else {
-//			generateQueryCornersOld(min, max);
-//		}
-//	}
-	
-
-//	private void generateQueryCornersOld(double[] min, double[] max) {
-//		int dims = min.length;
-//		//Here is a fixed size version, returning 1% of the space.
-//		//final double qVolume = 0.01 * Math.pow(cfgDataLen, DIM);//(float) Math.pow(0.1, DIM); //0.01 for DIM=2
-//		final double qVolume = S.cfgWindowQuerySize/(double)S.cfgNEntries * Math.pow(S.cfgDataLen, dims);
-//		
-//		int dDrop = R.nextInt(dims);
-//		//query create cube
-//		double[] len = new double[min.length];
-//		do {
-//			double vol = 1;
-//			for (int d = 0; d < dims; d++) {
-//				if (d == dDrop) {
-//					continue;
-//				}
-//				len[d] = R.nextDouble()*S.cfgDataLen;
-//				vol *= len[d];
-//			}
-//			//create cuboid/box of desired size by dropping random length
-//			len[dDrop] = qVolume/vol;  //now the new len creates a rectangle/box of SIZE.
-//		} while (len[dDrop] >= S.cfgDataLen); //drop bad rectangles
-//		
-//		//create location
-//		for (int d = 0; d < dims; d++) {
-//			min[d] = R.nextDouble()*(S.cfgDataLen-len[d]);
-//			max[d] = min[d]+len[d];
-//			if (min[d]+len[d] >= S.cfgDataLen) {
-//				//drop bad rectangles 
-//				throw new RuntimeException();
-//			}
-//		}
-//	}
-
-	
 	private double[] generateQueryPointD(final int N, final int dims) {
 		double[] xyz = new double[dims];
 		int pos = R.nextInt(N*2);
@@ -725,10 +682,12 @@ public class TestRunner {
 	private void update(int round) {
 		log(time() + "updates ...");
 
-//		long t00 = System.currentTimeMillis();
+		long t00 = System.currentTimeMillis();
 		int n;
 		long t;
-//		do {
+		//Use result count from first run as control value
+		int control = -1;
+		do {
 			n = 0;
 			t = 0;
 			double[][] u = null; //2 points, 2 versions
@@ -745,8 +704,11 @@ public class TestRunner {
 				S.statGcDiffUp += JmxTools.getDiff();
 				S.statGcTimeUp += JmxTools.getTime();
 			}
-//			logNLF("*");
-//		} while (System.currentTimeMillis() - t00 < minimumMS);
+			if (control == -1) {
+				control = n;
+			}
+			logNLF("*");
+		} while (System.currentTimeMillis() - t00 < minimumMS);
 
 		log("Elements updated: " + n + " -> " + n);
 		log("Update time: " + t + " ms -> " + t*1000*1000/(double)n + " ns/update");
@@ -754,12 +716,12 @@ public class TestRunner {
 			S.statTu1 = t;
 			S.statTu1E = (long) (t*1000*1000/(double)n);
 			S.statPSu1E = (long) (n*1000L)/t;
-			S.statNu1 = n;
+			S.statNu1 = control;
 		} else {
 			S.statTu2 = t;
 			S.statTu2E = (long) (t*1000*1000/(double)n);
 			S.statPSu2E = (long) (n*1000L)/t;
-			S.statNu2 = n;
+			S.statNu2 = control;
 		}
 	}
 	

@@ -6,6 +6,8 @@
  */
 package ch.ethz.globis.tinspin.wrappers;
 
+import java.util.Arrays;
+
 import ch.ethz.globis.phtree.PhDistance;
 import ch.ethz.globis.phtree.PhDistanceF;
 import ch.ethz.globis.phtree.PhDistanceF_L1;
@@ -64,14 +66,20 @@ public class PointPHC2 extends Candidate {
 	
 	@Override
 	public void load(double[] data, int dims) {
+		int nDuplicates = 0;
 		for (int i = 0; i < N; i++) {
 			long[] buf = new long[dims];
 			for (int d = 0; d < dims; d++) {
 				buf[d] = f2l(data[i*dims+d]); 
 			}
 			if (phc.put(buf, O) != null) {
-				throw new IllegalArgumentException();
+				//throw new IllegalArgumentException("Duplicate: " + Arrays.toString(buf));
+				//System.err.println("Duplicate: " + Arrays.toString(buf));
+				nDuplicates++;
 			}
+		}
+		if (nDuplicates > 0) {
+			System.err.println("**************************   DUPLICATES FOUND: " + nDuplicates);
 		}
 		this.data = data;
 	}

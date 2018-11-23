@@ -87,6 +87,7 @@ public class PointPHC_IPP extends Candidate {
 			}
 		};
 		double[] buf = new double[dims];
+		int nDuplicates = 0;
 		for (int i = 0; i < N; i++) {
 			long[] buf2 = new long[dims];
 			for (int d = 0; d < dims; d++) {
@@ -94,8 +95,12 @@ public class PointPHC_IPP extends Candidate {
 			}
 			pp.pre(buf, buf2);
 			if (phc.put(buf2, O) != null) {
-				throw new IllegalArgumentException();
+				nDuplicates++;
+				//throw new IllegalArgumentException();
 			}
+		}
+		if (nDuplicates > 0) {
+			System.err.println("**************************   DUPLICATES FOUND: " + nDuplicates);
 		}
 		this.data = data;
 	}
