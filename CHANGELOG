@@ -4,6 +4,9 @@
 - (TZ) Updated Window Query generator again
 - (TZ) Re-added repeated testing of update()
 - (TZ) Use result count only from first run, for comparability 
+- (TZ) Updated timings to use nanoSecs internally
+- (TZ) CHANGE: WQ timings now return time/query instead of time/result
+
 
 2018-07-10
 ==========

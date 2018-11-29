@@ -23,9 +23,9 @@ public class MemTools {
 	}
 	
 	public static long cleanMem(int N, long prevMemUsed) {
-		long ret = 0;
+		long ret = prevMemUsed;
         for (int i = 0; i < 5 ; i++) {
-	        ret = MemTools.printMemUsed("MemTree", prevMemUsed, N);
+	        ret = Math.min(ret, MemTools.printMemUsed("MemTree", prevMemUsed, N));
         	System.gc();
         	try {
 				Thread.sleep(100);
