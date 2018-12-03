@@ -278,6 +278,14 @@ public abstract class Candidate {
 		return Math.sqrt(dist);
 	}
 	
+	public Object getNative() {
+		return "(Not obligatory) Please return the native implementation of the index here.";
+	}
+	
+	public String getNativeStats() {
+		return "(Not obligatory) Please return the native stats of the index here.";
+	}
+	
 	@Override
 	public String toString() {
 		return "Please provide configuration information for "

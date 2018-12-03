@@ -32,10 +32,10 @@ import ch.ethz.globis.tinspin.wrappers.PointPHCCTree;
  * @author Tilmann Zaeschke
  */
 public class TestRunner {
-	
+
 	private static final SimpleDateFormat FT = new SimpleDateFormat ("yyyy-MM-dd' 'HH:mm:ss");
 	private static final boolean DEBUG = PhTreeHelper.DEBUG;
-	
+
 	public static boolean USE_NEW_QUERIES = true;
 	public static long minimumMS = 2000; 
 
@@ -45,7 +45,7 @@ public class TestRunner {
 	private Candidate tree;
 	private AbstractTest test = null;
 
-	
+
 	public static void main(String[] args) {
 		//-Xmx28G -XX:+UseConcMarkSweepGC -Xprof -XX:MaxInlineSize=0 -XX:FreqInlineSize=0 -XX:+UnlockDiagnosticVMOptions -XX:+PrintInlining 
 		//-XX:+PrintHeapAtGC - Prints detailed GC info including heap occupancy before and after GC
@@ -54,10 +54,10 @@ public class TestRunner {
 			runWithArgs(args);
 			return;
 		}
-		
+
 		final int DIM = 3;
-		final int N = 1_000;
-						
+		final int N = 10_000;
+
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QTZ, N, DIM, true, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QTZ, N, DIM, true, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, true, 1.0);
@@ -65,31 +65,32 @@ public class TestRunner {
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.FCT, N, DIM, false, 5.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC2, N, 2, false, 1.0);
-		TestStats s0 = new TestStats(TST.HDF5, IDX.PHC2, N, DIM, false, 2.0);
+		TestStats s0 = new TestStats(TST.HDF5, IDX.KDZ, N, DIM, false, 4.0);
 		//s0.cfgWindowQueryRepeat = 1000;
 		//s0.cfgPointQueryRepeat = 1000000;
 		//s0.cfgUpdateSize = 1000;
 
 		//s0.cfgWindowQuerySize = 1;
 		//s0.cfgWindowQueryRepeat = 10_000;
-		
+
 		//s0.cfgWindowQuerySize = 1;
 		//s0.cfgKnnQueryBaseRepeat = 1000_000;
-		
+
 		//s0.cfgWindowQuerySize = 10000;
 		//s0.cfgWindowQueryRepeat = 10000;
 
 		s0.setSeed(0);
 		TestRunner test = new TestRunner(s0);
 		TestStats s = test.run();
+		System.out.println(test.tree.getNativeStats());
 		System.out.println(s.toStringOld());
 		System.out.println(s.toStringNew());
 		//System.out.println(BitsLong.POOL.print());
-//		System.out.println("AMM: " + PhIteratorNoGC.AMM1 + " / " + PhIteratorNoGC.AMM2 + " / " + PhIteratorNoGC.AMM3 + " / " + PhIteratorNoGC.AMM4 + " / " + PhIteratorNoGC.AMM5 + " / ");
-//		System.out.println("VMM: " + PhIteratorNoGC.VMM1 + " / " + PhIteratorNoGC.VMM2 + " / " + PhIteratorNoGC.VMM3);
-//		System.out.println("HCI-A/L/N: " + PhIteratorNoGC.HCIA + " / " + PhIteratorNoGC.HCIL + " / " + PhIteratorNoGC.HCIN);
+		//		System.out.println("AMM: " + PhIteratorNoGC.AMM1 + " / " + PhIteratorNoGC.AMM2 + " / " + PhIteratorNoGC.AMM3 + " / " + PhIteratorNoGC.AMM4 + " / " + PhIteratorNoGC.AMM5 + " / ");
+		//		System.out.println("VMM: " + PhIteratorNoGC.VMM1 + " / " + PhIteratorNoGC.VMM2 + " / " + PhIteratorNoGC.VMM3);
+		//		System.out.println("HCI-A/L/N: " + PhIteratorNoGC.HCIA + " / " + PhIteratorNoGC.HCIL + " / " + PhIteratorNoGC.HCIN);
 	}
-	
+
 	private static void runWithArgs(String[] args) {
 		if (args.length < 4) {
 			System.out.println("ERROR: At least 4 arguments required, found: " + args.length);
@@ -110,7 +111,7 @@ public class TestRunner {
 			}
 			return;
 		}
-		
+
 		IDX idx;
 		try {
 			idx = IDX.valueOf(args[1]);
@@ -122,7 +123,7 @@ public class TestRunner {
 			}
 			return;
 		}
-		
+
 		int n = Integer.parseInt(args[2]);
 		int dim = Integer.parseInt(args[3]);
 		boolean box = args.length > 4 ? Boolean.parseBoolean(args[4]) : false;
@@ -141,30 +142,30 @@ public class TestRunner {
 		this.S = S;
 		this.R = new Random(S.seed);
 	}
-	
+
 	public TestStats run() {
 		JmxTools.startUp();
 
 		//load
 		resetR();
 		load(S);
-		
-//		if (!false) {
-//			TestDraw.draw(data, 2);
-//			return S;
-//		}
-		
-//		int resolution = 10000;
-//		for (int d = 0; d < S.cfgNDims; d++) {
-//			int[] histo = new int[resolution];
-//			for (int i = d; i < S.cfgNEntries; i+=S.cfgNDims) {
-//				double dat = data[i]; 
-//				histo[(int)(dat*resolution)]++;
-//			}
-//			System.out.println("histo(d=" + d + "): " + Arrays.toString(histo));
-//		}
-		
-		
+
+		//		if (!false) {
+		//			TestDraw.draw(data, 2);
+		//			return S;
+		//		}
+
+		//		int resolution = 10000;
+		//		for (int d = 0; d < S.cfgNDims; d++) {
+		//			int[] histo = new int[resolution];
+		//			for (int i = d; i < S.cfgNEntries; i+=S.cfgNDims) {
+		//				double dat = data[i]; 
+		//				histo[(int)(dat*resolution)]++;
+		//			}
+		//			System.out.println("histo(d=" + d + "): " + Arrays.toString(histo));
+		//		}
+
+
 		//window queries
 		if (S.cfgNDims <= 60 && tree.supportsWindowQuery()) {
 			resetR();
@@ -176,7 +177,7 @@ public class TestRunner {
 		} else {
 			System.err.println("WARNING: window queries disabled");
 		}
-		
+
 		//point queries.
 		if (tree.supportsPointQuery()) {
 			resetR();
@@ -198,7 +199,7 @@ public class TestRunner {
 		} else {
 			System.err.println("WARNING: kNN queries disabled");
 		}
-		
+
 		//update
 		if (tree.supportsUpdate()) {
 			S.assortedInfo += " UPD_DIST=" + test.maxUpdateDistance();
@@ -208,7 +209,7 @@ public class TestRunner {
 		} else {
 			System.err.println("WARNING: update() disabled");
 		}
-		
+
 		//unload
 		if (tree.supportsUnload()) {
 			unload();
@@ -216,14 +217,14 @@ public class TestRunner {
 			System.err.println("WARNING: unload() disabled");
 		}
 
-		if (tree != null) {
-			tree.release();
-		}
-		
+		tree.getStats(S);
+
+		tree.release();
+
 		return S;
 	} 
-	
-	
+
+
 	/**
 	 * This method sets the random seed to the default seed plus a given delta.
 	 * This solves the problem that, for example, the kNN generator
@@ -238,7 +239,7 @@ public class TestRunner {
 	private void resetR() {
 		R.setSeed(S.seed);
 	}
-	
+
 	private int getKnnRepeat(int dims) {
 		if (S.TEST == TestStats.TST.CLUSTER && S.cfgNDims > 5 ) {
 			S.cfgKnnQueryBaseRepeat /= 10;//100;
@@ -254,7 +255,7 @@ public class TestRunner {
 		}
 		return S.cfgKnnQueryBaseRepeat/50;
 	}
-	
+
 	private void load(TestStats ts) {
 		log(date() + "generating data ...");
 		long t1g = System.currentTimeMillis();
@@ -264,7 +265,7 @@ public class TestRunner {
 		} else {
 			test = TestPoint.create(R, ts);
 		}
-		
+
 		switch (ts.TEST) {
 		case CUBE:
 		case CLUSTER:
@@ -289,7 +290,7 @@ public class TestRunner {
 		case CUSTOM: {
 			if (S.testClass == null)
 				throw new RuntimeException("No dataset class passed (null)");
-			
+
 			try {
 				// Note: a custom Test class MUST have an empty constructor
 				test = S.testClass.getDeclaredConstructor().newInstance();
@@ -305,22 +306,22 @@ public class TestRunner {
 		long t2g = System.currentTimeMillis();
 		log("data generation finished in: " + (t2g-t1g));
 		S.statTGen = t2g-t1g;
-		
+
 		int dims = S.cfgNDims;
 		int N = S.cfgNEntries;
-		
-        long memTree = MemTools.getMemUsed();
+
+		long memTree = MemTools.getMemUsed();
 		if (ts.paramEnforceGC) {
 			MemTools.cleanMem(N, memTree);
 		}
 
-		
+
 		//load index
 		log(date() + "loading index ...");
-        memTree = MemTools.getMemUsed();
-        JmxTools.reset();
+		memTree = MemTools.getMemUsed();
+		JmxTools.reset();
 		long t1 = timer();
-		
+
 		tree = ts.createTree();
 		tree.load(data, dims);
 
@@ -334,22 +335,22 @@ public class TestRunner {
 		S.statSjvmE = S.statSjvmF / N;
 		S.statTLoad = (long) toMS(t1, t2);
 		S.statPSLoad = opsPerSec(N, t1, t2);
-		
+
 		if (ts.INDEX == IDX.PHCC) {
 			// TODO: add pht-cpp statistics collection
-			
+
 			// memory usage
 			S.statSjvmF = ((PointPHCCTree)tree).getMemoryUsage();
 			S.statSjvmE = S.statSjvmF / N;
 		}
-		
+
 		tree.getStats(S);
 		S.assortedInfo += tree.toString();
-		
+
 		//This avoid premature garbage collection...
 		log("loaded objects: " + N + " " + data[0]);
 	}
-		
+
 	private void repeatQuery(int repeat, int round) {
 		int dims = S.cfgNDims;
 		log("N=" + S.cfgNEntries);
@@ -400,7 +401,7 @@ public class TestRunner {
 		S.statGcDiffWq = JmxTools.getDiff();
 		S.statGcTimeWq = JmxTools.getTime();
 	}
-	
+
 	private void repeatPointQuery(int repeat, int round) {
 		log(date() + "point queries ...");
 		//prepare query
@@ -447,7 +448,7 @@ public class TestRunner {
 		S.statGcDiffPq = JmxTools.getDiff();
 		S.statGcTimePq = JmxTools.getTime();
 	}
-	
+
 	private double[][] preparePointQuery(int repeat) {
 		int dims = S.cfgNDims;
 		double[][] qA;
@@ -497,7 +498,7 @@ public class TestRunner {
 		if (t2 == t1) {
 			t2++;
 		}
-		
+
 		log("Element distance: " + dist + " -> " + control);
 		log("kNN query time (repeat=" + repeat + "): " + toMS(t1, t2) + " ms -> " + 
 				toMS(t1, t2)/(double)repeat + " ms/q -> " +
@@ -532,7 +533,7 @@ public class TestRunner {
 			S.statGcTimeK10 = JmxTools.getTime();
 		}
 	}
-	
+
 	private double[][] prepareKnnQuery(int repeat) {
 		int dims = S.cfgNDims;
 		double[][] qA;
@@ -616,7 +617,7 @@ public class TestRunner {
 			return sum.toString();
 		}
 	}
-	
+
 	private int repeatQueries(double[][] lower, double[][] upper) {
 		long t0 = System.currentTimeMillis();
 		int n=0;
@@ -631,7 +632,7 @@ public class TestRunner {
 		}
 		return n;
 	}
-	
+
 	static void log(String string) {
 		System.out.println(string);
 	}
@@ -655,7 +656,7 @@ public class TestRunner {
 		}
 		return xyz;
 	}
-	
+
 	private void generateQueryPointDRect(double[] lo, double[] hi, final int N, final int dims) {
 		int pos = R.nextInt(N*2);
 		if (pos >= N) {
@@ -670,7 +671,7 @@ public class TestRunner {
 			System.arraycopy(data, pos*dims*2+dims, hi, 0, dims);
 		}
 	}
-	
+
 	private double[] generateKnnQueryPointD(final int dims) {
 		double[] xyz = new double[dims];
 		//randomise
@@ -679,7 +680,7 @@ public class TestRunner {
 		}
 		return xyz;
 	}
-	
+
 	private void generateKnnQueryPointDRect(double[] lo, double[] hi, final int dims) {
 		//randomise
 		for (int d = 0; d < dims; d++) {
@@ -687,7 +688,7 @@ public class TestRunner {
 			hi[d] = lo[d] + R.nextDouble()*test.len(d)/1000.;
 		}
 	}
-	
+
 	private void update(int round) {
 		log(date() + "updates ...");
 
@@ -737,7 +738,7 @@ public class TestRunner {
 			S.statNu2 = control;
 		}
 	}
-	
+
 	private void unload() {
 		log("Unloading...");
 		JmxTools.reset();
@@ -745,7 +746,7 @@ public class TestRunner {
 		long t1 = timer();
 		int n = tree.unload();
 		long t2 = timer();
-		
+
 		log("Deletion time: " + toMS(t1, t2) + " ms -> " + 
 				toNSPerOp(t1, t2, S.cfgNEntries) + " ns/delete");
 		S.statTUnload = (long) toMS(t1, t2);
@@ -757,11 +758,11 @@ public class TestRunner {
 			//throw new IllegalStateException("N/n: " + S.cfgNEntries + "/" + n);
 		}
 	}
-	
+
 	public TestStats getTestStats() {
 		return S;
 	}
-	
+
 	private String date() {
 		return FT.format(new Date()) + " ";
 	}
@@ -769,35 +770,35 @@ public class TestRunner {
 	public Candidate getCandidate() {
 		return tree;
 	}
-	
+
 	private static long timer() {
 		return System.nanoTime();
 	}
-	
+
 	private static long opsPerSec(int nOps, double t1, double t2) {
 		return opsPerSec(nOps, t2-t1);
 	}
-	
+
 	private static long opsPerSec(int nOps, double t) {
 		return (long) (nOps / t * 1_000_000_000L);
 	}
-	
+
 	private static double toMS(double t1, double t2) {
 		return (t2-t1)/1_000_000;
 	}
-	
+
 	private static double toMS(double t) {
 		return t/1_000_000;
 	}
-	
-	private static double toSec(double t1, double t2) {
-		return toMS(t1, t2) * 1_000;
-	}
-	
+
+	//	private static double toSec(double t1, double t2) {
+	//		return toMS(t1, t2) * 1_000;
+	//	}
+
 	private static long toNSPerOp(double t1, double t2, long nOps) {
 		return toNSPerOp(t2 - t1, nOps);
 	}
-	
+
 	private static long toNSPerOp(double t, long nOps) {
 		return (long) t / nOps;
 	}

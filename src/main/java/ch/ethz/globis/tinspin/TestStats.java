@@ -36,6 +36,8 @@ import ch.ethz.globis.tinspin.wrappers.RectangleQuadZ;
 import ch.ethz.globis.tinspin.wrappers.RectangleRStarZ;
 import ch.ethz.globis.tinspin.wrappers.RectangleSTRZ;
 
+import org.tinspin.wrappers.PointCTZ;
+
 public class TestStats implements Serializable, Cloneable {
 
 	/** Edge length of the populated data area. */
@@ -65,6 +67,8 @@ public class TestStats implements Serializable, Cloneable {
 		PHC_IPP(PointPHC_IPP.class.getName(), RectanglePHC_IPP.class.getName()),
 		/** CritBit */
 		CBZ(PointCritBitZ.class.getName(), ""),
+		/** CoverTree */
+		CTZ(PointCTZ.class.getName(), ""),
 		/** KD-Tree */
 		KDZ(PointKDZ.class.getName(), ""),
 		/** Quadtree with HC navigation */
@@ -162,11 +166,11 @@ public class TestStats implements Serializable, Cloneable {
 	/** How often are tests repeated? */
 	public static int DEFAULT_CFG_REPEAT = 3;
 	
-	public static int DEFAULT_W_QUERY_SIZE = 1000;
-	public static int DEFAULT_N_WINDOW_QUERY = 1000; //number of range queries
-	public static int DEFAULT_N_POINT_QUERY = 1000*1000; //number of point queries
-	public static int DEFAULT_N_KNN_QUERY = 10*1000;
-	public static int DEFAULT_N_UPDATES = 100*1000;
+	public static int DEFAULT_W_QUERY_SIZE = 1_000;
+	public static int DEFAULT_N_WINDOW_QUERY = 1_000; //number of range queries
+	public static int DEFAULT_N_POINT_QUERY = 100_000; //number of point queries
+	public static int DEFAULT_N_KNN_QUERY = 10_000;
+	public static int DEFAULT_N_UPDATES = 100_000;
 	public static int DEFAULT_N_UPDATE_CYCLES = 10;
 
 
@@ -275,6 +279,9 @@ public class TestStats implements Serializable, Cloneable {
 	public int statNnodes;
 	public long statNpostlen;
 	public int statNNodeAHC;
+	public long statNDistCalc;
+	public long statNDistCalc1NN;
+	public long statNDistCalcKNN;
 	int statNNodeNT;
 	int statNNodeInternalNT;
 	int statNq1;
@@ -508,8 +515,8 @@ public class TestStats implements Serializable, Cloneable {
 		ret += statNq1 + D + statNq2 + D + statNqp1 + D + statNqp2 + D;
 		ret += statDqk1_1 + D + statDqk1_2 + D + statDqk10_1 + D + statDqk10_2 + D;
 		ret += statNu1 + D + statNu2 + D;
-		ret += 0 + D + 0 + D;  //Dummy
-		ret += 0 + D + 0 + D;  //Dummy
+		ret += statNDistCalc + D + statNDistCalc1NN + D;  //Dummy
+		ret += statNDistCalcKNN + D + 0 + D;  //Dummy
 
 		//GC
 		ret += statGcDiffL/1000000 + D + statGcTimeL + D;
@@ -622,6 +629,9 @@ public class TestStats implements Serializable, Cloneable {
 			avg.statNNodeAHC += t.statNNodeAHC;
 			avg.statNNodeNT += t.statNNodeNT;
 			avg.statNNodeInternalNT += t.statNNodeInternalNT;
+			avg.statNDistCalc += t.statNDistCalc;
+			avg.statNDistCalc1NN += t.statNDistCalc1NN;
+			avg.statNDistCalcKNN += t.statNDistCalcKNN;
 			avg.statNq1 += t.statNq1;
 			avg.statNq2 += t.statNq2;
 			avg.statNqp1 += t.statNqp1;
@@ -705,6 +715,9 @@ public class TestStats implements Serializable, Cloneable {
 		avg.statNNodeAHC /= (double)cnt;
 		avg.statNNodeNT /= (double)cnt;
 		avg.statNNodeInternalNT /= (double)cnt;
+		avg.statNDistCalc /= (double)cnt;
+		avg.statNDistCalc1NN /= (double)cnt;
+		avg.statNDistCalcKNN /= (double)cnt;
 		avg.statNq1 /= (double)cnt;
 		avg.statNq2 /= (double)cnt;
 		avg.statNqp1 /= (double)cnt;

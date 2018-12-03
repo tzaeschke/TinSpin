@@ -19,7 +19,7 @@ import ch.ethz.globis.tinspin.TestStats;
 /**
  * KD-Tree.
  * 
- * @author Tilmann Zäschke
+ * @author Tilmann Zï¿½schke
  *
  */
 public class PointKDZ extends Candidate {
@@ -136,6 +136,7 @@ public class PointKDZ extends Candidate {
 	/**
 	 * Used to test the native code during development process
 	 */
+	@Override
 	public KDTree<double[]> getNative() {
 		return phc;
 	}
@@ -145,6 +146,9 @@ public class PointKDZ extends Candidate {
 		KDStats qs = phc.getStats();
 		s.statNnodes = qs.getNodeCount();
 		s.statNpostlen = qs.getMaxDepth();
+		s.statNDistCalc = qs.getNDistCalc();
+		s.statNDistCalc1NN = qs.getNDistCalc1NN();
+		s.statNDistCalcKNN = qs.getNDistCalcKNN();
 		//phc.printStats(N);
 		//phc.printQuality();
 		//PhTreeStats q = phc.getStats();

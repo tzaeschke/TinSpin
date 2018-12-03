@@ -439,7 +439,8 @@ public class Reader {
 		int pos = bb.position();
 		if (pos != posEnd) {
 			log("ERROR: pos/size = " + pos + " / " + posEnd); //TODO?
-			new IllegalStateException("pos/size = " + pos + " / " + posEnd).printStackTrace();
+			System.err.println("pos/size = " + pos + " / " + posEnd);
+			//new IllegalStateException("pos/size = " + pos + " / " + posEnd).printStackTrace();
 		}
 		jumpTo(bb, posEnd); 
 

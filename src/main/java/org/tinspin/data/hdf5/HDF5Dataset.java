@@ -55,7 +55,7 @@ public class HDF5Dataset {
 		int count = (int) ((DOMsg0001)dohp.messages[0]).dataDim[0];
 		int dims = (int) ((DOMsg0001)dohp.messages[0]).dataDim[1];
 		int pos = (int) ((DOMsg0008v3)dohp.messages[3]).l4DataAddressO;
-		int nBytes = (int) ((DOMsg0008v3)dohp.messages[3]).l8DataSizeL;
+		//int nBytes = (int) ((DOMsg0008v3)dohp.messages[3]).l8DataSizeL;
 		
 		if (nMax > 0) {
 			count = Math.min(count, nMax);

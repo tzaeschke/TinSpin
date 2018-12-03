@@ -1,6 +1,6 @@
 2018-11-23
 ==========
-- (TZ) Added basic import for HDF5 files.
+- (TZ) Added (very basic!) import for HDF5 files.
 - (TZ) Updated Window Query generator again
 - (TZ) Re-added repeated testing of update()
 - (TZ) Use result count only from first run, for comparability 
