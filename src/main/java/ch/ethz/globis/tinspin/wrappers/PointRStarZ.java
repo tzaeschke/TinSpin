@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 import org.tinspin.index.Index;
 import org.tinspin.index.rtree.RTree;
+import org.tinspin.index.rtree.RTree.RTreeStats;
 import org.tinspin.index.rtree.RTreeIterator;
 import org.tinspin.index.rtree.RTreeQueryKnn;
 
@@ -135,14 +136,19 @@ public class PointRStarZ extends Candidate {
 	/**
 	 * Used to test the native code during development process
 	 */
+	@Override
 	public Index<double[]> getNative() {
 		return phc;
 	}
 
 	@Override
 	public void getStats(TestStats s) {
-		s.statNnodes = phc.getNodeCount();
-		s.statNpostlen = phc.getDepth();
+		RTreeStats qs = phc.getStats();
+		s.statNnodes = qs.getNodeCount();
+		s.statNpostlen = qs.getMaxDepth();
+		s.statNDistCalc = qs.getNDistCalc();
+		s.statNDistCalc1NN = qs.getNDistCalc1NN();
+		s.statNDistCalcKNN = qs.getNDistCalcKNN();
 		//phc.printStats(N);
 		//phc.printQuality();
 		//PhTreeStats q = phc.getStats();

@@ -20,7 +20,7 @@ import ch.ethz.globis.tinspin.TestStats;
 /**
  * Plain MX-CIF quadtree
  * 
- * @author Tilmann Zäschke
+ * @author Tilmann Zï¿½schke
  *
  */
 public class PointQuad0Z extends Candidate {
@@ -174,6 +174,7 @@ public class PointQuad0Z extends Candidate {
 	/**
 	 * Used to test the native code during development process
 	 */
+	@Override
 	public QuadTreeKD0<double[]> getNative() {
 		return phc;
 	}

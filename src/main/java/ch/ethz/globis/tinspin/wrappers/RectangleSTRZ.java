@@ -14,6 +14,7 @@ import org.tinspin.index.rtree.Entry;
 import org.tinspin.index.rtree.RTree;
 import org.tinspin.index.rtree.RTreeIterator;
 import org.tinspin.index.rtree.RTreeQueryKnn;
+import org.tinspin.index.rtree.RTree.RTreeStats;
 
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -146,14 +147,18 @@ public class RectangleSTRZ extends Candidate {
 		data = null;
 	}
 
+	@Override
 	public Index<Object> getNative() {
 		return phc;
 	}
 
 	@Override
-	public void getStats(TestStats S) {
-		S.statNnodes = phc.getNodeCount(); 
-		S.statNpostlen = phc.getDepth();
+	public void getStats(TestStats s) {
+		RTreeStats qs = phc.getStats();
+		s.statNnodes = qs.getNodeCount();
+		s.statNpostlen = qs.getMaxDepth();
+		s.statNDistCalc = qs.getNDistCalc();
+		s.statNDistCalc1NN = qs.getNDistCalc1NN();
 	}
 	
 	@Override

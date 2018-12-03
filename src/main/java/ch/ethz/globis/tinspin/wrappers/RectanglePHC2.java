@@ -176,6 +176,7 @@ public class RectanglePHC2 extends Candidate {
 		data = null;
 	}
 
+	@Override
 	public PhTree<Object> getNative() {
 		return phc;
 	}

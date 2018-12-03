@@ -19,7 +19,7 @@ import ch.ethz.globis.tinspin.TestStats;
 /**
  * Quadtree with HypercubeNavigation (HC).
  * 
- * @author Tilmann Zäschke
+ * @author Tilmann Zï¿½schke
  *
  */
 public class PointQuadZ extends Candidate {
@@ -163,6 +163,7 @@ public class PointQuadZ extends Candidate {
 	/**
 	 * Used to test the native code during development process
 	 */
+	@Override
 	public QuadTreeKD<double[]> getNative() {
 		return phc;
 	}

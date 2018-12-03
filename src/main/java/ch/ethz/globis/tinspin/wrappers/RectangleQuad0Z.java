@@ -156,6 +156,7 @@ public class RectangleQuad0Z extends Candidate {
 		data = null;
 	}
 
+	@Override
 	public QuadTreeRKD0<Object> getNative() {
 		return phc;
 	}

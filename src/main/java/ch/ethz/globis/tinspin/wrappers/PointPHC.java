@@ -174,6 +174,7 @@ public class PointPHC extends Candidate {
 	/**
 	 * Used to test the native code during development process
 	 */
+	@Override
 	public PhTree<Object> getNative() {
 		return phc;
 	}

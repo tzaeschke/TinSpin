@@ -161,6 +161,7 @@ public class PointPHCRectangle extends Candidate {
 	/**
 	 * Used to test the native code during development process
 	 */
+	@Override
 	public PhTreeSolid<Object> getNative() {
 		return phc;
 	}

@@ -156,6 +156,7 @@ public class RectanglePHCF extends Candidate {
 		data = null;
 	}
 
+	@Override
 	public PhTreeSolidF<Object> getNative() {
 		return phc;
 	}

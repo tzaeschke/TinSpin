@@ -198,6 +198,7 @@ public class RectanglePHC_IPP extends Candidate {
 		data = null;
 	}
 
+	@Override
 	public PhTree<Object> getNative() {
 		return phc.getInternalTree();
 	}
