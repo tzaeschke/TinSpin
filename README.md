@@ -78,16 +78,19 @@ Tree statistics. The following columns contain tree statistics, such as number o
  
 Result statistics. The following columns give an indicator of the result returned by the _first_ test run, even if runs are repeated if they are faster than 2 seconds (default), see above. The counts should not vary much between runs, but using the first runs allows comparing the result counts of different tree as a basic form of correctness testing. 
  
- * q1-n: Number of returned objects
- * q2-n: Number of returned objects
- * q1p-n: Number of found objects
- * q2p-n: Number of found objects
- * up1-n: Number of found objects
- * up2-n: Number of found objects
+ * q1-n: Number of returned window query objects
+ * q2-n: Number of returned window query objects
+ * q1p-n: Number of found objects in point query
+ * q2p-n: Number of found objects in point query
  * d1-1NN: Average distance of nearest neighbors
  * d2-1NN: Average distance of nearest neighbors
  * d1-kNN: Average of sum of distance of 10 nearest neighbors
  * d2-kNN: Average of sum of distance of 10 nearest neighbors
+ * up1-n: Number of updated objects
+ * up2-n: Number of updated objects
+ * distCalc-n : Number of distance calculation for insert, query and deletion
+ * distCalc1NN-n : Number of distance calculations of 1NN queries
+ * distCalcKNN-n : Number of distance calculations of kNN queries 
  
 For each test part, the following column contain garbage collection statistics based on Java instrumentation. They are a good indicator, but not precise! `-s` is the estimated memory [MB] freed up by GC. `-t` is the estimated time in [ms] used by the GC.  
  

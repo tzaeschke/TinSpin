@@ -395,13 +395,14 @@ public class TestStats implements Serializable, Cloneable {
 						"up1/s", "up2/s",
 						"unload/s", 
 						"distCalc-n", "distCalc1NN-n", "distCalcKNN-n", 
-						"dummy",
+						"dummy", "dummy", 
+						"dummy", "dummy", 
 						"nodes", "postLen", "AHC", "NT", "NTinternal", 
 						"wq1-n", "wq2-n", "pq1-n", "pq2-n", 
 						"1-NN1-d", "1-NN2-2", "10-NN1-d", "10-NN2-d", 
 						"up1-n", "up2-n",
-						"dummy", "dummy", 
-						"dummy", "dummy",
+						"distCalc-n", "distCalc1NN-n", "distCalcKNN-n", 
+						"dummy",
 						"load-s", "load-t", "w-query-s", "w-query-t", 
 						"p-query-s", "p-query-t", "update-s", "update-t", 
 						"1-NN-s", "1-NN-t", "10-NN-s", "10-NN-t", 
@@ -515,8 +516,9 @@ public class TestStats implements Serializable, Cloneable {
 		ret += statNq1 + D + statNq2 + D + statNqp1 + D + statNqp2 + D;
 		ret += statDqk1_1 + D + statDqk1_2 + D + statDqk10_1 + D + statDqk10_2 + D;
 		ret += statNu1 + D + statNu2 + D;
-		ret += statNDistCalc + D + statNDistCalc1NN + D;  //Dummy
-		ret += statNDistCalcKNN + D + 0 + D;  //Dummy
+		ret += statNDistCalc + D + statNDistCalc1NN + D;  
+		ret += statNDistCalcKNN + D;
+		ret += 0 + D;  //Dummy
 
 		//GC
 		ret += statGcDiffL/1000000 + D + statGcTimeL + D;
