@@ -70,7 +70,7 @@ public class Logging {
 	
 	/**
 	 * Add a result.
-	 * @param ts
+	 * @param ts stats
 	 */
 	public void logResult(TestStats ts) {
 		stats.add(ts);
@@ -79,7 +79,7 @@ public class Logging {
 	
 	/**
 	 * Calculates the average of the last n results.
-	 * @param nStats
+	 * @param nStats n stats
 	 * @return a result instance with the average results
 	 */
 	public TestStats logResultAverage(int nStats) {
@@ -120,7 +120,7 @@ public class Logging {
 	 * Also, this methods writes ALL results to a file called full.txt.
 	 * 
 	 * Results are stored in prjHome/target/logs.
-	 * @param subDir 
+	 * @param subDir subfolder
 	 */
 	public void writeLogFileForTestSeries(String subDir) {
 		writeLogFileFull();

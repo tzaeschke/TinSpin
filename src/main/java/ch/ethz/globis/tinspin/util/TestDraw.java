@@ -220,7 +220,7 @@ public class TestDraw extends JPanel {
 
 	/**
 	 * 
-	 * @param data
+	 * @param data data
 	 * @param dim Total number of dimension in original data
 	 * @param dx Id of dimension that should be drawn as 'x'
 	 * @param dy Id of dimension that should be drawn as 'y'
@@ -238,7 +238,7 @@ public class TestDraw extends JPanel {
 
 	/**
 	 * 
-	 * @param data
+	 * @param data Data
 	 * @param dim Total number of dimension in original data
 	 * @param dx Id of dimension that should be drawn as 'x'
 	 * @param dy Id of dimension that should be drawn as 'y'

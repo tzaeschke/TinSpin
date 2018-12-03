@@ -89,7 +89,7 @@ public class PointPHCCTree extends Candidate {
 	/**
 	 * Used to test the native code during development process
 	 * 
-	 * @param args
+	 * @param args args
 	 */
 	public static void main(String[] args) {
 		int N = 1;

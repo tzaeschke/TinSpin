@@ -243,7 +243,9 @@ public abstract class AbstractTest {
 	 * @param min output: query box minimum
 	 * @param max output: query box maximum
 	 * @param maxLen maximum allowed length for a query box in any dimension.
+	 * @param maxLenProduct Increasing sum of products of lengths
 	 * @param avgQVol Average expected volume of a query box
+	 * @param ignoreChecks ignore checks?
 	 */
 	public void generateQuery3(double[] min, double[] max, 
 			final double[] maxLen, double[] maxLenProduct, final double avgQVol,

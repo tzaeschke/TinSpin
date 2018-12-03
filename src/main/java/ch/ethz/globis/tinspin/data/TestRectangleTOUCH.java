@@ -35,7 +35,7 @@ import ch.ethz.globis.tinspin.wrappers.RectanglePHC;
  * 
  * <p>
  * 
- * param1: 0=even, 1=gauss, >1= gauss spots
+ * param1: 0=even, 1=gauss, greater than 1 = gauss spots
  * <br>
  * param2: EPSILON, usually 5 or 10
  * 

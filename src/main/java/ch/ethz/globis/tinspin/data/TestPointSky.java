@@ -69,12 +69,12 @@ public class TestPointSky extends TestPoint {
 	/**
 	 * Data set type selection via param1:
 	 * <p>
-	 * 1.0 -> correlated		<br>
-	 * 2.0 -> independent  		<br>
-	 * 3.0 -> anti-correlated	<br>
+	 * 1.0 : correlated		<br>
+	 * 2.0 : independent  		<br>
+	 * 3.0 : anti-correlated	<br>
 	 * 
-	 * @param R
-	 * @param S
+	 * @param R Random
+	 * @param S Stats
 	 */
 	public TestPointSky(Random R, TestStats S) {
 		super(R, S);

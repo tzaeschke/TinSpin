@@ -191,8 +191,8 @@ public class TestPerf {
 	
 	/**
 	 * 
-	 * @param id
-	 * @param attrID
+	 * @param id ID
+	 * @param attrID attribute ID
 	 * @return The value for a given attribute for a given object. 
 	 */
 	protected int createIntValue(long id, int attrID) {

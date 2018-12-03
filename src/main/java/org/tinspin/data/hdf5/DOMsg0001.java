@@ -49,13 +49,27 @@ public class DOMsg0001 extends DOMsg {
 	}
 	
 	static class Entry {
-		//This value is the current size of the dimension of the data as stored in the file. The first dimension stored in the list of dimensions is the slowest changing dimension and the last dimension stored is the fastest changing dimension.
+		/**
+		 * This value is the current size of the dimension of the data as stored in the 
+		 * file. The first dimension stored in the list of dimensions is the slowest changing 
+		 * dimension and the last dimension stored is the fastest changing dimension.
+		 */
 		long l0DimensionSize;// #n 
 
-		//This value is the maximum size of the dimension of the data as stored in the file. This value may be the special “unlimited” size which indicates that the data may expand along this dimension indefinitely. If these values are not stored, the maximum size of each dimension is assumed to be the dimension’s current size.
+		/** 
+		 * This value is the maximum size of the dimension of the data as stored in the file. 
+		 * This value may be the special "unlimited" size which indicates that the data may expand
+		 * along this dimension indefinitely. If these values are not stored, the maximum size of 
+		 * each dimension is assumed to be the dimension’s current size.
+		 */
 		long l8DimensionMaximumSize;// #n
 
-		//This value is the index permutation used to map each dimension from the canonical representation to an alternate axis for each dimension. If these values are not stored, the first dimension stored in the list of dimensions is the slowest changing dimension and the last dimension stored is the fastest changing dimension. 
+		/**
+		 * This value is the index permutation used to map each dimension from the canonical 
+		 * representation to an alternate axis for each dimension. If these values are not stored,
+		 * the first dimension stored in the list of dimensions is the slowest changing dimension 
+		 * and the last dimension stored is the fastest changing dimension. 
+		 */
 		long l16PermutationIndex;// #n
 	}
 
