@@ -39,6 +39,8 @@ public class TestPointHDF5 extends TestPoint {
 			paramStr += "sift-128-euclidean.hdf5"; break;
 		case 4: 
 			paramStr += "nytimes-256-angular.hdf5"; break;
+		case 5:
+			paramStr += "glove-50-angular.hdf5"; break;
 		default:
 			throw new IllegalArgumentException("param1 must be {1,2,3,4}");	
 		}
