@@ -8,7 +8,9 @@ TinSpin provides several dataset generators for point data and rectangle data. T
 
 The framework was originally developed at ETH Zurich in the GlobIS group. It is now maintained by Tilmann Zäschke.
 
+# Results
 
+Some results can be found in the doc folder. The file [benchmark-high-dim-2018-12.ods](doc/benchmark-high-dim-2018-12.ods) contains benchmarks with high-dimensional datasets, such as GloVe-25, GloVe-50, SIFT-128, NYTimes-256 and MNIST-784 (see [ann-benchmark](https://github.com/erikbern/ann-benchmarks)).
 
 # Output File Format
 
