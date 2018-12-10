@@ -8,8 +8,8 @@ package ch.ethz.globis.tinspin;
 
 import static org.junit.Assert.assertEquals;
 
-import ch.ethz.globis.tinspin.TestStats.IDX;
-import ch.ethz.globis.tinspin.TestStats.TST;
+import ch.ethz.globis.tinspin.TestInstances.IDX;
+import ch.ethz.globis.tinspin.TestInstances.TST;
 import ch.ethz.globis.tinspin.wrappers.Candidate;
 
 public abstract class AbstractWrapperTest {
@@ -18,10 +18,11 @@ public abstract class AbstractWrapperTest {
 	protected static final int dims = 3;
 
 	public static TestStats createUnitTestStats(
-			String candidate, TST tst, int N, int dims, boolean isRangeData, double param1) {
-		TestStats ts = new TestStats(tst, IDX.CUSTOM, N, dims, isRangeData, param1);
+			String candidate, TST tst, int N, int dims, double param1) {
+		TestStats ts = new TestStats(tst, IDX.CUSTOM, N, dims, param1);
 		ts.setCandidateClass(candidate);
 		ts.cfgNRepeat = 1;
+		ts.minimumMsPerTest = 1;
 		ts.paramEnforceGC = false;
 		ts.cfgWindowQueryRepeat = 100;
 		ts.cfgPointQueryRepeat = 1000;

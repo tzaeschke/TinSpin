@@ -7,8 +7,8 @@
 package ch.ethz.globis.tinspin.wrappers;
 
 import ch.ethz.globis.phtree.util.BitTools;
+import ch.ethz.globis.tinspin.TestInstances;
 import ch.ethz.globis.tinspin.TestStats;
-import ch.ethz.globis.tinspin.TestStats.IDX;
 
 public class PointPHCCTree extends Candidate {
 	static {
@@ -110,7 +110,7 @@ public class PointPHCCTree extends Candidate {
 			rangeQueryMAX[i] = Double.MAX_VALUE;
 		}
 		
-		TestStats ts = new TestStats(null, IDX.PHCC, N, dims, false, -1);
+		TestStats ts = new TestStats(null, TestInstances.IDX.PHCC, N, dims, false, -1, -1);
 		PointPHCCTree tree = new PointPHCCTree(ts);
 		
 		tree.load(data, dims);

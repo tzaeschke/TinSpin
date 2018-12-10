@@ -8,6 +8,23 @@ TinSpin provides several dataset generators for point data and rectangle data. T
 
 The framework was originally developed at ETH Zurich in the GlobIS group. It is now maintained by Tilmann Zäschke.
 
+# Changelog
+
+2018-12: 
+ * Major refactoring with modularization, new Maven module 'tinspin-common'
+ * Added new [Example](src/main/java/ch/ethz/globis/tinspin/Example.java) for custom testing
+ * Added (very basic!) import for HDF5 files.
+ * Testing: Updated Window Query generator again; Use result count only from first run, for comparability; Updated timings to use nanoSecs internally
+ * CHANGE: WQ timings now return time/query instead of time/result
+  
+2018-07: 
+ * New logging output with ops/sec instead of time/op
+ * Operations without side effects (window query, point query, kNN search) are repeatedly executed until a minimum time has passed (in order to avoid problems with warm-up)
+
+# Example
+
+The [Example](src/main/java/ch/ethz/globis/tinspin/Example.java) class demonstrates how to test you own index.
+
 # Results
 
 Some results can be found in the doc folder. The file [benchmark-high-dim-2018-12.ods](doc/benchmark-high-dim-2018-12.ods) contains benchmarks with high-dimensional datasets, such as GloVe-25, GloVe-50, SIFT-128, NYTimes-256 and MNIST-784 (see [ann-benchmark](https://github.com/erikbern/ann-benchmarks)).

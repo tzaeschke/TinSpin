@@ -19,7 +19,7 @@ import ch.ethz.globis.phtree.v16.PhTree16;
 import ch.ethz.globis.phtree.v16hd.PhTree16HD;
 import ch.ethz.globis.tinspin.TestStats;
 
-public class PointPHC_IPP extends Candidate {
+public class PointPHC_IPP extends CandidatePHC {
 	
 	private static final Object O = new Object();
 	
@@ -215,11 +215,8 @@ public class PointPHC_IPP extends Candidate {
 
 	@Override
 	public void getStats(TestStats S) {
-		//phc.printStats(N);
-		//phc.printQuality();
 		PhTreeStats q = phc.getStats();
-		S.setStats(q);
-		//System.out.println(phc.getQuality());
+		setStats(S, q);
 	}
 
 	@Override

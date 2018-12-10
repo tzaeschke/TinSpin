@@ -22,6 +22,7 @@ import java.util.Scanner;
 
 import ch.ethz.globis.phtree.PhTreeSolidF;
 import ch.ethz.globis.phtree.nv.PhTreeNVSolidF.PHREntry;
+import ch.ethz.globis.tinspin.TestInstances;
 import ch.ethz.globis.tinspin.TestStats;
 import ch.ethz.globis.tinspin.util.TestPerf;
 import ch.ethz.globis.tinspin.wrappers.Candidate;
@@ -199,13 +200,13 @@ public class TestRectangleTOUCH extends TestRectangle {
 
 		int param0 = Integer.parseInt(args[0]);
 		
-		TestStats.IDX idx;
+		TestInstances.IDX idx;
 		try {
-			idx = TestStats.IDX.valueOf(args[1]);
+			idx = TestInstances.IDX.valueOf(args[1]);
 		} catch (IllegalArgumentException e) {
 			System.out.println("Index not recognised: " + args[1]);
 			System.out.print("Please choose one of: ");
-			for (TestStats.IDX t: TestStats.IDX.values()) {
+			for (TestInstances.IDX t: TestInstances.IDX.values()) {
 				System.out.print(t.name() + ", ");
 			}
 			return;
@@ -218,7 +219,7 @@ public class TestRectangleTOUCH extends TestRectangle {
 		int seed = (args.length > 6 ? Integer.parseInt(args[6]) : 0);
 		int repeat = (args.length > 7 ? Integer.parseInt(args[7]) : 3);
 		
-		TestStats S = new TestStats(TestStats.TST.TOUCH, idx, n_b, dim, true, param0, eps);
+		TestStats S = new TestStats(TestInstances.TST.TOUCH, idx, n_b, dim, true, param0, eps);
 
 		if (args.length>8) {
 			Path path = FileSystems.getDefault().getPath(args[8]);
@@ -270,7 +271,7 @@ public class TestRectangleTOUCH extends TestRectangle {
 
 		// param1: 0=even, 1=gauss, >1= gauss spots
 		// param2: EPSILON, usually 5 or 10
-		TestStats S = new TestStats(TestStats.TST.TOUCH, TestStats.IDX.CUSTOM, N_B, 3, true, 1, EPS[2]);
+		TestStats S = new TestStats(TestInstances.TST.TOUCH, TestInstances.IDX.CUSTOM, N_B, 3, true, 1, EPS[2]);
 		for (int i = 0; i < 3; i++) {
 			S.setSeed(0);;
 			System.out.println("SEED: " + S.SEEDmsg);

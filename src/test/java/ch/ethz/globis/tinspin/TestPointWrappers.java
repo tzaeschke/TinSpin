@@ -14,8 +14,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import ch.ethz.globis.tinspin.TestStats.IDX;
-import ch.ethz.globis.tinspin.TestStats.TST;
+import ch.ethz.globis.tinspin.TestInstances.IDX;
+import ch.ethz.globis.tinspin.TestInstances.TST;
 
 @RunWith(Parameterized.class)
 public class TestPointWrappers extends AbstractWrapperTest {
@@ -35,10 +35,10 @@ public class TestPointWrappers extends AbstractWrapperTest {
 		//init results
 		//use this as reference for all others
 		//if the naive implementation should be wrong, the others should fail as well
-		expectedCube = createUnitTestStats(candidate, TST.CUBE, N, dims, false, 1.0);
+		expectedCube = createUnitTestStats(candidate, TST.CUBE_P, N, dims, 1.0);
 		new TestRunner(expectedCube).run();
 
-		expectedCluster = createUnitTestStats(candidate, TST.CLUSTER, N, dims, false, 5.0);
+		expectedCluster = createUnitTestStats(candidate, TST.CLUSTER_P, N, dims, 5.0);
 		new TestRunner(expectedCluster).run();
 	}
 	
@@ -51,16 +51,19 @@ public class TestPointWrappers extends AbstractWrapperTest {
 		l.add(new Object[]{IDX.PHCF.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.PHC_IPP.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.QTZ.getCandidateClassNamePoint()});
+		l.add(new Object[]{IDX.QT2Z.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.RSZ.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.STRZ.getCandidateClassNamePoint()});
 		l.add(new Object[]{IDX.CBZ.getCandidateClassNamePoint()});
+		l.add(new Object[]{IDX.KDZ.getCandidateClassNamePoint()});
+		l.add(new Object[]{IDX.CTZ.getCandidateClassNamePoint()});
 		return l;
 	}
 
 	@Test
 	@Parameters
     public void testCube() {
-		TestStats ts = createUnitTestStats(candidate, TST.CUBE, N, dims, false, 1.0);
+		TestStats ts = createUnitTestStats(candidate, TST.CUBE_P, N, dims, 1.0);
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 
@@ -70,7 +73,7 @@ public class TestPointWrappers extends AbstractWrapperTest {
 	@Test
 	@Parameters
     public void testCluster() {
-		TestStats ts = createUnitTestStats(candidate, TST.CLUSTER, N, dims, false, 5.0);
+		TestStats ts = createUnitTestStats(candidate, TST.CLUSTER_P, N, dims, 5.0);
 		TestRunner tr = new TestRunner(ts);
 		tr.run();
 

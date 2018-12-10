@@ -9,30 +9,14 @@ package ch.ethz.globis.tinspin.data;
 import java.util.HashSet;
 import java.util.Random;
 
-import org.tinspin.data.hdf5.TestPointHDF5;
-
 import ch.ethz.globis.tinspin.TestStats;
+
 
 public abstract class TestPoint extends AbstractTest {
 	
 	
 	protected TestPoint(Random R, TestStats S) {
 		super(R, S);
-	}
-	
-	public static TestPoint create(Random R, TestStats S) {
-		switch (S.TEST) {
-		case CLUSTER: return new TestPointCluster(R, S);
-		case CUBE: return new TestPointCube(R, S);
-		case CSV: return new TestPointCSV(R, S);
-		case HDF5: return new TestPointHDF5(R, S);
-		case OSM: return new TestPointOSM(R, S);
-		case SKYLINE: return new TestPointSky(R, S);
-		case TIGER: return new TestPointTiger(R, S);
-		default:
-			break;
-		}
-		return null;
 	}
 	
 	@Override

@@ -20,7 +20,7 @@ import ch.ethz.globis.tinspin.TestStats;
 /**
  * Rectangle PH-Tree that uses the PH-Tree solid/rectangle-float API. 
  */
-public class RectanglePHCF extends Candidate {
+public class RectanglePHCF extends CandidatePHC {
 	
 	private final PhTreeSolidF<Object> phc;
 	private final int dims;
@@ -164,7 +164,7 @@ public class RectanglePHCF extends Candidate {
 	@Override
 	public void getStats(TestStats S) {
 		PhTreeStats q = phc.getInternalTree().getStats();
-		S.setStats(q);
+		setStats(S, q);
 		System.out.println(q.toStringHist());
 	}
 	

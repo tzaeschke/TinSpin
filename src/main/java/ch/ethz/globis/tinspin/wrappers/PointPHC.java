@@ -19,7 +19,7 @@ import ch.ethz.globis.tinspin.TestStats;
  * Test adapter for PH-Tree.
  * 
  */
-public class PointPHC extends Candidate {
+public class PointPHC extends CandidatePHC {
 	
 	private static final Object O = new Object();
 	
@@ -182,7 +182,7 @@ public class PointPHC extends Candidate {
 	@Override
 	public void getStats(TestStats S) {
 		PhTreeStats q = phc.getStats();
-		S.setStats(q);
+		setStats(S, q);
 		System.out.println(q);
 		System.out.println(q.toStringHist());
 	}

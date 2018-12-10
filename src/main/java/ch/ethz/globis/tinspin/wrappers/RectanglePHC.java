@@ -20,7 +20,7 @@ import ch.ethz.globis.phtree.pre.PreProcessorRangeF;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.tinspin.TestStats;
 
-public class RectanglePHC extends Candidate {
+public class RectanglePHC extends CandidatePHC {
 	
 	private final PhTree<Object> phc;
 	private final int dims;
@@ -181,7 +181,7 @@ public class RectanglePHC extends Candidate {
 	@Override
 	public void getStats(TestStats S) {
 		PhTreeStats q = phc.getStats();
-		S.setStats(q);
+		setStats(S, q);
 		System.out.println(q.toStringHist());
 	}
 	

@@ -17,19 +17,6 @@ public abstract class TestRectangle extends AbstractTest {
 		super(R, S);
 	}
 	
-	public static TestRectangle create(Random R, TestStats S) {
-		switch (S.TEST) {
-		case CUBE: return new TestRectangleCube(R, S);
-		case CLUSTER: return new TestRectangleCluster(R, S);
-		case OSM: return new TestRectangleOSM(R, S);
-		case TIGER: return new TestRectangleTiger(R, S);
-		case TOUCH: return new TestRectangleTOUCH(R, S);
-		default:
-			break;
-		}
-		return null;
-	}
-	
 	@Override
 	public final double[][] generateUpdates(int n, double[] data, double[][] ups) {
 		double maxD = maxUpdateDistance();

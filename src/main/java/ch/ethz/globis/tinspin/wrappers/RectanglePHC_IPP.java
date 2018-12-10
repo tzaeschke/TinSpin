@@ -20,7 +20,7 @@ import ch.ethz.globis.phtree.pre.PreProcessorRangeF;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.tinspin.TestStats;
 
-public class RectanglePHC_IPP extends Candidate {
+public class RectanglePHC_IPP extends CandidatePHC {
 	
 	private final PhTreeSolidF<Object> phc;
 	private final int dims;
@@ -208,7 +208,7 @@ public class RectanglePHC_IPP extends Candidate {
 		//phc.printStats(N);
 		//phc.printQuality();
 		PhTreeStats q = phc.getInternalTree().getStats();
-		S.setStats(q);
+		setStats(S, q);
 		//System.out.println(phc.getQuality());
 		System.out.println(q.toStringHist());
 	}

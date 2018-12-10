@@ -12,11 +12,9 @@ import java.util.Date;
 import java.util.Random;
 
 import ch.ethz.globis.phtree.PhTreeHelper;
-import ch.ethz.globis.tinspin.TestStats.IDX;
-import ch.ethz.globis.tinspin.TestStats.TST;
+import ch.ethz.globis.tinspin.TestInstances.IDX;
+import ch.ethz.globis.tinspin.TestInstances.TST;
 import ch.ethz.globis.tinspin.data.AbstractTest;
-import ch.ethz.globis.tinspin.data.TestPoint;
-import ch.ethz.globis.tinspin.data.TestRectangle;
 import ch.ethz.globis.tinspin.util.JmxTools;
 import ch.ethz.globis.tinspin.util.MemTools;
 import ch.ethz.globis.tinspin.util.TestPerf;
@@ -37,7 +35,6 @@ public class TestRunner {
 	private static final boolean DEBUG = PhTreeHelper.DEBUG;
 
 	public static boolean USE_NEW_QUERIES = true;
-	public static long minimumMS = 2000; 
 
 	private final TestStats S;
 	private Random R;
@@ -55,8 +52,8 @@ public class TestRunner {
 			return;
 		}
 
-		final int DIM = 3;
-		final int N = 10_000;
+		final int DIM = 5;
+		final int N = 1_000_000;
 
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QTZ, N, DIM, true, 5);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.QTZ, N, DIM, true, 1.0);
@@ -65,7 +62,7 @@ public class TestRunner {
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.FCT, N, DIM, false, 5.0);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC2, N, 2, false, 1.0);
-		TestStats s0 = new TestStats(TST.HDF5, IDX.KDZ, N, DIM, false, 4.0);
+		TestStats s0 = new TestStats(TST.CLUSTER_P, IDX.XTS, N, DIM, 3.5);
 		//s0.cfgWindowQueryRepeat = 1000;
 		//s0.cfgPointQueryRepeat = 1000000;
 		//s0.cfgUpdateSize = 1000;
@@ -100,25 +97,25 @@ public class TestRunner {
 					+ "[BOXES=false] [param=1.0] [random seed=0]");
 			return;
 		}
-		TST tst;
+		TestHandle tst;
 		try {
-			tst = TST.valueOf(args[0]);
+			tst = TestInstances.TST.valueOf(args[0]);
 		} catch (IllegalArgumentException e) {
 			System.out.println("Test not recognised: " + args[0]);
 			System.out.print("Please choose one of: ");
-			for (TST t: TST.values()) {
+			for (TestInstances.TST t: TestInstances.TST.values()) {
 				System.out.print(t.name() + ", ");
 			}
 			return;
 		}
 
-		IDX idx;
+		IndexHandle idx;
 		try {
-			idx = IDX.valueOf(args[1]);
+			idx = TestInstances.IDX.valueOf(args[1]);
 		} catch (IllegalArgumentException e) {
 			System.out.println("Index not recognised: " + args[0]);
 			System.out.print("Please choose one of: ");
-			for (IDX t: IDX.values()) {
+			for (TestInstances.IDX t: TestInstances.IDX.values()) {
 				System.out.print(t.name() + ", ");
 			}
 			return;
@@ -130,7 +127,7 @@ public class TestRunner {
 		double param0 = args.length > 5 ? Double.parseDouble(args[5]) : 1.0;
 		int seed = args.length > 6 ? Integer.parseInt(args[6]) : 0;
 
-		TestStats s0 = new TestStats(tst, idx, n, dim, box, param0);
+		TestStats s0 = new TestStats(tst, idx, n, dim, box, param0, -1);
 		s0.setSeed(seed);
 		TestRunner test = new TestRunner(s0);
 		TestStats s = test.run();
@@ -241,7 +238,9 @@ public class TestRunner {
 	}
 
 	private int getKnnRepeat(int dims) {
-		if (S.TEST == TestStats.TST.CLUSTER && S.cfgNDims > 5 ) {
+		if ((S.TEST == TestInstances.TST.CLUSTER_P
+				|| S.TEST == TestInstances.TST.CLUSTER_R)
+				&& S.cfgNDims > 5 ) {
 			S.cfgKnnQueryBaseRepeat /= 10;//100;
 		}
 		if (dims <= 3) {
@@ -260,49 +259,43 @@ public class TestRunner {
 		log(date() + "generating data ...");
 		long t1g = System.currentTimeMillis();
 
-		if (ts.isRangeData) {
-			test = TestRectangle.create(R, ts);
-		} else {
-			test = TestPoint.create(R, ts);
-		}
+		test = ts.TEST.createInstance(R, ts);
 
-		switch (ts.TEST) {
-		case CUBE:
-		case CLUSTER:
-		case CSV:
-		case HDF5:
-		case OSM:
-		case TIGER:
-		case TOUCH:
-		case VORTEX: {
+//		switch (ts.TEST) {
+//		case CUBE:
+//		case CLUSTER:
+//		case CSV:
+//		case HDF5:
+//		case OSM:
+//		case TIGER:
+//		case TOUCH:
+//		case VORTEX: {
 			data = test.generate();
-			break;
-		}
-		//case ASPECT:
-		case MBR_SIZE: {
-			//IS_POINT_DATA = PR_TestSize.generate(R, cfgDataLen, N, DIM, 0.001f);
-			//IS_POINT_DATA = PR_TestSize.generate(R, cfgDataLen, N, DIM, 0.02f);
-			//data = PR_TestAspect.generate(R, cfgDataLen, N, DIM, 1e3f);//10.0f);
-			data = test.generate();
-			if (!ts.isRangeData) throw new IllegalStateException();
-			break;
-		}
-		case CUSTOM: {
-			if (S.testClass == null)
-				throw new RuntimeException("No dataset class passed (null)");
-
-			try {
-				// Note: a custom Test class MUST have an empty constructor
-				test = S.testClass.getDeclaredConstructor().newInstance();
-				data = test.generate();
-				break;
-			} catch (Exception e) {
-				throw new RuntimeException("Failed to generate custom dataset.", e);
-			}
-		}
-		default:
-			throw new UnsupportedOperationException("No data for: " + ts.TEST.name());
-		}
+//			break;
+//		}
+//		//case ASPECT:
+//		case MBR_SIZE: {
+//			//data = PR_TestAspect.generate(R, cfgDataLen, N, DIM, 1e3f);//10.0f);
+//			data = test.generate();
+//			if (!ts.isRangeData) throw new IllegalStateException();
+//			break;
+//		}
+//		case CUSTOM: {
+//			if (S.testClass == null)
+//				throw new RuntimeException("No dataset class passed (null)");
+//
+//			try {
+//				// Note: a custom Test class MUST have an empty constructor
+//				test = S.testClass.getDeclaredConstructor().newInstance();
+//				data = test.generate();
+//				break;
+//			} catch (Exception e) {
+//				throw new RuntimeException("Failed to generate custom dataset.", e);
+//			}
+//		}
+//		default:
+//			throw new UnsupportedOperationException("No data for: " + ts.TEST.name());
+//		}
 		long t2g = System.currentTimeMillis();
 		log("data generation finished in: " + (t2g-t1g));
 		S.statTGen = t2g-t1g;
@@ -336,7 +329,7 @@ public class TestRunner {
 		S.statTLoad = (long) toMS(t1, t2);
 		S.statPSLoad = opsPerSec(N, t1, t2);
 
-		if (ts.INDEX == IDX.PHCC) {
+		if (ts.INDEX == TestInstances.IDX.PHCC) {
 			// TODO: add pht-cpp statistics collection
 
 			// memory usage
@@ -378,7 +371,7 @@ public class TestRunner {
 				control = n;
 			}
 			logNLF("*");
-		} while (toMS(t00, timer()) < minimumMS);
+		} while (toMS(t00, timer()) < S.minimumMsPerTest);
 		if (t2 == t1) {
 			t2++;
 		}
@@ -425,7 +418,7 @@ public class TestRunner {
 				control = n;
 			}
 			logNLF("*");
-		} while (toMS(t00, timer()) < minimumMS);
+		} while (toMS(t00, timer()) < S.minimumMsPerTest);
 		if (t2 == t1) {
 			t2++;
 		}
@@ -494,7 +487,7 @@ public class TestRunner {
 				control = dist/repeat/k;
 			}
 			logNLF("*");
-		} while (toMS(t00, timer()) < minimumMS);
+		} while (toMS(t00, timer()) < S.minimumMsPerTest);
 		if (t2 == t1) {
 			t2++;
 		}
@@ -722,7 +715,7 @@ public class TestRunner {
 				control = n;
 			}
 			logNLF("*");
-		} while (toMS(t00, timer()) < minimumMS);
+		} while (toMS(t00, timer()) < S.minimumMsPerTest);
 
 		log("Elements updated: " + n + " -> " + n);
 		log("Update time: " + toMS(t) + " ms -> " + toNSPerOp(t, n) + " ns/update");

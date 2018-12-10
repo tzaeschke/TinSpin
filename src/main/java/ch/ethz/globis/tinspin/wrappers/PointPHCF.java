@@ -13,7 +13,7 @@ import ch.ethz.globis.phtree.PhTreeF.PhQueryF;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.tinspin.TestStats;
 
-public class PointPHCF extends Candidate {
+public class PointPHCF extends CandidatePHC {
 	
 	private final PhTreeF<Object> phc;
 	private final int dims;
@@ -144,7 +144,7 @@ public class PointPHCF extends Candidate {
 		//phc.printStats(N);
 		//phc.printQuality();
 		PhTreeStats q = phc.getInternalTree().getStats();
-		S.setStats(q);
+		setStats(S, q);
 		//System.out.println(phc.getQuality());
 	}
 	

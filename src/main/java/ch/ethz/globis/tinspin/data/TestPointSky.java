@@ -441,16 +441,16 @@ public class TestPointSky extends TestPoint {
 			int N = Integer.parseInt(args[3]);
 			int DIM = Integer.parseInt(args[1]);
 			char c = args[2].charAt(0);
-			TestStats S = new TestStats(null, null, N, DIM, false, -1);
+			TestStats S = new TestStats(null, null, N, DIM, -1);
 			switch (c) {
 			case 'E':
-				S = new TestStats(null, null, N, DIM, false, 2.0);
+				S = new TestStats(null, null, N, DIM, 2.0);
 				break;
 			case 'C':
-				S = new TestStats(null, null, N, DIM, false, 1.0);
+				S = new TestStats(null, null, N, DIM, 1.0);
 				break;
 			case 'A':
-				S = new TestStats(null, null, N, DIM, false, 3.0);
+				S = new TestStats(null, null, N, DIM, 3.0);
 				break;
 			}
 			TestPointSky t = new TestPointSky(new Random(0), S);
@@ -466,7 +466,7 @@ public class TestPointSky extends TestPoint {
 		} else {
 			int N = Integer.parseInt(args[2]);
 			int DIM = Integer.parseInt(args[0]);
-			TestStats S = new TestStats(null, null, N, DIM, false, -1);
+			TestStats S = new TestStats(null, null, N, DIM, -1);
 			TestPointSky t = new TestPointSky(new Random(0), S);
 			t.GenerateData(DIM, args[1].charAt(0), N, args[3]);
 		}

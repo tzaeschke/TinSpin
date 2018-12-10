@@ -15,12 +15,9 @@ import ch.ethz.globis.phtree.PhTreeSolidF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhEntrySF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhIteratorSF;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhQuerySF;
+import ch.ethz.globis.tinspin.TestInstances;
 import ch.ethz.globis.tinspin.TestStats;
-import ch.ethz.globis.tinspin.TestStats.IDX;
-import ch.ethz.globis.tinspin.TestStats.TST;
 import ch.ethz.globis.tinspin.data.AbstractTest;
-import ch.ethz.globis.tinspin.data.TestPoint;
-import ch.ethz.globis.tinspin.data.TestRectangle;
 import ch.ethz.globis.tinspin.wrappers.Candidate;
 import ch.ethz.globis.tinspin.wrappers.RectanglePHCF;
 
@@ -292,7 +289,7 @@ public class TestRunnerOV {
 		final int N = r.N;
 						
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.RSS, N, DIM, true, 1.0);
-		TestStats s0 = new TestStats(TST.CUBE, IDX.PHCF, N, DIM, true, 1.);
+		TestStats s0 = new TestStats(TestInstances.TST.CUBE_R, TestInstances.IDX.PHCF, N, DIM, 1.);
 		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.PHC, N, DIM, false, 3.4);
 		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHCF, N, DIM, false, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, false, 1.0);
@@ -553,35 +550,9 @@ public class TestRunnerOV {
 		log(time() + "generating data ...");
 		long t1g = System.currentTimeMillis();
 
-		if (ts.isRangeData) {
-			test = TestRectangle.create(R, ts);
-		} else {
-			test = TestPoint.create(R, ts);
-		}
+		test = ts.TEST.createInstance(R, ts);
 		
-		switch (ts.TEST) {
-		case CUBE:
-		case CLUSTER:
-		case CSV:
-		case OSM:
-		case TIGER:
-		case TOUCH:
-		case VORTEX: {
-			data = test.generate();
-			break;
-		}
-		//case ASPECT:
-		case MBR_SIZE: {
-			//IS_POINT_DATA = PR_TestSize.generate(R, cfgDataLen, N, DIM, 0.001f);
-			//IS_POINT_DATA = PR_TestSize.generate(R, cfgDataLen, N, DIM, 0.02f);
-			//data = PR_TestAspect.generate(R, cfgDataLen, N, DIM, 1e3f);//10.0f);
-			data = test.generate();
-			if (!ts.isRangeData) throw new IllegalStateException();
-			break;
-		}
-		default:
-			throw new UnsupportedOperationException("No data for: " + ts.TEST.name());
-		}
+		data = test.generate();
 		long t2g = System.currentTimeMillis();
 		log("data generation finished in: " + (t2g-t1g));
 		//S.statTGen = t2g-t1g;

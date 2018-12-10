@@ -1,3 +1,8 @@
+2018-12-10
+==========
+- (TZ) Modularization, new base module tinspin-common
+- (TZ) Added new Example
+
 2018-11-23
 ==========
 - (TZ) Added (very basic!) import for HDF5 files.
