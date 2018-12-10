@@ -40,7 +40,7 @@ public class PointPHC extends Candidate {
 	 * @param ts TestStats
 	 */
 	public PointPHC(TestStats ts) {
-//		phc = new PhTree13<Object>(ts.cfgNDims);
+//		phc = new PhTree11<Object>(ts.cfgNDims);
 		phc = PhTree.create(ts.cfgNDims);
 //		Node.AHC_LHC_BIAS = 1*1000*1000;
 //		Node.NT_THRESHOLD = 2*1000*1000;

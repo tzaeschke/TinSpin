@@ -124,6 +124,12 @@ public class PointCritBitZ extends Candidate {
 		return n;
 	}
 
+	@Override
+	public boolean supportsWindowQuery() {
+		return dims <= 10;
+	}
+	
+	
 	private long[] getEntryDPR(long[] e, int pos) {
 		for (int d = 0; d < dims; d++) {
 			e[d] = BitTools.toSortableLong( data[pos*dims+d] + OFS );

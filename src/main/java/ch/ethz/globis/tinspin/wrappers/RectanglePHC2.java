@@ -18,7 +18,6 @@ import ch.ethz.globis.phtree.PhTree.PhQuery;
 import ch.ethz.globis.phtree.PhTreeSolidF.PhEntrySF;
 import ch.ethz.globis.phtree.pre.PreProcessorRangeF;
 import ch.ethz.globis.phtree.util.PhTreeStats;
-import ch.ethz.globis.phtree.v11.PhTree11;
 import ch.ethz.globis.tinspin.TestStats;
 
 public class RectanglePHC2 extends Candidate {
@@ -46,8 +45,8 @@ public class RectanglePHC2 extends Candidate {
 	public RectanglePHC2(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
-		//phc = PhTree.create(2*dims);
-		phc = new PhTree11<>(2*dims); 
+		phc = PhTree.create(2*dims);
+		//phc = new PhTree11<>(2*dims); 
 		this.pre = new PreProcessorRangeF.IEEE(dims);
 		//this.pre = new PreProcessorRangeF.IPP(dims, 10e9);
 		//distFn = new PhDistanceSFCenterDist(pre, dims);
