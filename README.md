@@ -8,6 +8,9 @@ TinSpin provides several dataset generators for point data and rectangle data. T
 
 The framework was originally developed at ETH Zurich in the GlobIS group. It is now maintained by Tilmann Zäschke.
 
+If you want to reference this project, please consider referencing the [PH-Tree](http://www.phtree.org) instead, as TinSpin was originally developed to benchmark the PH-Tree and because there is currently no TinSpin publication: _The PH-tree: A Space-Efficient Storage Structure and Multi-Dimensional Index, T. Zäschke, C. Zimmerli and M.C. Norrie, Proc. of the 2014 ACM SIGMOD Intl. Conf. on Management of Data._
+ 
+
 # Changelog
 
 2018-12: 

@@ -65,12 +65,7 @@
 			<artifactId>tinspin-indexes</artifactId>
 			<version>[1.7,)</version>
 		</dependency>
-<!-- 		<dependency>
-			<groupId>org.tinspin</groupId>
-			<artifactId>tinspin-third-party-impl</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
- -->	</dependencies>
+	</dependencies>
   
 	<build>
 		<plugins>
