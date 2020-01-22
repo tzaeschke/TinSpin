@@ -23,7 +23,9 @@ public class TestManager {
 		long t1 = System.currentTimeMillis();
 		try {
 	
-			int[] sizesQuery = {1, 10, 100, 1000};//, 10000};
+	        TestManagerRMI.PROCESS_OPTIONS = "-Xmx24G -XX:+UseConcMarkSweepGC";
+
+	        int[] sizesQuery = {1, 10, 100, 1000};//, 10000};
 			double[] sizesData = new double[]{0.5, 1};//, 2.5, 5, 10, 25, 50};
 			//double[] sizesData = new double[]{0.001, 0.005, 0.01, 0.05};
 

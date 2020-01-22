@@ -17,7 +17,9 @@ import ch.ethz.globis.tinspin.util.rmi.TestRunnerLocal.NoSecurityManager;
 
 public class TestManagerRMI {
 
-	private static final boolean USE_RMI = true;
+	public static String PROCESS_OPTIONS = "-Xmx24G -XX:+UseConcMarkSweepGC"; 
+    
+    private static final boolean USE_RMI = true;
 	
 	static final String RMI_NAME = "TestRunnerRMI";
 	
@@ -45,7 +47,7 @@ public class TestManagerRMI {
 		System.out.println("Manager: starting task.");
 		//TestProcessLauncher.launchProcess("rmigegistry", new String[]{});
 		System.setSecurityManager (new NoSecurityManager());
-		Process p = TestProcessLauncher.launchProcess("-Xmx24G -XX:+UseConcMarkSweepGC", 
+		Process p = TestProcessLauncher.launchProcess(PROCESS_OPTIONS, 
 				TestRunnerLocal.class, new String[]{
 			stats0.INDEX.name(), stats0.TEST.name(), Integer.toString(stats0.getN())});
 		try {

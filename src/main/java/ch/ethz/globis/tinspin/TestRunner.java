@@ -56,6 +56,8 @@ public class TestRunner {
 		final int N = 1_000_000;
 
 		// Suffix '_P' tests point data, '_R' tests rectangle data
+        // *******************************************************
+		
 		//TestStats s0 = new TestStats(TST.CLUSTER_R, IDX.QTZ, N, DIM, 5);
 		//TestStats s0 = new TestStats(TST.CUBE_R, IDX.QTZ, N, DIM, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM_R, IDX.PHC, N, 2, 1.0);
@@ -65,6 +67,7 @@ public class TestRunner {
 		//TestStats s0 = new TestStats(TST.OSM_P, IDX.PHC2, N, 2, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE_P, IDX.PHC, N, DIM, 3.5);
 		TestStats s0 = new TestStats(TST.CLUSTER_P, IDX.PHC, N, DIM, 3.5);
+
 		//s0.cfgWindowQueryRepeat = 1000;
 		//s0.cfgPointQueryRepeat = 1000000;
 		//s0.cfgUpdateSize = 1000;
