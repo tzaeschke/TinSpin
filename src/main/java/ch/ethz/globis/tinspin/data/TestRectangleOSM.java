@@ -18,7 +18,7 @@ public class TestRectangleOSM extends TestRectangle {
 
 	private static final String dbName = "OsmBufferDB_R";
 
-	protected TestRectangleOSM(Random R, TestStats S) {
+	public TestRectangleOSM(Random R, TestStats S) {
 		super(R, S);
 	}
 

@@ -18,7 +18,7 @@ public class TestPointOSM extends TestPoint {
 
 	private static final String dbName = "OsmBufferDB_P";
 
-	protected TestPointOSM(Random R, TestStats S) {
+	public TestPointOSM(Random R, TestStats S) {
 		super(R, S);
 	}
 

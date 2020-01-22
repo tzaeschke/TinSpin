@@ -52,22 +52,24 @@ public class TestRunner {
 			return;
 		}
 
-		final int DIM = 5;
+		final int DIM = 3;
 		final int N = 1_000_000;
 
-		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.QTZ, N, DIM, true, 5);
-		//TestStats s0 = new TestStats(TST.CUBE, IDX.QTZ, N, DIM, true, 1.0);
-		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC, N, 2, true, 1.0);
-		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, true, 1.0E-5);
-		//TestStats s0 = new TestStats(TST.CLUSTER, IDX.FCT, N, DIM, false, 5.0);
-		//TestStats s0 = new TestStats(TST.CUBE, IDX.PHC, N, DIM, false, 1.0);
-		//TestStats s0 = new TestStats(TST.OSM, IDX.PHC2, N, 2, false, 1.0);
-		TestStats s0 = new TestStats(TST.CLUSTER_P, IDX.XTS, N, DIM, 3.5);
+		// Suffix '_P' tests point data, '_R' tests rectangle data
+		//TestStats s0 = new TestStats(TST.CLUSTER_R, IDX.QTZ, N, DIM, 5);
+		//TestStats s0 = new TestStats(TST.CUBE_R, IDX.QTZ, N, DIM, 1.0);
+		//TestStats s0 = new TestStats(TST.OSM_R, IDX.PHC, N, 2, 1.0);
+		//TestStats s0 = new TestStats(TST.CUBE_R, IDX.PHC, N, DIM, 1.0E-5);
+		//TestStats s0 = new TestStats(TST.CLUSTER_P, IDX.FCT, N, DIM, 5.0);
+		//TestStats s0 = new TestStats(TST.CUBE_P, IDX.PHC, N, DIM, 1.0);
+		//TestStats s0 = new TestStats(TST.OSM_P, IDX.PHC2, N, 2, 1.0);
+		//TestStats s0 = new TestStats(TST.CUBE_P, IDX.PHC, N, DIM, 3.5);
+		TestStats s0 = new TestStats(TST.CLUSTER_P, IDX.PHC, N, DIM, 3.5);
 		//s0.cfgWindowQueryRepeat = 1000;
 		//s0.cfgPointQueryRepeat = 1000000;
 		//s0.cfgUpdateSize = 1000;
 
-		//s0.cfgWindowQuerySize = 1;
+		//s0.cfgWindowQuerySize = 10;
 		//s0.cfgWindowQueryRepeat = 10_000;
 
 		//s0.cfgWindowQuerySize = 1;
@@ -357,6 +359,7 @@ public class TestRunner {
 		long t1, t2;
 		//Use result count from first run as control value
 		int control = -1;
+		int nTotalRepeat = 0;
 		do {
 			JmxTools.reset();
 			t1 = timer();
@@ -371,6 +374,7 @@ public class TestRunner {
 				control = n;
 			}
 			logNLF("*");
+			nTotalRepeat += repeat;
 		} while (toMS(t00, timer()) < S.minimumMsPerTest);
 		if (t2 == t1) {
 			t2++;
@@ -379,7 +383,8 @@ public class TestRunner {
 		log("n/q=" + n/(double)lower.length);
 		log("Query time: " + toMS(t1, t2) + " ms -> " + 
 				toMS(t1, t2)/(double)repeat + " ms/q -> " +
-				toNSPerOp(t1, t2, n) + " ns/q/r  (n=" + n + ")");
+				toNSPerOp(t1, t2, repeat) + " ns/q/r  (n=" + n + ")" +
+				"; total qieries: " + nTotalRepeat);
 		if (round == 0) {
 			S.statTq1 = (long) toMS(t1, t2);
 			S.statTq1E = toNSPerOp(t1, t2, repeat);

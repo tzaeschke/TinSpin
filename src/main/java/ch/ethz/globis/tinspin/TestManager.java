@@ -24,11 +24,22 @@ public class TestManager {
 		try {
 	
 			int[] sizesQuery = {1, 10, 100, 1000};//, 10000};
-			//double[] sizesData = new double[]{0.5, 1};//, 2.5, 5, 10, 25, 50};
-			double[] sizesData = new double[]{0.001, 0.005, 0.01, 0.05};
+			double[] sizesData = new double[]{0.5, 1};//, 2.5, 5, 10, 25, 50};
+			//double[] sizesData = new double[]{0.001, 0.005, 0.01, 0.05};
 
+			sizesData = new double[]{0.1, 0.5, 1, 2.5, 5, 10, 25, 50};
+			testSeries(TST.CLUSTER_P, IDX.CBZ, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER_P, IDX.RSZ, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER_P, IDX.STRZ, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER_P, IDX.PHC, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER_P, IDX.PHC2, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER_P, IDX.PHC_IPP, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER_P, IDX.QTZ, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER_P, IDX.QT2Z, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER_P, IDX.KDZ, 3, 5.0, sizesData);
+			testSeries(TST.CLUSTER_P, IDX.XTS, 3, 5.0, sizesData);
+			
 //			double p1;
-//
 //			p1 = 2.0; //25 dim
 //			sizesData = new double[]{0.001, 0.005, 0.01, 0.05, 0.1, 0.5, 1.0, 5.0};//, 2.5, 5, 10, 25, 50};
 //			testSeries(TST.HDF5, IDX.CTZ, 3, p1, sizesData);
@@ -99,17 +110,21 @@ public class TestManager {
 //			testSeriesWQS(TST.CLUSTER, IDX.RSZ, 3, 5.0, 1, sizesQuery);
 //			testSeriesWQS(TST.CLUSTER, IDX.QT0Z, 3, 5.0, 1, sizesQuery);
 //			testSeriesWQS(TST.CLUSTER, IDX.QT2Z, 3, 5.0, 1, sizesQuery);
-//			testSeriesWQS(TST.CLUSTER, IDX.PHC2, 3, 5.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CLUSTER_P, IDX.PHC2, 3, 5.0, 1, sizesQuery);
 //			testSeriesWQS(TST.CLUSTER, IDX.PHC_IPP, 3, 5.0, 1, sizesQuery);
 //			testSeriesWQS(TST.CLUSTER, IDX.KDZ, 3, 5.0, 1, sizesQuery);
 
-//			testSeries(TST.CLUSTER, IDX.RSZ, 3, 5.0, sizesData);
-//			testSeries(TST.CLUSTER, IDX.STRZ, 3, 5.0, sizesData);
-//			testSeries(TST.CLUSTER, IDX.PHC2, 3, 5.0, sizesData);
-//			testSeries(TST.CLUSTER, IDX.PHC_IPP, 3, 5.0, sizesData);
-//			testSeries(TST.CLUSTER, IDX.QT0Z, 3, 5.0, sizesData);
-//			testSeries(TST.CLUSTER, IDX.QT2Z, 3, 5.0, sizesData);
-//			testSeries(TST.CLUSTER, IDX.KDZ, 3, 5.0, sizesData);
+			sizesData = new double[]{0.1, 0.5, 1, 2.5, 5, 10, 25, 50};
+//			testSeries(TST.CLUSTER_P, IDX.CBZ, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.RSZ, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.STRZ, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.PHC, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.PHC2, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.PHC_IPP, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.QTZ, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.QT2Z, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.KDZ, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.XTS, 3, 5.0, sizesData);
 //			
 //			suiteDims(TST.CLUSTER, IDX.RSZ, 1, 5.0);
 //			suiteDims(TST.CLUSTER, IDX.STRZ, 1, 5.0);
@@ -309,9 +324,9 @@ public class TestManager {
 //			suiteDims(TST.CUBE, IDX.KD_LEVY, 1, 1.0);
 //			suiteDims(TST.CUBE, IDX.KD_SAVA, 1, 1.0);
 //			suiteDims(TST.CUBE, IDX.KDZ, 1, 1.0);
-			suiteDims(TST.CUBE_P, IDX.QTZ, 1, 1.0);
-			suiteDims(TST.CUBE_P, IDX.QT2Z, 1, 1.0);
-			suiteDims(TST.CUBE_P, IDX.XTS, 1, 1.0);
+//			suiteDims(TST.CUBE_P, IDX.QTZ, 1, 1.0);
+//			suiteDims(TST.CUBE_P, IDX.QT2Z, 1, 1.0);
+//			suiteDims(TST.CUBE_P, IDX.XTS, 1, 1.0);
 			
 //			suiteDims(TST.CLUSTER, IDX.CBF, 1, 3.4);
 //OLD			suiteDims(TST.CLUSTER, IDX.CBZ, 1, 3.4);
@@ -338,19 +353,22 @@ public class TestManager {
 //			suiteDims(TST.CLUSTER, IDX.XTS, 1, 3.5);
 
 			
-			sizesQuery = new int[]{1, 10, 100, 1000, 10000};
-			testSeriesWQS(TST.CUBE_P, IDX.CBZ, 3, 1.0, 1, sizesQuery);
+//			sizesQuery = new int[]{1, 10, 100, 1000, 10000};
+//			testSeriesWQS(TST.CUBE_P, IDX.CBZ, 3, 1.0, 1, sizesQuery);
 //			testSeriesWQS(TST.CUBE, IDX.KD_LEVY, 3, 1.0, 1, sizesQuery);
 //			testSeriesWQS(TST.CUBE, IDX.KD_SAVA, 3, 1.0, 1, sizesQuery);
-			testSeriesWQS(TST.CUBE_P, IDX.KDZ, 3, 1.0, 1, sizesQuery);
-			testSeriesWQS(TST.CUBE_P, IDX.PHC2, 3, 1.0, 1, sizesQuery);
-			testSeriesWQS(TST.CUBE_P, IDX.PHC_IPP, 3, 1.0, 1, sizesQuery);
-			testSeriesWQS(TST.CUBE_P, IDX.QT2Z, 3, 1.0, 1, sizesQuery);
-			testSeriesWQS(TST.CUBE_P, IDX.QTZ, 3, 1.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CUBE_P, IDX.KDZ, 3, 1.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CUBE_P, IDX.PHC2, 3, 1.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CUBE_P, IDX.PHC_IPP, 3, 1.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CUBE_P, IDX.QT2Z, 3, 1.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CUBE_P, IDX.QTZ, 3, 1.0, 1, sizesQuery);
 //			testSeriesWQS(TST.CUBE, IDX.RSS, 3, 1.0, 1, sizesQuery);
-			testSeriesWQS(TST.CUBE_P, IDX.RSZ, 3, 1.0, 1, sizesQuery);
-			testSeriesWQS(TST.CUBE_P, IDX.STRZ, 3, 1.0, 1, sizesQuery);
-			testSeriesWQS(TST.CUBE_P, IDX.XTS, 3, 1.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CUBE_P, IDX.RSZ, 3, 1.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CUBE_P, IDX.STRZ, 3, 1.0, 1, sizesQuery);
+//			testSeriesWQS(TST.CUBE_P, IDX.XTS, 3, 1.0, 1, sizesQuery);
+//
+//			suiteDims(TST.CUBE_P, IDX.QT2Z, 1, 1.0);
+//			suiteDims(TST.CUBE_P, IDX.XTS, 1, 1.0);
 
 //			testSeriesWQS(TST.OSM, IDX.CBZ, 2, 1.0, 1, sizesQuery);
 //			testSeriesWQS(TST.OSM, IDX.KD_LEVY, 2, 1.0, 1, sizesQuery);
@@ -408,27 +426,27 @@ public class TestManager {
 //			testSeriesWQSR(TST.CLUSTER, IDX.RSZ, 3, 5.0, 1, sizesQuery);
 //			testSeriesWQSR(TST.CLUSTER, IDX.STRZ, 3, 5.0, 1, sizesQuery);
 
-			sizesData = new double[]{0.5, 1, 2.5, 5, 10, 25, 50};
-			testSeriesR(TST.CUBE_R, IDX.PHC2, 3, 1.0, sizesData);
-			testSeriesR(TST.CUBE_R, IDX.PHC_IPP, 3, 1.0, sizesData);
+//			sizesData = new double[]{0.5, 1, 2.5, 5, 10, 25, 50};
+//			testSeriesR(TST.CUBE_R, IDX.PHC2, 3, 1.0, sizesData);
+//			testSeriesR(TST.CUBE_R, IDX.PHC_IPP, 3, 1.0, sizesData);
 //			testSeriesR(TST.CUBE, IDX.RSS, 3, 1.0, sizesData);
-			testSeriesR(TST.CUBE_R, IDX.RSZ, 3, 1.0, sizesData);
-			testSeriesR(TST.CUBE_R, IDX.STRZ, 3, 1.0, sizesData);
-			testSeriesR(TST.CUBE_R, IDX.QTZ, 3, 1.0, sizesData);
+//			testSeriesR(TST.CUBE_R, IDX.RSZ, 3, 1.0, sizesData);
+//			testSeriesR(TST.CUBE_R, IDX.STRZ, 3, 1.0, sizesData);
+//			testSeriesR(TST.CUBE_R, IDX.QTZ, 3, 1.0, sizesData);
 
-			suiteDimsR(TST.CUBE_R, IDX.PHC2, 1, 1.0);
-			suiteDimsR(TST.CUBE_R, IDX.PHC_IPP, 1, 1.0);
+//			suiteDimsR(TST.CUBE_R, IDX.PHC2, 1, 1.0);
+//			suiteDimsR(TST.CUBE_R, IDX.PHC_IPP, 1, 1.0);
 //			suiteDimsR(TST.CUBE, IDX.RSS, 1, 1.0);
-			suiteDimsR(TST.CUBE_R, IDX.RSZ, 1, 1.0);
-			suiteDimsR(TST.CUBE_R, IDX.STRZ, 1, 1.0);
-			suiteDimsR(TST.CUBE_R, IDX.QTZ, 1, 1.0);
+//			suiteDimsR(TST.CUBE_R, IDX.RSZ, 1, 1.0);
+//			suiteDimsR(TST.CUBE_R, IDX.STRZ, 1, 1.0);
+//			suiteDimsR(TST.CUBE_R, IDX.QTZ, 1, 1.0);
 
-			testSeriesR(TST.CLUSTER_R, IDX.PHC2, 3, 5.0, sizesData);
-			testSeriesR(TST.CLUSTER_R, IDX.PHC_IPP, 3, 5.0, sizesData);
+//			testSeriesR(TST.CLUSTER_R, IDX.PHC2, 3, 5.0, sizesData);
+//			testSeriesR(TST.CLUSTER_R, IDX.PHC_IPP, 3, 5.0, sizesData);
 //			testSeriesR(TST.CLUSTER, IDX.RSS, 3, 5.0, sizesData);
-			testSeriesR(TST.CLUSTER_R, IDX.RSZ, 3, 5.0, sizesData);
-			testSeriesR(TST.CLUSTER_R, IDX.STRZ, 3, 5.0, sizesData);
-			testSeriesR(TST.CLUSTER_R, IDX.QTZ, 3, 5.0, sizesData);
+//			testSeriesR(TST.CLUSTER_R, IDX.RSZ, 3, 5.0, sizesData);
+//			testSeriesR(TST.CLUSTER_R, IDX.STRZ, 3, 5.0, sizesData);
+//			testSeriesR(TST.CLUSTER_R, IDX.QTZ, 3, 5.0, sizesData);
 
 //			suiteDimsR(TST.CLUSTER, IDX.PHC, 1, 5.0);
 //			suiteDimsR(TST.CLUSTER, IDX.PHC_IPP, 1, 5.0);
@@ -463,6 +481,7 @@ public class TestManager {
 		case CBZ:
 		case QTZ:
 		case QT0Z:
+		case QT2Z:
 		default:
 			testP(test, idx, 24, n, p1);
 //			testP(test, idx, 28, n, p1);

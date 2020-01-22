@@ -6,7 +6,9 @@
  */
 package ch.ethz.globis.tinspin.wrappers;
 
+import ch.ethz.globis.phtree.PhDistance;
 import ch.ethz.globis.phtree.PhDistanceF;
+import ch.ethz.globis.phtree.PhDistanceF_L1;
 import ch.ethz.globis.phtree.PhTree;
 import ch.ethz.globis.phtree.PhTree.PhKnnQuery;
 import ch.ethz.globis.phtree.PhTree.PhQuery;
@@ -25,9 +27,10 @@ public class PointPHC extends CandidatePHC {
 	
 	private final PhTree<Object> phc;
 	private final int dims;
-	private int N;
+    private int N;
 	private double[] data;
 	private PhQuery<Object> query;
+    private final PhDistance distanceKnn;
 	private long[] qMin;
 	private long[] qMax;
 	private PhKnnQuery<Object> knnQuery;
@@ -40,15 +43,17 @@ public class PointPHC extends CandidatePHC {
 	 * @param ts TestStats
 	 */
 	public PointPHC(TestStats ts) {
+		this.N = ts.cfgNEntries;
+		this.dims = ts.cfgNDims;
+		this.S = ts;
+        distanceKnn = PhDistanceF.THIS;
+        //distanceKnn = PhDistanceF_L1.THIS;
 //		phc = new PhTree11<Object>(ts.cfgNDims);
 		phc = PhTree.create(ts.cfgNDims);
 //		Node.AHC_LHC_BIAS = 1*1000*1000;
 //		Node.NT_THRESHOLD = 2*1000*1000;
 //		PhTree11.HCI_ENABLED = true;
 //		TestRunner.USE_NEW_QUERIES = false;
-		this.N = ts.cfgNEntries;
-		this.dims = ts.cfgNDims;
-		this.S = ts;
 		qMin = new long[dims];
 		qMax = new long[dims];
 		knnCenter = new long[dims];
@@ -58,7 +63,7 @@ public class PointPHC extends CandidatePHC {
 	
 	@Override
 	public void load(double[] data, int dims) {
-		int skipped = 0;
+		int nDuplicates = 0;
 		long[] buf = new long[dims];
 		for (int i = 0; i < N; i++) {
 			for (int d = 0; d < dims; d++) {
@@ -66,15 +71,15 @@ public class PointPHC extends CandidatePHC {
 			}
 			if (phc.put(buf, O) != null) {
 				//throw new IllegalArgumentException("i=" + i + " " + Arrays.toString(buf));
-				skipped++;
+				nDuplicates++;
 			}
 		}
-		this.data = data;
-		if (skipped != 0) {
-			System.err.println("Skipped: " + skipped);
-			N -= skipped;
-			S.cfgNEntries -= skipped;
+        if (nDuplicates > 0) {
+            System.err.println("**************************   DUPLICATES FOUND: " + nDuplicates);
+			N -= nDuplicates;
+			S.cfgNEntries -= nDuplicates;
 		}
+        this.data = data;
 	}
 
 	@Override
@@ -132,8 +137,6 @@ public class PointPHC extends CandidatePHC {
 			query.nextValue();
 			n++;
 		}
-//		List<PhEntry<Object>> it = phc.queryAll(min2, max2);
-//		int n = it.size();
 		//log("q=" + Arrays.toString(q));
 		return n;
 	}
@@ -141,11 +144,7 @@ public class PointPHC extends CandidatePHC {
 	@Override
 	public double knnQuery(int k, double[] center) {
 		f2l(center, knnCenter);
-		if (knnQuery == null) {
-			knnQuery = phc.nearestNeighbour(k, PhDistanceF.THIS, null, knnCenter);
-		} else {
-			knnQuery.reset(k, PhDistanceF.THIS, knnCenter);
-		}
+        knnQuery.reset(k, distanceKnn, knnCenter);
 		double ret = 0;
 		double[] v2 = new double[dims];
 		int n = 0;
@@ -208,6 +207,6 @@ public class PointPHC extends CandidatePHC {
 	
 	@Override
 	public String toString() {
-		return phc.toString(); 
+        return phc.toString() + "dist=" + distanceKnn;
 	}
 }
