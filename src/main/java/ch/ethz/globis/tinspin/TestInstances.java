@@ -27,6 +27,7 @@ import ch.ethz.globis.tinspin.wrappers.PointKDZ;
 import ch.ethz.globis.tinspin.wrappers.PointPHC;
 import ch.ethz.globis.tinspin.wrappers.PointPHC2;
 import ch.ethz.globis.tinspin.wrappers.PointPHCF;
+import ch.ethz.globis.tinspin.wrappers.PointPHCMMF;
 import ch.ethz.globis.tinspin.wrappers.PointPHC_IPP;
 import ch.ethz.globis.tinspin.wrappers.PointQuad0Z;
 import ch.ethz.globis.tinspin.wrappers.PointQuadZ;
@@ -59,8 +60,10 @@ public class TestInstances {
 		PHC(PointPHC.class.getName(), RectanglePHC.class.getName()),
 		/** PH-Tree with different preprocessor */
 		PHC2(PointPHC2.class.getName(), RectanglePHC2.class.getName()),
-		/** PH-Tree based on PhTreeF */
-		PHCF(PointPHCF.class.getName(), RectanglePHCF.class.getName()), 
+        /** PH-Tree based on PhTreeF */
+        PHCF(PointPHCF.class.getName(), RectanglePHCF.class.getName()), 
+        /** PH-Tree multi-map based on PhTreeMultiMapF */
+        PHCMMF(PointPHCMMF.class.getName(), ""), 
 		/** PH-Tree with Integer pre-processor. */
 		PHC_IPP(PointPHC_IPP.class.getName(), RectanglePHC_IPP.class.getName()),
 		/** CritBit */

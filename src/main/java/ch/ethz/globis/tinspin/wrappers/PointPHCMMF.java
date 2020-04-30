@@ -6,31 +6,31 @@
  */
 package ch.ethz.globis.tinspin.wrappers;
 
-import ch.ethz.globis.phtree.PhDistanceF;
-import ch.ethz.globis.phtree.PhTreeF;
-import ch.ethz.globis.phtree.PhTreeF.PhKnnQueryF;
-import ch.ethz.globis.phtree.PhTreeF.PhQueryF;
+import ch.ethz.globis.phtree.PhDistanceMMF;
+import ch.ethz.globis.phtree.PhTreeMultiMapF;
+import ch.ethz.globis.phtree.PhTreeMultiMapF.PhKnnQueryMMF;
+import ch.ethz.globis.phtree.PhTreeMultiMapF.PhQueryMMF;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.tinspin.TestStats;
 
-public class PointPHCF extends CandidatePHC {
+public class PointPHCMMF extends CandidatePHC {
 	
-	private final PhTreeF<Object> phc;
+	private final PhTreeMultiMapF<Object> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private PhKnnQueryF<Object> knnQuery;
-    private PhQueryF<Object> pit;
-    
+	private PhKnnQueryMMF<Object> knnQuery;
+    private PhQueryMMF<Object> pit;
+	
 	/**
 	 * Setup of a native PH tree
 	 * 
 	 * @param ts test stats
 	 */
-	public PointPHCF(TestStats ts) {
+	public PointPHCMMF(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
-		phc = PhTreeF.create(dims);
+		phc = PhTreeMultiMapF.create(dims);
 		knnQuery = phc.nearestNeighbour(1, new double[dims]);
 	}
 	
@@ -42,7 +42,7 @@ public class PointPHCF extends CandidatePHC {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			if (phc.put(buf, O) != null) {
+			if (phc.put(buf, i, O) != null) {
 				throw new IllegalArgumentException();
 			}
 		}
@@ -58,12 +58,14 @@ public class PointPHCF extends CandidatePHC {
 	public int pointQuery(Object qA) {
 		int n = 0;
 		for (double[] q: (double[][])qA) {
-			if (phc.contains(q)) {
+            // TODO This does not work
+			if (phc.contains(q, -1)) {
 				n++;
 			}
 			//log("q=" + Arrays.toString(q));
 		}
-		return n;
+		// TODO return n;
+		return -((double[][])qA).length;
 	}
 
 	@Override
@@ -71,12 +73,12 @@ public class PointPHCF extends CandidatePHC {
 		int n = 0;
 		double[] l = new double[dims];
 		for (int i = 0; i < N>>1; i++) {
-			n += phc.remove(getEntry(l, i)) != null ? 1 : 0;
-			n += phc.remove(getEntry(l, N-i-1)) != null ? 1 : 0;
+			n += phc.remove(getEntry(l, i), i) != null ? 1 : 0;
+			n += phc.remove(getEntry(l, N-i-1), N-i-1) != null ? 1 : 0;
 		}
 		if ((N%2) != 0) {
 			int i = (N>>1);
-			n += phc.remove(getEntry(l, i)) != null ? 1 : 0;
+			n += phc.remove(getEntry(l, i), i) != null ? 1 : 0;
 		}
 		return n;
 	}
@@ -100,8 +102,6 @@ public class PointPHCF extends CandidatePHC {
 			pit.next();
 			n++;
 		}
-//		int n = ((PhTree7)phc).queryAll(min2, max2).size();
-		//log("q=" + Arrays.toString(q));
 		return n;
 	}
 	
@@ -112,7 +112,7 @@ public class PointPHCF extends CandidatePHC {
 
 	@Override
 	public double knnQuery(int k, double[] center) {
-		knnQuery.reset(k, PhDistanceF.THIS, center);
+		knnQuery.reset(k, PhDistanceMMF.THIS, center);
 		double ret = 0;
 		int n = 0;
 		while (knnQuery.hasNext() && n++ < k) {
@@ -134,7 +134,7 @@ public class PointPHCF extends CandidatePHC {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public PhTreeF<Object> getNative() {
+	public PhTreeMultiMapF<Object> getNative() {
 		return phc;
 	}
 
@@ -153,11 +153,13 @@ public class PointPHCF extends CandidatePHC {
 		for (int i = 0; i < updateTable.length; ) {
 			double[] p1 = updateTable[i++];
 			double[] p2 = updateTable[i++];
-			if (phc.update(p1, p2) != null) {
+			// TODO This does not work
+			if (phc.update(p1, -1, p2) != null) {
 				n++;
 			}
 		}
-		return n;
+        // TODO return n;
+		return -updateTable.length;
 	}
 	
 	@Override
