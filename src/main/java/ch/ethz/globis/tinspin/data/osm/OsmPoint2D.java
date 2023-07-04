@@ -37,7 +37,7 @@ import ch.ethz.globis.tinspin.db.PersistentArrayDoubleParent;
  * Geometric duplicates are removed (i.e. points with identical 
  * coordinates).
  * 
- * @author Tilmann Zäschke
+ * @author Tilmann ZÃ¤schke
  *
  */
 public class OsmPoint2D {

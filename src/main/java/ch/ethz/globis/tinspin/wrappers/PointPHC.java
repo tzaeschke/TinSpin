@@ -6,6 +6,8 @@
  */
 package ch.ethz.globis.tinspin.wrappers;
 
+import java.util.Arrays;
+
 import ch.ethz.globis.phtree.PhDistance;
 import ch.ethz.globis.phtree.PhDistanceF;
 import ch.ethz.globis.phtree.PhDistanceF_L1;
@@ -64,14 +66,14 @@ public class PointPHC extends CandidatePHC {
 	@Override
 	public void load(double[] data, int dims) {
 		int nDuplicates = 0;
-		long[] buf = new long[dims];
 		for (int i = 0; i < N; i++) {
+	        long[] buf = new long[dims];
 			for (int d = 0; d < dims; d++) {
 				buf[d] = f2l(data[i*dims+d]); 
 			}
 			if (phc.put(buf, O) != null) {
-				//throw new IllegalArgumentException("i=" + i + " " + Arrays.toString(buf));
-				nDuplicates++;
+				throw new IllegalArgumentException("i=" + i + " " + Arrays.toString(buf));
+				//nDuplicates++;
 			}
 		}
         if (nDuplicates > 0) {
@@ -93,7 +95,7 @@ public class PointPHC extends CandidatePHC {
 	}
 
 	@Override
-	public int pointQuery(Object qA) {
+	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
 		for (long[] q: (long[][])qA) {
 			if (phc.contains(q)) {
@@ -187,7 +189,7 @@ public class PointPHC extends CandidatePHC {
 	}
 	
 	@Override
-	public int update(double[][] updateTable) {
+	public int update(double[][] updateTable, int[] ids) {
 		int n = 0;
 		long[] oldKey = new long[dims];
 		long[] newKey = new long[dims];

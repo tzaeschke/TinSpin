@@ -32,7 +32,7 @@ import ch.ethz.globis.tinspin.db.PersistentArrayDoubleParent;
  * 
  * Data from Tiger/LINE: http://www2.census.gov/geo/tiger/KML/2010_Proto/2010tract_dt/
  * 
- * @author Tilmann Zäschke
+ * @author Tilmann ZÃ¤schke
  *
  */
 public class TigerKmlRect2D {

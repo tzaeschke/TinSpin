@@ -73,7 +73,7 @@ public class PointCritBitZ extends Candidate {
 	}
 
 	@Override
-	public int pointQuery(Object qA) {
+	public int pointQuery(Object qA, int[] ids) {
 		long[][] a = (long[][]) qA;
 		int n = 0;
 		for (long[] q: a) {
@@ -145,7 +145,7 @@ public class PointCritBitZ extends Candidate {
 	}
 
 	@Override
-	public int update(double[][] updateTable) {
+	public int update(double[][] updateTable, int[] ids) {
 		Object dummy = new Object();
 		long[] val1 = new long[dims];
 		long[] val2 = new long[dims];

@@ -71,7 +71,7 @@ public class RectanglePHCF extends CandidatePHC {
 	}
 
 	@Override
-	public int pointQuery(Object qA) {
+	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
 		double[][] dA = (double[][]) qA; 
 		for (int i = 0; i < dA.length; i+=2) {
@@ -171,7 +171,7 @@ public class RectanglePHCF extends CandidatePHC {
 
 
 	@Override
-	public int update(double[][] updateTable) {
+	public int update(double[][] updateTable, int[] ids) {
 		int n = 0;
 		for (int i = 0; i < updateTable.length; ) {
 			double[] lo1 = updateTable[i++];

@@ -38,7 +38,7 @@ import ch.ethz.globis.tinspin.db.PersistentArrayDoubleParent;
  * Geometric duplicates are removed (i.e. line segments with identical 
  * bounding boxes).
  * 
- * @author Tilmann Zäschke
+ * @author Tilmann ZÃ¤schke
  *
  */
 public class OsmRect2D {

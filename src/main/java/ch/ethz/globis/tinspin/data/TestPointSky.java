@@ -425,7 +425,7 @@ public class TestPointSky extends TestPoint {
 				generateDataAnticorrelated(f, Count, Dimensions);
 				break;
 			}
-			out.close();
+			// out.close();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

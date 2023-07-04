@@ -62,7 +62,7 @@ public class PointPHCCTree extends Candidate {
 	}
 
 	@Override
-	public int pointQuery(Object qA) {
+	public int pointQuery(Object qA, int[] ids) {
 		int numQueries = ((long[])qA).length/dims;
 		return nativePointQuery(numQueries, (long[])qA);
 	}
@@ -149,7 +149,7 @@ public class PointPHCCTree extends Candidate {
 	}
 
 	@Override
-	public int update(double[][] updateTable) {
+	public int update(double[][] updateTable, int[] ids) {
 //		Object dummy = new Object();
 //		int n = 0;
 //		for (int i = 0; i < updateTable.length; ) {

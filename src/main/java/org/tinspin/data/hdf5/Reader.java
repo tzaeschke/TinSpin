@@ -258,7 +258,7 @@ public class Reader {
 			SymbolTableEntry ste = rootSNOD.symbols[i];
 			String name = rootGroup.heap.getLinkName(ste);
 			log("Reading: " + name);
-			skipTo(bb, (int) ste.l8ObjectHeaderAddressO);
+			skipTo(bb, ste.l8ObjectHeaderAddressO);
 			DOHeaderPrefix dataset = readDOHeaderPrefix(bb, sb); 
 			data.add( new HDF5Dataset(this, name, dataset) );
 		}

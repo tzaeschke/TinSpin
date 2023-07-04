@@ -43,7 +43,7 @@ public class PointSTRZ extends Candidate {
 		phc = RTree.createRStar(dims);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtype"})
 	@Override
 	public void load(double[] data, int dims) {
 		int pos = 0;
@@ -54,7 +54,7 @@ public class PointSTRZ extends Candidate {
 			System.arraycopy(data, pos, lo, 0, dims);
 			System.arraycopy(data, pos, hi, 0, dims);
 			pos += dims;
-			Entry<Object> e = new Entry<Object>(lo, hi, O);
+			Entry<Object> e = new Entry<>(lo, hi, O);
 			list[n] = e;
 		}
 		phc.load(list);
@@ -67,7 +67,7 @@ public class PointSTRZ extends Candidate {
 	}
 
 	@Override
-	public int pointQuery(Object qA) {
+	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
 		for (double[] q: (double[][])qA) {
 			if (phc.queryExact(q, q) != null) {
@@ -168,7 +168,7 @@ public class PointSTRZ extends Candidate {
 	}
 	
 	@Override
-	public int update(double[][] updateTable) {
+	public int update(double[][] updateTable, int[] ids) {
 		int n = 0;
 		for (int i = 0; i < updateTable.length; ) {
 			double[] p1 = updateTable[i++];

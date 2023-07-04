@@ -13,6 +13,9 @@ If you want to reference this project, please consider referencing the [PH-Tree]
 
 # Changelog
 
+2023-07:
+ * Added support for multimap tests
+
 2018-12: 
  * Major refactoring with modularization, new Maven module 'tinspin-common'
  * Added new [Example](src/main/java/ch/ethz/globis/tinspin/Example.java) for custom testing

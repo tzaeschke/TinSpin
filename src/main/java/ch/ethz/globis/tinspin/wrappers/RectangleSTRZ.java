@@ -39,10 +39,11 @@ public class RectangleSTRZ extends Candidate {
 		this.phc = RTree.createRStar(dims);
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtype"})
 	@Override
 	public void load(double[] data, int dims) {
 		int pos = 0;
+		@SuppressWarnings("rawtype")
 		Entry<Object>[] list = new Entry[N];
 		for (int n = 0; n < N; n++) {
 			double[] lo = new double[dims];
@@ -51,7 +52,7 @@ public class RectangleSTRZ extends Candidate {
 			pos += dims;
 			System.arraycopy(data, pos, hi, 0, dims);
 			pos += dims;
-			Entry<Object> e = new Entry<Object>(lo, hi, O);
+			Entry<Object> e = new Entry<>(lo, hi, O);
 			list[n] = e;
 		}
 		phc.load(list);
@@ -64,7 +65,7 @@ public class RectangleSTRZ extends Candidate {
 	}
 
 	@Override
-	public int pointQuery(Object qA) {
+	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
 		double[][] dA = (double[][]) qA; 
 		for (int i = 0; i < dA.length; i+=2) {
@@ -162,7 +163,7 @@ public class RectangleSTRZ extends Candidate {
 	}
 	
 	@Override
-	public int update(double[][] updateTable) {
+	public int update(double[][] updateTable, int[] ids) {
 		int n = 0;
 		for (int i = 0; i < updateTable.length; ) {
 			double[] lo1 = updateTable[i++];

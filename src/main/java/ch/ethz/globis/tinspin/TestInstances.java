@@ -6,6 +6,7 @@
  */
 package ch.ethz.globis.tinspin;
 
+import ch.ethz.globis.tinspin.wrappers.*;
 import org.tinspin.data.hdf5.TestPointHDF5;
 import org.tinspin.wrappers.PointCTZ;
 
@@ -21,28 +22,6 @@ import ch.ethz.globis.tinspin.data.TestRectangleCube;
 import ch.ethz.globis.tinspin.data.TestRectangleOSM;
 import ch.ethz.globis.tinspin.data.TestRectangleTOUCH;
 import ch.ethz.globis.tinspin.data.TestRectangleTiger;
-import ch.ethz.globis.tinspin.wrappers.PointArray;
-import ch.ethz.globis.tinspin.wrappers.PointCritBitZ;
-import ch.ethz.globis.tinspin.wrappers.PointKDZ;
-import ch.ethz.globis.tinspin.wrappers.PointPHC;
-import ch.ethz.globis.tinspin.wrappers.PointPHC2;
-import ch.ethz.globis.tinspin.wrappers.PointPHCF;
-import ch.ethz.globis.tinspin.wrappers.PointPHCMMF;
-import ch.ethz.globis.tinspin.wrappers.PointPHC_IPP;
-import ch.ethz.globis.tinspin.wrappers.PointQuad0Z;
-import ch.ethz.globis.tinspin.wrappers.PointQuadZ;
-import ch.ethz.globis.tinspin.wrappers.PointQuadZ2;
-import ch.ethz.globis.tinspin.wrappers.PointRStarZ;
-import ch.ethz.globis.tinspin.wrappers.PointSTRZ;
-import ch.ethz.globis.tinspin.wrappers.RectangleArray;
-import ch.ethz.globis.tinspin.wrappers.RectanglePHC;
-import ch.ethz.globis.tinspin.wrappers.RectanglePHC2;
-import ch.ethz.globis.tinspin.wrappers.RectanglePHCF;
-import ch.ethz.globis.tinspin.wrappers.RectanglePHC_IPP;
-import ch.ethz.globis.tinspin.wrappers.RectangleQuad0Z;
-import ch.ethz.globis.tinspin.wrappers.RectangleQuadZ;
-import ch.ethz.globis.tinspin.wrappers.RectangleRStarZ;
-import ch.ethz.globis.tinspin.wrappers.RectangleSTRZ;
 
 public class TestInstances {
 
@@ -63,7 +42,9 @@ public class TestInstances {
         /** PH-Tree based on PhTreeF */
         PHCF(PointPHCF.class.getName(), RectanglePHCF.class.getName()), 
         /** PH-Tree multi-map based on PhTreeMultiMapF */
-        PHCMMF(PointPHCMMF.class.getName(), ""), 
+        PHCMMF(PointPHCMMF.class.getName(), ""),
+		/** PH-Tree multi-map based on PhTreeMultiMapF2 */
+		PHCMMF2(PointPHCMMF2.class.getName(), ""),
 		/** PH-Tree with Integer pre-processor. */
 		PHC_IPP(PointPHC_IPP.class.getName(), RectanglePHC_IPP.class.getName()),
 		/** CritBit */

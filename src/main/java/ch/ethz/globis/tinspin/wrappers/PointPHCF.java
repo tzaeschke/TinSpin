@@ -55,7 +55,7 @@ public class PointPHCF extends CandidatePHC {
 	}
 
 	@Override
-	public int pointQuery(Object qA) {
+	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
 		for (double[] q: (double[][])qA) {
 			if (phc.contains(q)) {
@@ -148,7 +148,7 @@ public class PointPHCF extends CandidatePHC {
 	}
 	
 	@Override
-	public int update(double[][] updateTable) {
+	public int update(double[][] updateTable, int[] ids) {
 		int n = 0;
 		for (int i = 0; i < updateTable.length; ) {
 			double[] p1 = updateTable[i++];

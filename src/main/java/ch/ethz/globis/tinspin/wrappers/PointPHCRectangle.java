@@ -84,7 +84,7 @@ public class PointPHCRectangle extends CandidatePHC {
 	}
 
 	@Override
-	public int pointQuery(Object qA) {
+	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
 		for (long[] q: (long[][])qA) {
 			if (phc.contains(q, q)) {
@@ -175,7 +175,7 @@ public class PointPHCRectangle extends CandidatePHC {
 	}
 	
 	@Override
-	public int update(double[][] updateTable) {
+	public int update(double[][] updateTable, int[] ids) {
 		long[] oldKey = new long[dims];
 		int n = 0;
 		for (int i = 0; i < updateTable.length; ) {

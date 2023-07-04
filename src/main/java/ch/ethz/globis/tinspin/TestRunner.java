@@ -66,7 +66,8 @@ public class TestRunner {
 		//TestStats s0 = new TestStats(TST.CUBE_P, IDX.PHC, N, DIM, 1.0);
 		//TestStats s0 = new TestStats(TST.OSM_P, IDX.PHC2, N, 2, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE_P, IDX.PHC, N, DIM, 3.5);
-		TestStats s0 = new TestStats(TST.CLUSTER_P, IDX.PHC, N, DIM, 3.5);
+		//TestStats s0 = new TestStats(TST.CLUSTER_P, IDX.PHC2, N, DIM, 3.5);
+		TestStats s0 = new TestStats(TST.CLUSTER_P, IDX.PHCMMF2, N, DIM, 3.5);
 
 		//s0.cfgWindowQueryRepeat = 1000;
 		//s0.cfgPointQueryRepeat = 1000000;
@@ -387,7 +388,7 @@ public class TestRunner {
 		log("Query time: " + toMS(t1, t2) + " ms -> " + 
 				toMS(t1, t2)/(double)repeat + " ms/q -> " +
 				toNSPerOp(t1, t2, repeat) + " ns/q/r  (n=" + n + ")" +
-				"; total qieries: " + nTotalRepeat);
+				"; total queries: " + nTotalRepeat);
 		if (round == 0) {
 			S.statTq1 = (long) toMS(t1, t2);
 			S.statTq1E = toNSPerOp(t1, t2, repeat);
@@ -407,7 +408,8 @@ public class TestRunner {
 		log(date() + "point queries ...");
 		//prepare query
 		//TODO return only double[], convert inside query function!
-		double[][] qDA = preparePointQuery(repeat);
+		int[] ids = new int[repeat];
+		double[][] qDA = preparePointQuery(repeat, ids);
 		Object q = tree.preparePointQuery(qDA);
 
 		long t00 = timer();
@@ -420,7 +422,7 @@ public class TestRunner {
 
 			//query
 			t1 = timer();
-			n = tree.pointQuery(q);
+			n = tree.pointQuery(q, ids);
 			t2 = timer();
 			if (control == -1) {
 				control = n;
@@ -450,13 +452,13 @@ public class TestRunner {
 		S.statGcTimePq = JmxTools.getTime();
 	}
 
-	private double[][] preparePointQuery(int repeat) {
+	private double[][] preparePointQuery(int repeat, int[] ids) {
 		int dims = S.cfgNDims;
 		double[][] qA;
 		if (!S.isRangeData) {
 			qA = new double[repeat][];
 			for (int i = 0; i < repeat; i++) {
-				qA[i] = generateQueryPointD(S.cfgNEntries, dims);
+				qA[i] = generateQueryPointD(S.cfgNEntries, dims, ids, i);
 			}
 		} else {
 			qA = new double[repeat*2][];
@@ -643,7 +645,7 @@ public class TestRunner {
 	}
 
 
-	private double[] generateQueryPointD(final int N, final int dims) {
+	private double[] generateQueryPointD(final int N, final int dims, int[] ids, int idPos) {
 		double[] xyz = new double[dims];
 		int pos = R.nextInt(N*2);
 		if (pos >= N) {
@@ -651,9 +653,11 @@ public class TestRunner {
 			for (int d = 0; d < dims; d++) {
 				xyz[d] = test.min(d) + R.nextDouble()*test.len(d);
 			}
+			ids[idPos] = -1;
 		} else {
 			//get existing element
 			System.arraycopy(data, pos*dims, xyz, 0, dims);
+			ids[idPos] = pos;
 		}
 		return xyz;
 	}
@@ -707,13 +711,14 @@ public class TestRunner {
 			//     perform different number of runs. But this seems to be the
 			//     (relatively) most accurate solution.
 			int nUpdates = S.cfgUpdateSize > S.cfgNEntries/4 ? S.cfgNEntries/4 : S.cfgUpdateSize;
+			int[] ids = new int[nUpdates];
 			for (int i = 0; i < S.cfgUpdateRepeat; i++) {
 				//prepare query
-				u = test.generateUpdates(nUpdates, data, u);
+				u = test.generateUpdates(nUpdates, data, u, ids);
 				JmxTools.reset();
 				//updates
 				long t1 = timer();
-				n += tree.update(u);
+				n += tree.update(u, ids);
 				long t2 = timer();
 				t += t2-t1;
 				S.statGcDiffUp += JmxTools.getDiff();

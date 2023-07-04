@@ -1,3 +1,7 @@
+2023-07-04
+==========
+- (TZ) Added support for multimap tests
+
 2018-12-10
 ==========
 - (TZ) Modularization, new base module tinspin-common
