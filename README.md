@@ -55,7 +55,7 @@ DB file (binary format) which is faster to read than text/xml files such as OSM.
 
 The `wrappers` folder contains wrappers for various index implementation and different data types: point data, rectangle
 data. `*MM*` wrappers support multimap indexes. **Note that generated data does NOT contain duplicates, i.e. the
-generators do generate at most one entry for each point or rectangle.**
+generators generate at most one entry for each coordinate (point) or pair of coordinates (rectangle).**
 
 ## Results
 
@@ -74,14 +74,14 @@ The test data is written to tab-separated value files in target/logs.
 
 ### Folders
 
-There are several possible subfolders, which are be defined in the `TestManager` class. The default folders are:
+Log files from tests are written to several possible folders. The default folders are:
 
-* dimsP: Point data scaled with dimensionality
-* dimsR: Rectangle data scaled with dimensionality
-* sizeP: Point data scaled with dataset size
-* sizeR: Rectangle data scaled with dataset size
-* sizePWQS: Point data scaled with size of query window
-* sizeRWQS: Rectangle data scaled with size of query window
+* `dimsP`: Point data scaled with dimensionality
+* `dimsR`: Rectangle data scaled with dimensionality
+* `sizeP`: Point data scaled with dataset size
+* `sizeR`: Rectangle data scaled with dataset size
+* `sizePWQS`: Point data scaled with size of query window
+* `sizeRWQS`: Rectangle data scaled with size of query window
 
 ### File Sections
 
@@ -98,18 +98,17 @@ By default, TinSpin averages three consecutive test runs into one average.
 
 ### File Columns in TinSpin 1.x
 
-**Columns with general information.**
-
-An example spreadsheet (LibreOffice .ods) file for interpreting and visualizing results can be
+**Columns with general information.** 
+An example spreadsheet file for interpreting and visualizing results can be
 found [here](doc/benchmark-high-dim-2018-12.ods), e.g. 2nd sheet.
 
-* Index: Index and test descriptor, such as `RSZ-R` for rectangle index, see above
-* data: Test data descriptor, Such as `CUBE(1.0,0.0,null)`, see above
-* dim: number of data dimensions
-* bits: number of bits (deprecated), always 64
-* N: dataset size (number of points or rectangles)
-* memory: Total measured JVM memory [bytes]
-* memory/n: Total measured JVM memory [bytes per entry]
+* `Index`: Index and test descriptor, such as `RSZ-R` for rectangle index, see above
+* `data`: Test data descriptor, Such as `CUBE(1.0,0.0,null)`, see above
+* `dim`: number of data dimensions
+* `bits`: number of bits (deprecated), always 64
+* `N`: dataset size (number of points or rectangles)
+* `memory`: Total measured JVM memory [bytes]
+* `memory/n`: Total measured JVM memory [bytes per entry]
 
 **Columns with timing.** Most parts of the test are executed in two runs or more, each run consisting of a predefined
 number of
@@ -118,72 +117,69 @@ class.
 Except for load/unload, runs are repeated until at least 2 seconds (default) have passed, this is in order to give more
 precise timings for very short runs.
 
-* gen: time [ms] for dataset generation
-* load/s: adding entries throughput [entries/s]
-* wq1/s: window query throughput run #1 [queries/s]
-* wq2/s: window query throughput run #2 [queries/s]
-* pq1/s: exact match query throughput run #1 [queries/s] (was called point query)
-* pq2/s: exact match query throughput run #2 [queries/s]
-* 1-NN1/s: 1 nearest neighbor query throughput run #1 [queries/s]
-* 1-NN2/s: 1 nearest neighbor query throughput run #2 [queries/s]
-* 10-NN1/s: 10 nearest neighbor query throughput run #1 [queries/s]
-* 10-NN2/s: 10 nearest neighbor query throughput run #2 [queries/s]
-* up1/s: position update throughput run #1 [updates/s]
-* up2/s: position update throughput run #2 [updates/s]
-* unload/s: removing entries throughput [entries/s]
+* `gen`: time [ms] for dataset generation
+* `load/s`: adding entries throughput [entries/s]
+* `wq1/s`: window query throughput run #1 [queries/s]
+* `wq2/s`: window query throughput run #2 [queries/s]
+* `pq1/s`: exact match query throughput run #1 [queries/s] (was called point query)
+* `pq2/s`: exact match query throughput run #2 [queries/s]
+* `1-NN1/s`: 1 nearest neighbor query throughput run #1 [queries/s]
+* `1-NN2/s`: 1 nearest neighbor query throughput run #2 [queries/s]
+* `10-NN1/s`: 10 nearest neighbor query throughput run #1 [queries/s]
+* `10-NN2/s`: 10 nearest neighbor query throughput run #2 [queries/s]
+* `up1/s`: position update throughput run #1 [updates/s]
+* `up2/s`: position update throughput run #2 [updates/s]
+* `unload/s`: removing entries throughput [entries/s]
 
 **Columns with Tree statistics.** The following columns contain tree statistics, such as number of nodes or depth. The
 meaning may differ
 between trees.
 
-* nodes: Number of nodes
-* postLen: PH-tree: Average length of postfixes; R-Tree & Quadtrees: depth
-* AHC: PH-tree:Number of AHC nodes
-* NT: PH-tree:Number of NT-Nodes
-* NTinternal: PH-tree: Number of NT-subnodes in all NT-Nodes
+* `nodes`: Number of nodes
+* `postLen`: PH-tree: Average length of postfixes; R-Tree & Quadtrees: depth
+* `AHC`: PH-tree:Number of AHC nodes
+* `NT`: PH-tree:Number of NT-Nodes
+* `NTinternal`: PH-tree: Number of NT-subnodes in all NT-Nodes
 
 **Columns with result statistics.** The following columns give an indicator of the results returned by the _first_ test
 run, even if runs
 are repeated if they are faster than 2 seconds (default), see above. The counts should not vary much between runs. *This
 is a basic form of correctness testing.* For a given test scenarion, results should be the same for all indexes.
 
-* q1-n: Number of returned window query objects
-* q2-n: Number of returned window query objects
-* q1p-n: Number of found objects in point query
-* q2p-n: Number of found objects in point query
-* d1-1NN: Average distance of nearest neighbors
-* d2-1NN: Average distance of nearest neighbors
-* d1-kNN: Average of sum of distance of 10 nearest neighbors
-* d2-kNN: Average of sum of distance of 10 nearest neighbors
-* up1-n: Number of updated objects
-* up2-n: Number of updated objects
-* distCalc-n : Number of distance calculation for insert, query and deletion (optional)
-* distCalc1NN-n : Number of distance calculations of 1NN queries (optional)
-* distCalcKNN-n : Number of distance calculations of kNN queries (optional)
+* `wq1-n`: Number of returned window query objects
+* `wq2-n`: Number of returned window query objects
+* `q1p-n`: Number of found objects in point query
+* `q2p-n`: Number of found objects in point query
+* `1-NN1-d`: Average distance over all 1-nearest neighbors
+* `1-NN2-d`: Average distance over all 1-nearest neighbors
+* `10-NN1-d`: Average distance over all 10-nearest neighbors
+* `10-NN2-d`: Average distance over all 10-nearest neighbors
+* `up1-n`: Number of updated objects
+* `up2-n`: Number of updated objects
 
 **Columns with JVM statistics** For each test part, the following column contain garbage collection statistics based on
 Java instrumentation. They are a
 good indicator, but not precise! `-s` is the estimated memory [MB] freed up by GC. `-t` is the estimated time
 used by the GC in [ms].
 
-* load-s: Estimated size of garbage collected memory [MB]
-* load-t: Estimated runtime of garbage collector [ms]
-* w-query-s
-* w-query-t
-* p-query-s
-* p-query-t
-* update-s
-* update-t
-* 1-NN-s
-* 1-NN-t
-* 10-NN-s
-* 10-NN-t
-* unload-s
-* unload-t
+* `load-s`: Estimated size of garbage collected memory [MB]
+* `load-t`: Estimated CPU time of garbage collector [ms]
+* `w-query-s`
+* `w-query-t`
+* `p-query-s`
+* `p-query-t`
+* `update-s`
+* `update-t`
+* `1-NN-s`
+* `1-NN-t`
+* `10-NN-s`
+* `10-NN-t`
+* `unload-s`
+* `unload-t`
 
 **General messages column**
 
-* msg: General messages by index wrapper and test runner
+* `msg`: General messages by index wrapper and test runner
 
 ### File Columns in TinSpin 0.x
 
