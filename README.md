@@ -59,8 +59,12 @@ generators do generate at most one entry for each point or rectangle.**
 
 ## Results
 
-Some results can be found in the doc folder. The
-file [benchmark-high-dim-2018-12.ods](doc/benchmark-high-dim-2018-12.ods) contains benchmarks with high-dimensional
+Some results can be found in the doc folder.
+
+Visualized results from a complete run with 2D and 3D data can be
+found [here (PDF)](doc/benchmark-2017-01/Diagrams.pdf).
+
+The file [benchmark-high-dim-2018-12.ods](doc/benchmark-high-dim-2018-12.ods) contains benchmarks with high-dimensional
 datasets, such as GloVe-25, GloVe-50, SIFT-128, NYTimes-256 and MNIST-784 (
 see [ann-benchmark](https://github.com/erikbern/ann-benchmarks)).
 
@@ -96,7 +100,8 @@ By default, TinSpin averages three consecutive test runs into one average.
 
 **Columns with general information.**
 
-An example spreadsheet (LibreOffice .ods) file for interpreting and visualizing results can be found [here](doc/benchmark-high-dim-2018-12.ods), e.g. 2nd sheet. 
+An example spreadsheet (LibreOffice .ods) file for interpreting and visualizing results can be
+found [here](doc/benchmark-high-dim-2018-12.ods), e.g. 2nd sheet.
 
 * Index: Index and test descriptor, such as `RSZ-R` for rectangle index, see above
 * data: Test data descriptor, Such as `CUBE(1.0,0.0,null)`, see above
@@ -106,7 +111,8 @@ An example spreadsheet (LibreOffice .ods) file for interpreting and visualizing 
 * memory: Total measured JVM memory [bytes]
 * memory/n: Total measured JVM memory [bytes per entry]
 
-**Columns with timing.** Most parts of the test are executed in two runs or more, each run consisting of a predefined number of
+**Columns with timing.** Most parts of the test are executed in two runs or more, each run consisting of a predefined
+number of
 execution. For example, each exact match run consists of 100,000 exact match queries as defined in the `TestStats`
 class.
 Except for load/unload, runs are repeated until at least 2 seconds (default) have passed, this is in order to give more
@@ -126,7 +132,8 @@ precise timings for very short runs.
 * up2/s: position update throughput run #2 [updates/s]
 * unload/s: removing entries throughput [entries/s]
 
-**Columns with Tree statistics.** The following columns contain tree statistics, such as number of nodes or depth. The meaning may differ
+**Columns with Tree statistics.** The following columns contain tree statistics, such as number of nodes or depth. The
+meaning may differ
 between trees.
 
 * nodes: Number of nodes
@@ -135,8 +142,10 @@ between trees.
 * NT: PH-tree:Number of NT-Nodes
 * NTinternal: PH-tree: Number of NT-subnodes in all NT-Nodes
 
-**Columns with result statistics.** The following columns give an indicator of the results returned by the _first_ test run, even if runs
-are repeated if they are faster than 2 seconds (default), see above. The counts should not vary much between runs. *This is a basic form of correctness testing.* For a given test scenarion, results should be the same for all indexes. 
+**Columns with result statistics.** The following columns give an indicator of the results returned by the _first_ test
+run, even if runs
+are repeated if they are faster than 2 seconds (default), see above. The counts should not vary much between runs. *This
+is a basic form of correctness testing.* For a given test scenarion, results should be the same for all indexes.
 
 * q1-n: Number of returned window query objects
 * q2-n: Number of returned window query objects
@@ -152,7 +161,8 @@ are repeated if they are faster than 2 seconds (default), see above. The counts 
 * distCalc1NN-n : Number of distance calculations of 1NN queries (optional)
 * distCalcKNN-n : Number of distance calculations of kNN queries (optional)
 
-**Columns with JVM statistics** For each test part, the following column contain garbage collection statistics based on Java instrumentation. They are a
+**Columns with JVM statistics** For each test part, the following column contain garbage collection statistics based on
+Java instrumentation. They are a
 good indicator, but not precise! `-s` is the estimated memory [MB] freed up by GC. `-t` is the estimated time
 used by the GC in [ms].
 
