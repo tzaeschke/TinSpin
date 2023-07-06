@@ -8,8 +8,8 @@ package ch.ethz.globis.tinspin.wrappers;
 
 import ch.ethz.globis.phtree.PhDistanceF;
 import ch.ethz.globis.phtree.PhTreeMultiMapF2;
-import ch.ethz.globis.phtree.PhTreeMultiMapF2.PhKnnQueryMMF;
-import ch.ethz.globis.phtree.PhTreeMultiMapF2.PhQueryMMF;
+import ch.ethz.globis.phtree.PhTreeMultiMapF2.PhKnnQueryF;
+import ch.ethz.globis.phtree.PhTreeMultiMapF2.PhQueryF;
 import ch.ethz.globis.phtree.util.PhTreeStats;
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -19,8 +19,8 @@ public class PointPHCMMF2 extends CandidatePHC {
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private PhKnnQueryMMF<Object> knnQuery;
-    private PhQueryMMF<Object> pit;
+	private PhKnnQueryF<Object> knnQuery;
+    private PhQueryF<Object> pit;
 
 	/**
 	 * Setup of a native PH tree
