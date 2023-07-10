@@ -20,7 +20,7 @@ of the 2014 ACM SIGMOD Intl. Conf. on Management of Data._
 
 2023-07:
 
-* Added support for multimap tests
+* Added support for multimap tests. Note: this allows testing of multimap, however, the generated test data does currently *not* contain duplicates. 
 
 2018-12:
 
@@ -93,6 +93,7 @@ Log files from tests are written to several possible folders. The default folder
 * comment: `% Measurements`
 * comment: `% ============`
 * results: `RSZ-R-0	CLUSTER(5.0,0.0,null) ...` (Index=RSZ, datatype=Rectangle, random seed=0 (equals test run ID)
+* results new: `RSZ-R-M-0	CLUSTER(5.0,0.0,null) ...` (Index=RSZ, datatype=Rectangle, map/multimap=Map, random seed=0 (equals test run ID)
 
 By default, TinSpin averages three consecutive test runs into one average.
 
@@ -102,8 +103,9 @@ By default, TinSpin averages three consecutive test runs into one average.
 An example spreadsheet file for interpreting and visualizing results can be
 found [here](doc/benchmark-high-dim-2018-12.ods), e.g. 2nd sheet.
 
-* `Index`: Index and test descriptor, such as `RSZ-R` for rectangle index, see above
-* `data`: Test data descriptor, Such as `CUBE(1.0,0.0,null)`, see above
+* `Index`: Index and test descriptor, such as `RSZ-R-M` for rectangle index or `PHT-P-MM`
+for a point multimap index.
+* `data`: Test data descriptor, Such as `CUBE(4, 1.0, 0.0, null)`, see above
 * `dim`: number of data dimensions
 * `bits`: number of bits (deprecated), always 64
 * `N`: dataset size (number of points or rectangles)
