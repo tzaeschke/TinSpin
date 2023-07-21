@@ -15,6 +15,7 @@ import org.tinspin.index.rtree.RTreeIterator;
 import org.tinspin.index.rtree.RTreeQueryKnn;
 
 import ch.ethz.globis.tinspin.TestStats;
+import org.tinspin.index.rtree.RTreeQueryKnn2;
 
 public class PointRStarZ extends Candidate {
 	
@@ -23,7 +24,7 @@ public class PointRStarZ extends Candidate {
 	private final int N;
 	private double[] data;
 	private RTreeIterator<double[]> it;
-	private RTreeQueryKnn<double[]> itKnn;
+	private RTreeQueryKnn2<double[]> itKnn;
 
 	
 	/**
@@ -111,9 +112,9 @@ public class PointRStarZ extends Candidate {
 			return phc.query1NN(center).dist();
 		}
 		if (itKnn == null) {
-			itKnn = phc.queryKNN(center, k, null);
+			itKnn = phc.queryKNN(center, k);
 		} else {
-			itKnn.reset(center, k, null);
+			itKnn.reset(center, k);
 		}
 		double ret = 0;
 		while (itKnn.hasNext()) {

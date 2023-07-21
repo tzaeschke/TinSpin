@@ -7,15 +7,16 @@
 package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.tinspin.index.PointEntry;
+import org.tinspin.index.PointEntryDist;
 import org.tinspin.index.QueryIterator;
-import org.tinspin.index.qthypercube.QEntryDist;
+import org.tinspin.index.QueryIteratorKNN;
 import org.tinspin.index.qthypercube.QuadTreeKD;
 import org.tinspin.index.qthypercube.QuadTreeKD.QStats;
 
 import ch.ethz.globis.tinspin.TestStats;
+
 /**
  * Quadtree with HypercubeNavigation (HC).
  * 
@@ -29,7 +30,8 @@ public class PointQuadZ extends Candidate {
 	private final int N;
 	private double[] data;
 	private final int maxNodeSize = 10;
-	
+	private QueryIteratorKNN<PointEntryDist<double[]>> itKnn;
+
 	/**
 	 * Setup of a native PH tree
 	 * 
@@ -141,12 +143,25 @@ public class PointQuadZ extends Candidate {
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
-		List<QEntryDist<double[]>> nn = phc.knnQuery(center, k);
+		if (k == 1) {
+			return phc.query1NN(center).dist();
+		}
+		if (itKnn == null) {
+			itKnn = phc.queryKNN(center, k);
+		} else {
+			itKnn.reset(center, k);
+		}
 		double ret = 0;
-		for (int i = 0; i < k; i++) {
-			ret += nn.get(i).dist();
+		while (itKnn.hasNext()) {
+			ret += itKnn.next().dist();
 		}
 		return ret;
+//		List<QEntryDist<double[]>> nn = phc.knnQuery(center, k);
+//		double ret = 0;
+//		for (int i = 0; i < k; i++) {
+//			ret += nn.get(i).dist();
+//		}
+//		return ret;
 	}
 
 	@Override

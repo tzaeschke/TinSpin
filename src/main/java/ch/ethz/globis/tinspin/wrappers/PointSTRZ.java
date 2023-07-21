@@ -9,16 +9,13 @@ package ch.ethz.globis.tinspin.wrappers;
 import java.util.Arrays;
 
 import org.tinspin.index.Index;
-import org.tinspin.index.rtree.Entry;
-import org.tinspin.index.rtree.RTree;
-import org.tinspin.index.rtree.RTreeIterator;
-import org.tinspin.index.rtree.RTreeQueryKnn;
+import org.tinspin.index.rtree.*;
 import org.tinspin.index.rtree.RTree.RTreeStats;
 
 import ch.ethz.globis.tinspin.TestStats;
 
 /**
- * R-Tree with sort tile recursive bulkloading.
+ * R-Tree with sort tile recursive bulk loading.
  *
  */
 public class PointSTRZ extends Candidate {
@@ -29,7 +26,7 @@ public class PointSTRZ extends Candidate {
 	private double[] data;
 	private static final Object O = new Object();
 	private RTreeIterator<Object> it;
-	private RTreeQueryKnn<Object> itKnn;
+	private RTreeQueryKnn2<Object> itKnn;
 
 	
 	/**
@@ -123,9 +120,9 @@ public class PointSTRZ extends Candidate {
 			return phc.query1NN(center).dist();
 		}
 		if (itKnn == null) {
-			itKnn = phc.queryKNN(center, k, null);
+			itKnn = phc.queryKNN(center, k);
 		} else {
-			itKnn.reset(center, k, null);
+			itKnn.reset(center, k);
 		}
 		double ret = 0;
 		while (itKnn.hasNext()) {

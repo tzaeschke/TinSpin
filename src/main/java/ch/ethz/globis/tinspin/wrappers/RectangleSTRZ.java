@@ -9,11 +9,7 @@ package ch.ethz.globis.tinspin.wrappers;
 import java.util.Arrays;
 
 import org.tinspin.index.Index;
-import org.tinspin.index.rtree.DistEntry;
-import org.tinspin.index.rtree.Entry;
-import org.tinspin.index.rtree.RTree;
-import org.tinspin.index.rtree.RTreeIterator;
-import org.tinspin.index.rtree.RTreeQueryKnn;
+import org.tinspin.index.rtree.*;
 import org.tinspin.index.rtree.RTree.RTreeStats;
 
 import ch.ethz.globis.tinspin.TestStats;
@@ -26,7 +22,7 @@ public class RectangleSTRZ extends Candidate {
 	private double[] data;
 	private static final Object O = new Object();
 	private RTreeIterator<Object> query = null;
-	private RTreeQueryKnn<Object> queryKnn = null;
+	private RTreeQueryKnn2<Object> queryKnn = null;
 	
 	/**
 	 * Setup of a native PH tree
@@ -126,9 +122,9 @@ public class RectangleSTRZ extends Candidate {
 			return phc.query1NN(center).dist();
 		}
 		if (queryKnn == null) {
-			queryKnn = phc.queryKNN(center, k, null);
+			queryKnn = phc.queryKNN(center, k);
 		} else {
-			queryKnn.reset(center, k, null);
+			queryKnn.reset(center, k);
 		}
 		double ret = 0;
 		while (queryKnn.hasNext()) {

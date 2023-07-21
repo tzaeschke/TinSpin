@@ -69,7 +69,7 @@
 		<dependency>
 			<groupId>org.tinspin</groupId>
 			<artifactId>tinspin-indexes</artifactId>
-			<version>[1.7,)</version>
+			<version>[1.8,)</version>
 		</dependency>
 	</dependencies>
   

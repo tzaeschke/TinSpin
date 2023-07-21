@@ -6,10 +6,6 @@
  */
 package ch.ethz.globis.tinspin.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -57,7 +53,9 @@ public class TestPerf {
 		//Create Java data
 		for (int i = 0; i < N_DATA; i++) {
 			MyObject o = createInstance(i);
-			assertFalse(addInstance(i, o));
+			if (addInstance(i, o)) {
+				throw new IllegalStateException();
+			}
 		}
 		
 		//create ND data
@@ -67,7 +65,9 @@ public class TestPerf {
 			for (int d = 0; d < DIM; d++) {
 				val[d] = createIntValue(i, d);
 			}
-			assertNull(ind.put(val, O));
+			if (ind.put(val, O) != null)  {
+				throw new IllegalStateException();
+			}
 			//System.out.println("i=" + PhTree.toBinary(val, 32));
 		}
 		
@@ -76,8 +76,12 @@ public class TestPerf {
 		for (int i = 0; i < N_QUERY; i++) {
 			Iterator<MyObject> res = queryFirst(i);
 			long v0 = i;
-			assertEquals(v0, res.next().a0);
-			assertFalse(res.hasNext());
+			if (v0 != res.next().a0)  {
+				throw new IllegalStateException();
+			}
+			if (res.hasNext())  {
+				throw new IllegalStateException();
+			}
 		}
 		long t2a = System.currentTimeMillis();
 		

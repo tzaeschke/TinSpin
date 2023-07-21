@@ -67,7 +67,7 @@ public class TestRunner {
 		//TestStats s0 = new TestStats(TST.OSM_P, IDX.PHC2, N, 2, 1.0);
 		//TestStats s0 = new TestStats(TST.CUBE_P, IDX.PHC, N, DIM, 3.5);
 		//TestStats s0 = new TestStats(TST.CLUSTER_P, IDX.PHC2, N, DIM, 3.5);
-		TestStats s0 = new TestStats(TST.CLUSTER_P, IDX.PHCMMF2, N, DIM, 3.5);
+		TestStats s0 = new TestStats(TST.CLUSTER_P, IDX.RSZ, N, DIM, 5);
 
 		//s0.cfgWindowQueryRepeat = 1000;
 		//s0.cfgPointQueryRepeat = 1000000;
