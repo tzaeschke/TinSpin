@@ -19,9 +19,8 @@ package org.tinspin.wrappers;
 
 import ch.ethz.globis.tinspin.TestStats;
 
-import org.tinspin.index.PointDistanceFunction;
-import org.tinspin.index.PointEntryDist;
-import org.tinspin.index.QueryIteratorKNN;
+import org.tinspin.index.Index;
+import org.tinspin.index.PointDistance;
 import org.tinspin.index.covertree.CoverTree;
 import org.tinspin.index.covertree.Point;
 
@@ -37,7 +36,7 @@ public class PointCTZ extends Candidate {
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private QueryIteratorKNN<PointEntryDist<double[]>> itKnn;
+	private Index.PointIteratorKnn<double[]> itKnn;
 
 	
 	/**
@@ -66,7 +65,7 @@ public class PointCTZ extends Candidate {
 			Point<double[]> pp = CoverTree.create(p, p);
 			points[i] = pp;
 		}
-		phc = CoverTree.create(points, 1.3, PointDistanceFunction.L2);
+		phc = CoverTree.create(points, 1.3, PointDistance.L2);
 
 		
 //		for (int n = 0; n < N; n++) {
@@ -137,10 +136,10 @@ public class PointCTZ extends Candidate {
 	@Override
 	public double knnQuery(int k, double[] center) {
 		if (k == 1) {
-			return phc.query1NN(center).dist();
+			return phc.query1nn(center).dist();
 		}
 		if (itKnn == null) {
-			itKnn = phc.queryKNN(center, k);
+			itKnn = phc.queryKnn(center, k);
 		} else {
 			itKnn.reset(center, k);
 		}

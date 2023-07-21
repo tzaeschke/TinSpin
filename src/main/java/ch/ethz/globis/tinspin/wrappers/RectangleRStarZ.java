@@ -114,10 +114,10 @@ public class RectangleRStarZ extends Candidate {
 	@Override
 	public double knnQuery(int k, double[] center) {
 		if (k == 1) {
-			return phc.query1NN(center).dist();
+			return phc.query1nn(center).dist();
 		}
 		if (queryKnn == null) {
-			queryKnn = phc.queryKNN(center, k);
+			queryKnn = phc.queryKnn(center, k);
 		} else {
 			queryKnn.reset(center, k);
 		}
@@ -140,7 +140,7 @@ public class RectangleRStarZ extends Candidate {
 	}
 
 	@Override
-	public Index<Object> getNative() {
+	public Index getNative() {
 		return phc;
 	}
 

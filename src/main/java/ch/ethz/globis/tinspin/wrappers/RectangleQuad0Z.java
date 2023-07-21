@@ -7,12 +7,11 @@
 package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.Arrays;
-import java.util.List;
 
-import org.tinspin.index.qtplain.QREntryDist;
+import org.tinspin.index.BoxEntryDist;
+import org.tinspin.index.Index;
 import org.tinspin.index.qtplain.QuadTreeRKD0;
 import org.tinspin.index.qtplain.QuadTreeKD0.QStats;
-import org.tinspin.index.qtplain.QuadTreeRKD0.QRIterator;
 
 import ch.ethz.globis.tinspin.TestStats;
 
@@ -23,7 +22,8 @@ public class RectangleQuad0Z extends Candidate {
 	private final int N;
 	private double[] data;
 	private static final Object O = new Object();
-	private QRIterator<Object> query = null;
+	private Index.BoxIteratorKnn<Object> queryKnn = null;
+	private Index.BoxIterator<Object> query = null;
 	private final int maxNodeSize = 10;
 	
 	/**
@@ -137,10 +137,17 @@ public class RectangleQuad0Z extends Candidate {
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
-		List<QREntryDist<Object>> result = phc.knnQuery(center, k);
+		if (k == 1) {
+			return phc.query1nn(center).dist();
+		}
+		if (queryKnn == null) {
+			queryKnn = phc.queryKnn(center, k);
+		} else {
+			queryKnn.reset(center, k);
+		}
 		double ret = 0;
-		for (int i = 0; i < k; i++) {
-			QREntryDist<Object> e = result.get(i);
+		while (queryKnn.hasNext()) {
+			BoxEntryDist<Object> e = queryKnn.next();
 			ret += e.dist();
 		}
 		return ret;
@@ -162,10 +169,10 @@ public class RectangleQuad0Z extends Candidate {
 	}
 
 	@Override
-	public void getStats(TestStats S) {
+	public void getStats(TestStats stats) {
 		QStats qs = phc.getStats();
-		S.statNnodes = qs.getNodeCount(); 
-		S.statNpostlen = qs.getMaxDepth();
+		stats.statNnodes = qs.getNodeCount();
+		stats.statNpostlen = qs.getMaxDepth();
 	}
 	
 

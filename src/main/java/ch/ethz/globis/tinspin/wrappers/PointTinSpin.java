@@ -6,70 +6,61 @@
  */
 package ch.ethz.globis.tinspin.wrappers;
 
+import ch.ethz.globis.tinspin.IndexHandle;
+import ch.ethz.globis.tinspin.TestInstances;
+import ch.ethz.globis.tinspin.TestStats;
+import org.tinspin.index.Index;
+import org.tinspin.index.PointMap;
+import org.tinspin.index.Stats;
+import org.tinspin.index.kdtree.KDTree;
+import org.tinspin.index.qthypercube.QuadTreeKD;
+import org.tinspin.index.qthypercube2.QuadTreeKD2;
+import org.tinspin.index.qtplain.QuadTreeKD0;
+import org.tinspin.index.rtree.RTree;
+import org.tinspin.index.util.PointMapWrapper;
+
 import java.util.Arrays;
 
-import org.tinspin.index.Index;
-import org.tinspin.index.qtplain.QuadTreeKD0;
-import org.tinspin.index.qtplain.QuadTreeKD0.QStats;
-
-import ch.ethz.globis.tinspin.TestStats;
-
 /**
- * Plain MX-CIF quadtree
+ * KD-Tree.
  * 
  * @author Tilmann Zäschke
  *
  */
-public class PointQuad0Z extends Candidate {
-	
-	private QuadTreeKD0<double[]> phc;
+public class PointTinSpin extends Candidate {
+
+	private PointMap<double[]> phc;
 	private final int dims;
+	private final IndexHandle indexHandle;
 	private final int N;
 	private double[] data;
-	private final int maxNodeSize = 10;
 	private Index.PointIteratorKnn<double[]> itKnn;
 	private Index.PointIterator<double[]> pit;
 
 	/**
 	 * Setup of a native PH tree
-	 * 
+	 *
 	 * @param ts test stats
 	 */
-	public PointQuad0Z(TestStats ts) {
+	public PointTinSpin(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
-		//phc = QuadTreeKD.create(dims);
+		this.indexHandle = ts.INDEX;
 	}
 	
 	@Override
 	public void load(double[] data, int dims) {
-		double[] min = new double[dims];
-		double[] max = new double[dims];
-		Arrays.fill(min, Double.POSITIVE_INFINITY);
-		Arrays.fill(max, Double.NEGATIVE_INFINITY);
-		for (int i = 0; i < N; i+=dims) {
-			for (int d = 0; d < dims; d++) {
-				double x = data[i*dims+d];
-				if (x > max[d]) {
-					max[d] = x;
-				}
-				if (x < min[d]) {
-					min[d] = x;
-				}
-			}
+		switch ((TestInstances.IDX)indexHandle) {
+			// case CBZ: phc = CritBit.create(dims, 10); break;
+			// case CTZ: phc = CoverTree.create(dims); break;  // -> in separate class because it doesn't support all operations // TODO use sub-class?
+			case KDZ: phc = KDTree.create(dims); break;
+			case QT0Z: phc = QuadTreeKD0.create(dims, 10); break;
+			case QTZ: phc = QuadTreeKD.create(dims, 10); break;
+			case QT2Z: phc = QuadTreeKD2.create(dims, 10); break;
+			case RSZ:
+			case STRZ: phc = PointMapWrapper.create(RTree.createRStar(dims)); break;
+			default: throw new UnsupportedOperationException("Not supported: " + indexHandle.name());
 		}
-
-		double[] center = new double[dims];
-		double r = 0;
-		for (int i = 0; i < dims; i++) {
-			center[i] = (max[i]+min[i])/2;
-			double d = max[i]-min[i];
-			if (r < d) {
-				r = d;
-			}
-		}
-		
-		phc = QuadTreeKD0.create(dims, maxNodeSize, center, r);
 
 		for (int i = 0; i < N; i++) {
 			double[] buf = new double[dims];
@@ -90,18 +81,13 @@ public class PointQuad0Z extends Candidate {
 	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
 		for (double[] q: (double[][])qA) {
-			if (phc.containsExact(q)) {
+			if (phc.queryExact(q) != null) {
 				n++;
 			}
 		}
 		return n;
 	}
 
-	@Override
-	public boolean supportsPointQuery() {
-		return dims <= 12;
-	}
-	
 	@Override
 	public int unload() {
 		int n = 0;
@@ -122,11 +108,6 @@ public class PointQuad0Z extends Candidate {
 			val[d] = data[pos*dims+d];
 		}
 		return val;
-	}
-	
-	@Override
-	public boolean supportsUnload() {
-		return dims <= 12;
 	}
 	
 	@Override
@@ -163,7 +144,7 @@ public class PointQuad0Z extends Candidate {
 
 	@Override
 	public boolean supportsKNN() {
-		return dims <= 15;
+		return true;
 	}
 	
 	@Override
@@ -176,20 +157,18 @@ public class PointQuad0Z extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public QuadTreeKD0<double[]> getNative() {
+	public PointMap<double[]> getNative() {
 		return phc;
 	}
 
 	@Override
 	public void getStats(TestStats s) {
-		QStats qs = phc.getStats();
+		Stats qs = phc.getStats();
 		s.statNnodes = qs.getNodeCount();
 		s.statNpostlen = qs.getMaxDepth();
-		//phc.printStats(N);
-		//phc.printQuality();
-		//PhTreeStats q = phc.getStats();
-		//S.setStats(q);
-		//System.out.println(phc.getQuality());
+		s.statNDistCalc = qs.getNDistCalc();
+		s.statNDistCalc1NN = qs.getNDistCalc1NN();
+		s.statNDistCalcKNN = qs.getNDistCalcKNN();
 	}
 	
 	@Override
@@ -203,11 +182,6 @@ public class PointQuad0Z extends Candidate {
 			}
 		}
 		return n;
-	}
-	
-	@Override
-	public boolean supportsUpdate() {
-		return dims <= 12;
 	}
 	
 	@Override

@@ -7,10 +7,9 @@
 package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.Arrays;
-import java.util.List;
 
-import org.tinspin.index.qthypercube.QREntryDist;
-import org.tinspin.index.qthypercube.QRIterator;
+import org.tinspin.index.BoxEntryDist;
+import org.tinspin.index.Index;
 import org.tinspin.index.qthypercube.QuadTreeRKD;
 import org.tinspin.index.qthypercube.QuadTreeKD.QStats;
 
@@ -23,7 +22,8 @@ public class RectangleQuadZ extends Candidate {
 	private final int N;
 	private double[] data;
 	private static final Object O = new Object();
-	private QRIterator<Object> query = null;
+	private Index.BoxIteratorKnn<Object> queryKnn = null;
+	private Index.BoxIterator<Object> query = null;
 	private final int maxNodeSize = 10;
 	
 	/**
@@ -133,10 +133,17 @@ public class RectangleQuadZ extends Candidate {
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
-		List<QREntryDist<Object>> result = phc.knnQuery(center, k);
+		if (k == 1) {
+			return phc.query1nn(center).dist();
+		}
+		if (queryKnn == null) {
+			queryKnn = phc.queryKnn(center, k);
+		} else {
+			queryKnn.reset(center, k);
+		}
 		double ret = 0;
-		for (int i = 0; i < k; i++) {
-			QREntryDist<Object> e = result.get(i);
+		while (queryKnn.hasNext()) {
+			BoxEntryDist<Object> e = queryKnn.next();
 			ret += e.dist();
 		}
 		return ret;

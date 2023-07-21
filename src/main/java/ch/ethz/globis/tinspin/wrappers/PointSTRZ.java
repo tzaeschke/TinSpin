@@ -109,18 +109,16 @@ public class PointSTRZ extends Candidate {
 			it.next();
 			n++;
 		}
-//		int n = ((PhTree7)phc).queryAll(min2, max2).size();
-		//log("q=" + Arrays.toString(q));
 		return n;
 	}
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
 		if (k == 1) {
-			return phc.query1NN(center).dist();
+			return phc.query1nn(center).dist();
 		}
 		if (itKnn == null) {
-			itKnn = phc.queryKNN(center, k);
+			itKnn = phc.queryKnn(center, k);
 		} else {
 			itKnn.reset(center, k);
 		}
@@ -146,7 +144,7 @@ public class PointSTRZ extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public Index<Object> getNative() {
+	public Index getNative() {
 		return phc;
 	}
 
