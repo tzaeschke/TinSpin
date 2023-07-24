@@ -61,7 +61,7 @@ public class PointKDZ extends Candidate {
 	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
 		for (double[] q: (double[][])qA) {
-			if (phc.containsExact(q)) {
+			if (phc.contains(q)) {
 				n++;
 			}
 		}
