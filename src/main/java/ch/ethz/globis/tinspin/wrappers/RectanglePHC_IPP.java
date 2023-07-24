@@ -22,13 +22,12 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class RectanglePHC_IPP extends CandidatePHC {
 	
-	private final PhTreeSolidF<Object> phc;
+	private final PhTreeSolidF<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private static final Object O = new Object();
 	private final PreProcessorRangeF pre;
-	private PhKnnQuerySF<Object> qKNN = null;
+	private PhKnnQuerySF<Integer> qKNN = null;
 	private final PhDistanceSF distFn;
 
 	/**
@@ -62,7 +61,7 @@ public class RectanglePHC_IPP extends CandidatePHC {
 				for (int dd = 0; dd < dims; dd++) {
 					hi[dd] = data[pos++];
 				}
-				if (phc.put(lo, hi, O) != null) {
+				if (phc.put(lo, hi, n) != null) {
 					d++;
 					n--;
 					//throw new IllegalArgumentException();
@@ -74,7 +73,7 @@ public class RectanglePHC_IPP extends CandidatePHC {
 				pos += dims;
 				System.arraycopy(data, pos, hi, 0, dims);
 				pos += dims;
-				if (phc.put(lo, hi, O) != null) {
+				if (phc.put(lo, hi, n) != null) {
 					d++;
 					n--;
 					//throw new IllegalArgumentException();
@@ -131,7 +130,7 @@ public class RectanglePHC_IPP extends CandidatePHC {
 //	private static final int MAX = Integer.MAX_VALUE;
 //	private static final PhMapperKey<double[]> MAPPER = PhMapperKey.DOUBLE_ARRAY();
 	
-	private PhQuerySF<Object> it = null;
+	private PhQuerySF<Integer> it = null;
 	
 	@Override
 	public int query(double[] min, double[] max) {
@@ -156,7 +155,7 @@ public class RectanglePHC_IPP extends CandidatePHC {
 	}
 	
 	@Override
-	public List<PhEntrySF<Object>> queryToList(double[] min, double[] max) {
+	public List<PhEntrySF<Integer>> queryToList(double[] min, double[] max) {
 //		List<PHREntry> all = new ArrayList<>();
 //		Iterator<PHREntry> it = phc.queryIntersect(min, max);
 //		while (it.hasNext()) {
@@ -165,7 +164,7 @@ public class RectanglePHC_IPP extends CandidatePHC {
 //		int n = phc.queryIntersectAll(min, max, MAX, FILTER, MAPPER).size();
 //		int n = phc.queryIntersectAll(min, max, MAX, null, null).size();
 		
-		List<PhEntrySF<Object>> all = phc.queryIntersectAll(min, max);
+		List<PhEntrySF<Integer>> all = phc.queryIntersectAll(min, max);
 		return all;
 	}
 	
@@ -179,7 +178,7 @@ public class RectanglePHC_IPP extends CandidatePHC {
 		double ret = 0;
 		int n = 0;
 		while (qKNN.hasNext()) {
-			PhEntryDistSF<Object> e = qKNN.nextEntryReuse();
+			PhEntryDistSF<Integer> e = qKNN.nextEntryReuse();
 			ret += e.dist();
 			if (++n == k) {
 				break;
@@ -199,7 +198,7 @@ public class RectanglePHC_IPP extends CandidatePHC {
 	}
 
 	@Override
-	public PhTree<Object> getNative() {
+	public PhTree<Integer> getNative() {
 		return phc.getInternalTree();
 	}
 

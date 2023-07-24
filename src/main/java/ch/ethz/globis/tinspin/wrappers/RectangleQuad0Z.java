@@ -8,7 +8,6 @@ package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.Arrays;
 
-import org.tinspin.index.BoxEntryDist;
 import org.tinspin.index.Index;
 import org.tinspin.index.qtplain.QuadTreeRKD0;
 import org.tinspin.index.qtplain.QuadTreeKD0.QStats;
@@ -17,13 +16,12 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class RectangleQuad0Z extends Candidate {
 	
-	private QuadTreeRKD0<Object> phc;
+	private QuadTreeRKD0<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private static final Object O = new Object();
-	private Index.BoxIteratorKnn<Object> queryKnn = null;
-	private Index.BoxIterator<Object> query = null;
+	private Index.BoxIteratorKnn<Integer> queryKnn = null;
+	private Index.BoxIterator<Integer> query = null;
 	private final int maxNodeSize = 10;
 	
 	/**
@@ -65,7 +63,7 @@ public class RectangleQuad0Z extends Candidate {
 			pos += dims;
 			System.arraycopy(data, pos, hi, 0, dims);
 			pos += dims;
-			phc.insert(lo, hi, O);
+			phc.insert(lo, hi, n);
 		}
 		this.data = data;
 	}
@@ -147,8 +145,7 @@ public class RectangleQuad0Z extends Candidate {
 		}
 		double ret = 0;
 		while (queryKnn.hasNext()) {
-			BoxEntryDist<Object> e = queryKnn.next();
-			ret += e.dist();
+			ret += queryKnn.next().dist();
 		}
 		return ret;
 	}
@@ -164,7 +161,7 @@ public class RectangleQuad0Z extends Candidate {
 	}
 
 	@Override
-	public QuadTreeRKD0<Object> getNative() {
+	public QuadTreeRKD0<Integer> getNative() {
 		return phc;
 	}
 

@@ -15,12 +15,12 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class PointPHCMMF extends CandidatePHC {
 	
-	private final PhTreeMultiMapF<Object> phc;
+	private final PhTreeMultiMapF<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private PhKnnQueryMMF<Object> knnQuery;
-    private PhQueryMMF<Object> pit;
+	private PhKnnQueryMMF<Integer> knnQuery;
+    private PhQueryMMF<Integer> pit;
 	
 	/**
 	 * Setup of a native PH tree
@@ -36,13 +36,12 @@ public class PointPHCMMF extends CandidatePHC {
 	
 	@Override
 	public void load(double[] data, int dims) {
-		Object O = new Object();
 		double[] buf = new double[dims];
 		for (int i = 0; i < N; i++) {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			if (phc.put(buf, i, O) != null) {
+			if (phc.put(buf, i, i) != null) {
 				throw new IllegalArgumentException();
 			}
 		}
@@ -133,7 +132,7 @@ public class PointPHCMMF extends CandidatePHC {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public PhTreeMultiMapF<Object> getNative() {
+	public PhTreeMultiMapF<Integer> getNative() {
 		return phc;
 	}
 

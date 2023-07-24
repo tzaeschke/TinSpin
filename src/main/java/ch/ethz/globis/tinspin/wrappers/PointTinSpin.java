@@ -29,13 +29,13 @@ import java.util.Arrays;
  */
 public class PointTinSpin extends Candidate {
 
-	private PointMap<double[]> phc;
+	private PointMap<Integer> phc;
 	private final int dims;
 	private final IndexHandle indexHandle;
 	private final int N;
 	private double[] data;
-	private Index.PointIteratorKnn<double[]> itKnn;
-	private Index.PointIterator<double[]> pit;
+	private Index.PointIteratorKnn<Integer> itKnn;
+	private Index.PointIterator<Integer> pit;
 
 	/**
 	 * Setup of a native PH tree
@@ -67,7 +67,7 @@ public class PointTinSpin extends Candidate {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			phc.insert(buf, buf);
+			phc.insert(buf, i);
 		}
 		this.data = data;
 	}
@@ -157,7 +157,7 @@ public class PointTinSpin extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public PointMap<double[]> getNative() {
+	public PointMap<Integer> getNative() {
 		return phc;
 	}
 

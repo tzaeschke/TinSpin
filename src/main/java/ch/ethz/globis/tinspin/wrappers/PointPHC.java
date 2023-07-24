@@ -25,17 +25,15 @@ import ch.ethz.globis.tinspin.TestStats;
  */
 public class PointPHC extends CandidatePHC {
 	
-	private static final Object O = new Object();
-	
-	private final PhTree<Object> phc;
+	private final PhTree<Integer> phc;
 	private final int dims;
     private int N;
 	private double[] data;
-	private PhQuery<Object> query;
+	private PhQuery<Integer> query;
     private final PhDistance distanceKnn;
 	private long[] qMin;
 	private long[] qMax;
-	private PhKnnQuery<Object> knnQuery;
+	private PhKnnQuery<Integer> knnQuery;
 	private long[] knnCenter;
 	private TestStats S;
 	
@@ -50,7 +48,7 @@ public class PointPHC extends CandidatePHC {
 		this.S = ts;
         distanceKnn = PhDistanceF.THIS;
         //distanceKnn = PhDistanceF_L1.THIS;
-//		phc = new PhTree11<Object>(ts.cfgNDims);
+//		phc = new PhTree11<Integer>(ts.cfgNDims);
 		phc = PhTree.create(ts.cfgNDims);
 //		Node.AHC_LHC_BIAS = 1*1000*1000;
 //		Node.NT_THRESHOLD = 2*1000*1000;
@@ -71,7 +69,7 @@ public class PointPHC extends CandidatePHC {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = f2l(data[i*dims+d]); 
 			}
-			if (phc.put(buf, O) != null) {
+			if (phc.put(buf, i) != null) {
 				throw new IllegalArgumentException("i=" + i + " " + Arrays.toString(buf));
 				//nDuplicates++;
 			}
@@ -176,7 +174,7 @@ public class PointPHC extends CandidatePHC {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public PhTree<Object> getNative() {
+	public PhTree<Integer> getNative() {
 		return phc;
 	}
 

@@ -22,13 +22,13 @@ import ch.ethz.globis.tinspin.TestStats;
  */
 public class PointQuadZ2 extends Candidate {
 	
-	private QuadTreeKD2<double[]> phc;
+	private QuadTreeKD2<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
 	private final int maxNodeSize = 10;
-	private Index.PointIteratorKnn<double[]> itKnn;
-	private Index.PointIterator<double[]> pit;
+	private Index.PointIteratorKnn<Integer> itKnn;
+	private Index.PointIterator<Integer> pit;
 
 	/**
 	 * Setup of a native PH tree
@@ -81,7 +81,7 @@ public class PointQuadZ2 extends Candidate {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			phc.insert(buf, buf);
+			phc.insert(buf, i);
 		}
 		this.data = data;
 	}
@@ -172,7 +172,7 @@ public class PointQuadZ2 extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public QuadTreeKD2<double[]> getNative() {
+	public QuadTreeKD2<Integer> getNative() {
 		return phc;
 	}
 

@@ -22,9 +22,10 @@ import ch.ethz.globis.tinspin.TestStats;
 import org.tinspin.index.Index;
 import org.tinspin.index.PointDistance;
 import org.tinspin.index.covertree.CoverTree;
-import org.tinspin.index.covertree.Point;
 
 import ch.ethz.globis.tinspin.wrappers.Candidate;
+
+import static org.tinspin.index.Index.*;
 
 /**
  * (Faster) CoverTree.
@@ -32,11 +33,11 @@ import ch.ethz.globis.tinspin.wrappers.Candidate;
  */
 public class PointCTZ extends Candidate {
 	
-	private CoverTree<double[]> phc;
+	private CoverTree<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private Index.PointIteratorKnn<double[]> itKnn;
+	private Index.PointIteratorKnn<Integer> itKnn;
 
 	
 	/**
@@ -57,12 +58,12 @@ public class PointCTZ extends Candidate {
 		//double[][] allData = new double[N][dims];
 		//ArrayList<Point<double[]>> list = new ArrayList<>(N);
 
-		Point<double[]>[] points = new Point[N];
+		PointEntry<Integer>[] points = new PointEntry[N];
 		for (int i = 0; i < N; i++) {
 			double[] p = new double[dims];
 			System.arraycopy(data, pos, p, 0, dims);
 			pos += dims;
-			Point<double[]> pp = CoverTree.create(p, p);
+			PointEntry<Integer> pp = CoverTree.create(p, i);
 			points[i] = pp;
 		}
 		phc = CoverTree.create(points, 1.3, PointDistance.L2);
@@ -169,7 +170,7 @@ public class PointCTZ extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public CoverTree<double[]> getNative() {
+	public CoverTree<Integer> getNative() {
 		return phc;
 	}
 
@@ -186,11 +187,6 @@ public class PointCTZ extends Candidate {
 		s.statNDistCalc = stats.getNDistCalc();
 		s.statNDistCalc1NN = stats.getNDistCalc1NN();
 		s.statNDistCalcKNN = stats.getNDistCalcKNN();
-		//phc.printStats(N);
-		//phc.printQuality();
-		//PhTreeStats q = phc.getStats();
-		//S.setStats(q);
-		//System.out.println(phc.getQuality());
 	}
 	
 	@Override

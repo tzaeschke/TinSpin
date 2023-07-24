@@ -22,13 +22,13 @@ import ch.ethz.globis.tinspin.TestStats;
  */
 public class PointQuad0Z extends Candidate {
 	
-	private QuadTreeKD0<double[]> phc;
+	private QuadTreeKD0<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
 	private final int maxNodeSize = 10;
-	private Index.PointIteratorKnn<double[]> itKnn;
-	private Index.PointIterator<double[]> pit;
+	private Index.PointIteratorKnn<Integer> itKnn;
+	private Index.PointIterator<Integer> pit;
 
 	/**
 	 * Setup of a native PH tree
@@ -76,7 +76,7 @@ public class PointQuad0Z extends Candidate {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			phc.insert(buf, buf);
+			phc.insert(buf, i);
 		}
 		this.data = data;
 	}
@@ -89,8 +89,9 @@ public class PointQuad0Z extends Candidate {
 	@Override
 	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
-		for (double[] q: (double[][])qA) {
-			if (phc.containsExact(q)) {
+		double[][] q = (double[][])qA;
+		for (int i = 0; i < q.length; i++) {
+			if (phc.contains(q[i], ids[i])) {
 				n++;
 			}
 		}
@@ -176,7 +177,7 @@ public class PointQuad0Z extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public QuadTreeKD0<double[]> getNative() {
+	public QuadTreeKD0<Integer> getNative() {
 		return phc;
 	}
 
@@ -185,11 +186,6 @@ public class PointQuad0Z extends Candidate {
 		QStats qs = phc.getStats();
 		s.statNnodes = qs.getNodeCount();
 		s.statNpostlen = qs.getMaxDepth();
-		//phc.printStats(N);
-		//phc.printQuality();
-		//PhTreeStats q = phc.getStats();
-		//S.setStats(q);
-		//System.out.println(phc.getQuality());
 	}
 	
 	@Override

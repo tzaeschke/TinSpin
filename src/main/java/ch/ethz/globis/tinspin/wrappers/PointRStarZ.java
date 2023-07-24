@@ -18,12 +18,12 @@ import org.tinspin.index.rtree.RTreeQueryKnn2;
 
 public class PointRStarZ extends Candidate {
 	
-	private final RTree<double[]> phc;
+	private final RTree<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private RTreeIterator<double[]> it;
-	private RTreeQueryKnn2<double[]> itKnn;
+	private RTreeIterator<Integer> it;
+	private RTreeQueryKnn2<Integer> itKnn;
 
 	
 	/**
@@ -44,7 +44,7 @@ public class PointRStarZ extends Candidate {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			phc.insert(buf, buf);
+			phc.insert(buf, i);
 		}
 		this.data = data;
 	}

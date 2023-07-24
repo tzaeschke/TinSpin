@@ -16,13 +16,12 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class RectangleRStarZ extends Candidate {
 	
-	private final RTree<Object> phc;
+	private final RTree<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private static final Object O = new Object();
-	private RTreeIterator<Object> query = null;
-	private RTreeQueryKnn2<Object> queryKnn = null;
+	private RTreeIterator<Integer> query = null;
+	private RTreeQueryKnn2<Integer> queryKnn = null;
 	
 	/**
 	 * Setup of a native PH tree
@@ -45,7 +44,7 @@ public class RectangleRStarZ extends Candidate {
 			pos += dims;
 			System.arraycopy(data, pos, hi, 0, dims);
 			pos += dims;
-			phc.insert(lo, hi, O);
+			phc.insert(lo, hi, n);
 		}
 		this.data = data;
 	}
@@ -123,8 +122,7 @@ public class RectangleRStarZ extends Candidate {
 		}
 		double ret = 0;
 		while (queryKnn.hasNext()) {
-			DistEntry<Object> e = queryKnn.next();
-			ret += e.dist();
+			ret += queryKnn.next().dist();
 		}
 		return ret;
 	}

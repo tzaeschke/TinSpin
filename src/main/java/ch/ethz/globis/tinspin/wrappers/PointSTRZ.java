@@ -20,13 +20,12 @@ import ch.ethz.globis.tinspin.TestStats;
  */
 public class PointSTRZ extends Candidate {
 	
-	private final RTree<Object> phc;
+	private final RTree<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private static final Object O = new Object();
-	private RTreeIterator<Object> it;
-	private RTreeQueryKnn2<Object> itKnn;
+	private RTreeIterator<Integer> it;
+	private RTreeQueryKnn2<Integer> itKnn;
 
 	
 	/**
@@ -44,14 +43,14 @@ public class PointSTRZ extends Candidate {
 	@Override
 	public void load(double[] data, int dims) {
 		int pos = 0;
-		Entry<Object>[] list = new Entry[N];
+		Entry<Integer>[] list = new Entry[N];
 		for (int n = 0; n < N; n++) {
 			double[] lo = new double[dims];
 			double[] hi = new double[dims];
 			System.arraycopy(data, pos, lo, 0, dims);
 			System.arraycopy(data, pos, hi, 0, dims);
 			pos += dims;
-			Entry<Object> e = new Entry<>(lo, hi, O);
+			Entry<Integer> e = new Entry<>(lo, hi, n);
 			list[n] = e;
 		}
 		phc.load(list);
@@ -70,7 +69,6 @@ public class PointSTRZ extends Candidate {
 			if (phc.queryExact(q, q) != null) {
 				n++;
 			}
-			//log("q=" + Arrays.toString(q));
 		}
 		return n;
 	}
@@ -155,11 +153,6 @@ public class PointSTRZ extends Candidate {
 		s.statNpostlen = qs.getMaxDepth();
 		s.statNDistCalc = qs.getNDistCalc();
 		s.statNDistCalc1NN = qs.getNDistCalc1NN();
-		//phc.printStats(N);
-		//phc.printQuality();
-		//PhTreeStats q = phc.getStats();
-		//S.setStats(q);
-		//System.out.println(phc.getQuality());
 	}
 	
 	@Override

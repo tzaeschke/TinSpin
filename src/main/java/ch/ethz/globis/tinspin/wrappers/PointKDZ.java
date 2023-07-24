@@ -21,12 +21,12 @@ import ch.ethz.globis.tinspin.TestStats;
  */
 public class PointKDZ extends Candidate {
 	
-	private KDTree<double[]> phc;
+	private KDTree<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private Index.PointIteratorKnn<double[]> itKnn;
-	private Index.PointIterator<double[]> pit;
+	private Index.PointIteratorKnn<Integer> itKnn;
+	private Index.PointIterator<Integer> pit;
 
 	/**
 	 * Setup of a native PH tree
@@ -47,7 +47,7 @@ public class PointKDZ extends Candidate {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			phc.insert(buf, buf);
+			phc.insert(buf, i);
 		}
 		this.data = data;
 	}
@@ -137,7 +137,7 @@ public class PointKDZ extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public KDTree<double[]> getNative() {
+	public KDTree<Integer> getNative() {
 		return phc;
 	}
 
@@ -149,11 +149,6 @@ public class PointKDZ extends Candidate {
 		s.statNDistCalc = qs.getNDistCalc();
 		s.statNDistCalc1NN = qs.getNDistCalc1NN();
 		s.statNDistCalcKNN = qs.getNDistCalcKNN();
-		//phc.printStats(N);
-		//phc.printQuality();
-		//PhTreeStats q = phc.getStats();
-		//S.setStats(q);
-		//System.out.println(phc.getQuality());
 	}
 	
 	@Override

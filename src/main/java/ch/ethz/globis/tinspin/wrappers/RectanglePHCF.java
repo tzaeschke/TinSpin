@@ -22,14 +22,13 @@ import ch.ethz.globis.tinspin.TestStats;
  */
 public class RectanglePHCF extends CandidatePHC {
 	
-	private final PhTreeSolidF<Object> phc;
+	private final PhTreeSolidF<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private static final Object O = new Object();
 	private final PreProcessorRangeF pre;
-	private PhQuerySF<Object> query = null;
-	private PhKnnQuerySF<Object> knnQuery;
+	private PhQuerySF<Integer> query = null;
+	private PhKnnQuerySF<Integer> knnQuery;
 	
 	/**
 	 * Setup of a native PH tree
@@ -54,7 +53,7 @@ public class RectanglePHCF extends CandidatePHC {
 			pos += dims;
 			System.arraycopy(data, pos, hi, 0, dims);
 			pos += dims;
-			if (phc.put(lo, hi, O) != null) {
+			if (phc.put(lo, hi, n) != null) {
 				d++;
 				n--;
 			}
@@ -122,7 +121,7 @@ public class RectanglePHCF extends CandidatePHC {
 	}
 	
 	@Override
-	public List<PhEntrySF<Object>> queryToList(double[] min, double[] max) {
+	public List<PhEntrySF<Integer>> queryToList(double[] min, double[] max) {
 		return phc.queryIntersectAll(min, max);
 	}
 	
@@ -136,7 +135,7 @@ public class RectanglePHCF extends CandidatePHC {
 		double ret = 0;
 		int n = 0;
 		while (knnQuery.hasNext()) {
-			PhEntryDistSF<Object> e = knnQuery.nextEntryReuse();
+			PhEntryDistSF<Integer> e = knnQuery.nextEntryReuse();
 			ret += e.dist();
 			//ret += distREdge(center, e.lower(), e.upper());
 			if (++n == k) {
@@ -157,7 +156,7 @@ public class RectanglePHCF extends CandidatePHC {
 	}
 
 	@Override
-	public PhTreeSolidF<Object> getNative() {
+	public PhTreeSolidF<Integer> getNative() {
 		return phc;
 	}
 

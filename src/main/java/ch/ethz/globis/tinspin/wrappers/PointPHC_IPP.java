@@ -21,18 +21,16 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class PointPHC_IPP extends CandidatePHC {
 	
-	private static final Object O = new Object();
-	
-	private final PhTree<Object> phc;
+	private final PhTree<Integer> phc;
 	private final int dims;
 	private final int N;
 	private PreProcessorPointF pp;
 	private PhDistance dist;
 	private double[] data;
-	private PhQuery<Object> query;
+	private PhQuery<Integer> query;
 	private long[] qMin;
 	private long[] qMax;
-	private PhKnnQuery<Object> knnQuery;
+	private PhKnnQuery<Integer> knnQuery;
 	private long[] knnCenter;
 	
 	private static double AVG_LOW = 0;
@@ -94,7 +92,7 @@ public class PointPHC_IPP extends CandidatePHC {
 				buf[d] = data[i*dims+d]; 
 			}
 			pp.pre(buf, buf2);
-			if (phc.put(buf2, O) != null) {
+			if (phc.put(buf2, i) != null) {
 				nDuplicates++;
 				//throw new IllegalArgumentException();
 			}
@@ -209,7 +207,7 @@ public class PointPHC_IPP extends CandidatePHC {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public PhTree<Object> getNative() {
+	public PhTree<Integer> getNative() {
 		return phc;
 	}
 

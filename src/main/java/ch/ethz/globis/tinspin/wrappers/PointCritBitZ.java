@@ -15,7 +15,7 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class PointCritBitZ extends Candidate {
 
-	private CritBitKD<Object> sfc;
+	private CritBitKD<Integer> sfc;
 	
 	private final int dims;
 	private final int N;
@@ -46,7 +46,6 @@ public class PointCritBitZ extends Candidate {
 		
 		sfc = CritBit.createKD(64, dims);
 		int j = 0;
-		Object dummy = new Object();
 		long[] val = new long[dims];
 		for (int i = 0; i < N; i++) {
 			for (int d = 0; d < idxDim; d++) {
@@ -54,7 +53,7 @@ public class PointCritBitZ extends Candidate {
 			}
 			
 			// insert new point
-			sfc.putKD(val, dummy);
+			sfc.putKD(val, i);
 			
 			if (++j%N==0)
 				System.out.print(j/N+"%, ");
@@ -97,7 +96,7 @@ public class PointCritBitZ extends Candidate {
 			}
 		}
 		int n = 0;
-		QueryIteratorKD<Object> it = sfc.queryKD(lower, upper);
+		QueryIteratorKD<Integer> it = sfc.queryKD(lower, upper);
 		while (it.hasNext()) {
 			it.nextKey();
 			n++;
@@ -146,11 +145,11 @@ public class PointCritBitZ extends Candidate {
 
 	@Override
 	public int update(double[][] updateTable, int[] ids) {
-		Object dummy = new Object();
 		long[] val1 = new long[dims];
 		long[] val2 = new long[dims];
 		int n = 0;
 		for (int i = 0; i < updateTable.length; ) {
+			int id = ids[i >> 1];
 			double[] p1 = updateTable[i++];
 			double[] p2 = updateTable[i++];
 			for (int d = 0; d < dims; d++) {
@@ -160,7 +159,7 @@ public class PointCritBitZ extends Candidate {
 				for (int d = 0; d < dims; d++) {
 					val2[d] = BitTools.toSortableLong(p2[d] + OFS );
 				}
-				sfc.putKD(val2, dummy);
+				sfc.putKD(val2, id);
 				n++;
 			}
 		}

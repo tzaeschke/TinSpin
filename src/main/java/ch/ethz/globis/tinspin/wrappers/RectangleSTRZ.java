@@ -16,13 +16,12 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class RectangleSTRZ extends Candidate {
 	
-	private final RTree<Object> phc;
+	private final RTree<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private static final Object O = new Object();
-	private RTreeIterator<Object> query = null;
-	private RTreeQueryKnn2<Object> queryKnn = null;
+	private RTreeIterator<Integer> query = null;
+	private RTreeQueryKnn2<Integer> queryKnn = null;
 	
 	/**
 	 * Setup of a native PH tree
@@ -40,7 +39,7 @@ public class RectangleSTRZ extends Candidate {
 	public void load(double[] data, int dims) {
 		int pos = 0;
 		@SuppressWarnings("rawtype")
-		Entry<Object>[] list = new Entry[N];
+		Entry<Integer>[] list = (Entry<Integer>[]) new Entry[N];
 		for (int n = 0; n < N; n++) {
 			double[] lo = new double[dims];
 			double[] hi = new double[dims];
@@ -48,7 +47,7 @@ public class RectangleSTRZ extends Candidate {
 			pos += dims;
 			System.arraycopy(data, pos, hi, 0, dims);
 			pos += dims;
-			Entry<Object> e = new Entry<>(lo, hi, O);
+			Entry<Integer> e = new Entry<>(lo, hi, n);
 			list[n] = e;
 		}
 		phc.load(list);
@@ -128,8 +127,7 @@ public class RectangleSTRZ extends Candidate {
 		}
 		double ret = 0;
 		while (queryKnn.hasNext()) {
-			DistEntry<Object> e = queryKnn.next();
-			ret += e.dist();
+			ret += queryKnn.next().dist();
 		}
 		return ret;
 	}
