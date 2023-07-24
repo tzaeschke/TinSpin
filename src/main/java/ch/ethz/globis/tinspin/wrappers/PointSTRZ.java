@@ -39,11 +39,12 @@ public class PointSTRZ extends Candidate {
 		phc = RTree.createRStar(dims);
 	}
 	
-	@SuppressWarnings({"unchecked", "rawtype"})
+	@SuppressWarnings("unchecked")
 	@Override
 	public void load(double[] data, int dims) {
 		int pos = 0;
-		Entry<Integer>[] list = new Entry[N];
+		@SuppressWarnings("rawtype")
+		Entry<Integer>[] list = (Entry<Integer>[]) new Entry[N];
 		for (int n = 0; n < N; n++) {
 			double[] lo = new double[dims];
 			double[] hi = new double[dims];

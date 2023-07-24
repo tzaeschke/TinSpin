@@ -58,7 +58,7 @@ public class PointCTZ extends Candidate {
 		//double[][] allData = new double[N][dims];
 		//ArrayList<Point<double[]>> list = new ArrayList<>(N);
 
-		PointEntry<Integer>[] points = new PointEntry[N];
+		PointEntry<Integer>[] points = (PointEntry<Integer>[]) new PointEntry[N];
 		for (int i = 0; i < N; i++) {
 			double[] p = new double[dims];
 			System.arraycopy(data, pos, p, 0, dims);
