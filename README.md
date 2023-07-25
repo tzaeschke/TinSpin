@@ -20,6 +20,8 @@ of the 2014 ACM SIGMOD Intl. Conf. on Management of Data._
 
 2023-07:
 
+* Updated to new tinspin-indexes 2.0.0 with new API
+* Indexes now all hold a _unique identifier_ (int) as value instead of a _singleton Object_. 
 * Added support for multimap tests. Note: this allows testing of multimap, however, the generated test data does currently *not* contain duplicates. 
 
 2018-12:
