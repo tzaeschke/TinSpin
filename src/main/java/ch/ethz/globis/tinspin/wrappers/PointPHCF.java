@@ -15,12 +15,12 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class PointPHCF extends CandidatePHC {
 	
-	private final PhTreeF<Object> phc;
+	private final PhTreeF<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private PhKnnQueryF<Object> knnQuery;
-    private PhQueryF<Object> pit;
+	private PhKnnQueryF<Integer> knnQuery;
+    private PhQueryF<Integer> pit;
     
 	/**
 	 * Setup of a native PH tree
@@ -36,13 +36,12 @@ public class PointPHCF extends CandidatePHC {
 	
 	@Override
 	public void load(double[] data, int dims) {
-		Object O = new Object();
 		double[] buf = new double[dims];
 		for (int i = 0; i < N; i++) {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			if (phc.put(buf, O) != null) {
+			if (phc.put(buf, i) != null) {
 				throw new IllegalArgumentException();
 			}
 		}
@@ -134,7 +133,7 @@ public class PointPHCF extends CandidatePHC {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public PhTreeF<Object> getNative() {
+	public PhTreeF<Integer> getNative() {
 		return phc;
 	}
 

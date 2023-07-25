@@ -19,13 +19,13 @@ package org.tinspin.wrappers;
 
 import ch.ethz.globis.tinspin.TestStats;
 
-import org.tinspin.index.PointDistanceFunction;
-import org.tinspin.index.PointEntryDist;
-import org.tinspin.index.QueryIteratorKNN;
+import org.tinspin.index.Index;
+import org.tinspin.index.PointDistance;
 import org.tinspin.index.covertree.CoverTree;
-import org.tinspin.index.covertree.Point;
 
 import ch.ethz.globis.tinspin.wrappers.Candidate;
+
+import static org.tinspin.index.Index.*;
 
 /**
  * (Faster) CoverTree.
@@ -33,11 +33,11 @@ import ch.ethz.globis.tinspin.wrappers.Candidate;
  */
 public class PointCTZ extends Candidate {
 	
-	private CoverTree<double[]> phc;
+	private CoverTree<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private QueryIteratorKNN<PointEntryDist<double[]>> itKnn;
+	private Index.PointIteratorKnn<Integer> itKnn;
 
 	
 	/**
@@ -58,15 +58,15 @@ public class PointCTZ extends Candidate {
 		//double[][] allData = new double[N][dims];
 		//ArrayList<Point<double[]>> list = new ArrayList<>(N);
 
-		Point<double[]>[] points = new Point[N];
+		PointEntry<Integer>[] points = (PointEntry<Integer>[]) new PointEntry[N];
 		for (int i = 0; i < N; i++) {
 			double[] p = new double[dims];
 			System.arraycopy(data, pos, p, 0, dims);
 			pos += dims;
-			Point<double[]> pp = CoverTree.create(p, p);
+			PointEntry<Integer> pp = CoverTree.create(p, i);
 			points[i] = pp;
 		}
-		phc = CoverTree.create(points, 1.3, PointDistanceFunction.L2);
+		phc = CoverTree.create(points, 1.3, PointDistance.L2);
 
 		
 //		for (int n = 0; n < N; n++) {
@@ -92,7 +92,7 @@ public class PointCTZ extends Candidate {
 	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
 		for (double[] q: (double[][])qA) {
-			if (phc.containsExact(q)) {
+			if (phc.contains(q)) {
 				n++;
 			}
 			//log("q=" + Arrays.toString(q));
@@ -137,10 +137,10 @@ public class PointCTZ extends Candidate {
 	@Override
 	public double knnQuery(int k, double[] center) {
 		if (k == 1) {
-			return phc.query1NN(center).dist();
+			return phc.query1nn(center).dist();
 		}
 		if (itKnn == null) {
-			itKnn = phc.queryKNN(center, k);
+			itKnn = phc.queryKnn(center, k);
 		} else {
 			itKnn.reset(center, k);
 		}
@@ -170,7 +170,7 @@ public class PointCTZ extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public CoverTree<double[]> getNative() {
+	public CoverTree<Integer> getNative() {
 		return phc;
 	}
 
@@ -187,11 +187,6 @@ public class PointCTZ extends Candidate {
 		s.statNDistCalc = stats.getNDistCalc();
 		s.statNDistCalc1NN = stats.getNDistCalc1NN();
 		s.statNDistCalcKNN = stats.getNDistCalcKNN();
-		//phc.printStats(N);
-		//phc.printQuality();
-		//PhTreeStats q = phc.getStats();
-		//S.setStats(q);
-		//System.out.println(phc.getQuality());
 	}
 	
 	@Override

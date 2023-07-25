@@ -8,10 +8,7 @@ package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.Arrays;
 
-import org.tinspin.index.PointEntry;
-import org.tinspin.index.PointEntryDist;
-import org.tinspin.index.QueryIterator;
-import org.tinspin.index.QueryIteratorKNN;
+import org.tinspin.index.Index;
 import org.tinspin.index.kdtree.KDTree;
 import org.tinspin.index.kdtree.KDTree.KDStats;
 
@@ -19,16 +16,17 @@ import ch.ethz.globis.tinspin.TestStats;
 /**
  * KD-Tree.
  * 
- * @author Tilmann Z�schke
+ * @author Tilmann Zäschke
  *
  */
 public class PointKDZ extends Candidate {
 	
-	private KDTree<double[]> phc;
+	private KDTree<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private QueryIteratorKNN<PointEntryDist<double[]>> itKnn;
+	private Index.PointIteratorKnn<Integer> itKnn;
+	private Index.PointIterator<Integer> pit;
 
 	/**
 	 * Setup of a native PH tree
@@ -49,7 +47,7 @@ public class PointKDZ extends Candidate {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			phc.insert(buf, buf);
+			phc.insert(buf, i);
 		}
 		this.data = data;
 	}
@@ -63,10 +61,9 @@ public class PointKDZ extends Candidate {
 	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
 		for (double[] q: (double[][])qA) {
-			if (phc.containsExact(q)) {
+			if (phc.contains(q)) {
 				n++;
 			}
-			//log("q=" + Arrays.toString(q));
 		}
 		return n;
 	}
@@ -93,8 +90,6 @@ public class PointKDZ extends Candidate {
 		return val;
 	}
 	
-	private QueryIterator<PointEntry<double[]>> pit;
-	
 	@Override
 	public int query(double[] min, double[] max) {
 		if (pit == null) {
@@ -113,10 +108,10 @@ public class PointKDZ extends Candidate {
 	@Override
 	public double knnQuery(int k, double[] center) {
 		if (k == 1) {
-			return phc.query1NN(center).dist();
+			return phc.query1nn(center).dist();
 		}
 		if (itKnn == null) {
-			itKnn = phc.queryKNN(center, k);
+			itKnn = phc.queryKnn(center, k);
 		} else {
 			itKnn.reset(center, k);
 		}
@@ -125,15 +120,6 @@ public class PointKDZ extends Candidate {
 			ret += itKnn.next().dist();
 		}
 		return ret;
-//		if (k == 1) {
-//			return phc.nnQuery(center).dist();
-//		}
-//		List<KDEntryDist<double[]>> nn = phc.knnQuery(center, k);
-//		double ret = 0;
-//		for (int i = 0; i < k; i++) {
-//			ret += nn.get(i).dist();
-//		}
-//		return ret;
 	}
 
 	@Override
@@ -151,7 +137,7 @@ public class PointKDZ extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public KDTree<double[]> getNative() {
+	public KDTree<Integer> getNative() {
 		return phc;
 	}
 
@@ -163,11 +149,6 @@ public class PointKDZ extends Candidate {
 		s.statNDistCalc = qs.getNDistCalc();
 		s.statNDistCalc1NN = qs.getNDistCalc1NN();
 		s.statNDistCalcKNN = qs.getNDistCalcKNN();
-		//phc.printStats(N);
-		//phc.printQuality();
-		//PhTreeStats q = phc.getStats();
-		//S.setStats(q);
-		//System.out.println(phc.getQuality());
 	}
 	
 	@Override

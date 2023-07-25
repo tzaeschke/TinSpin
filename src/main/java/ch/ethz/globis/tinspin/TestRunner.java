@@ -138,7 +138,6 @@ public class TestRunner {
 		TestRunner test = new TestRunner(s0);
 		TestStats s = test.run();
 		System.out.println(s);
-		return;
 	}
 
 	public TestRunner(TestStats S) { 

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2023-07-24
+
+- (TZ) Version bumped to 1.1.0
+- (TZ) tinspin-indexes 2.0.0
+- (TZ) Changed data type of indexes from Singleton Object (or sometimes double[]) to Integer ID.
+
 ## 2023-07-04
 
 - (TZ) Added support for multimap tests

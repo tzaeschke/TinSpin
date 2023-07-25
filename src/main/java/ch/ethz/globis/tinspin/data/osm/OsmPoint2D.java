@@ -30,7 +30,7 @@ import ch.ethz.globis.tinspin.db.PersistentArrayDoubleParent;
 
 /**
  * OSM XML point reader.
- * 
+ * <p>
  * This class reads all OSM XML files in the specified folder and
  * extracts all points (nodes). The nodes are then stored 
  * in a ZooDB for faster read.
@@ -192,12 +192,12 @@ public class OsmPoint2D {
 	}
 	
 	
-	/** 
-	 * Template method that calls {@link #processLine(String)}.  
-	 * @param idxF 
-	 * @param w 
-	 * @param b2 
-	 * @param entries2 
+	/**
+	 * @param fFile input file
+	 * @param nTotal nodes total
+	 * @param MAX_E  nodes MAX
+	 * @param idxF Index
+	 * @param w Writer
 	 */
 	private int readFile(File fFile, int nTotal, int MAX_E, 
 			PhTreeF<Object> idxF, DbWriter w) {

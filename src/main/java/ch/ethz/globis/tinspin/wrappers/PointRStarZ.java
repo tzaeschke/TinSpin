@@ -12,19 +12,18 @@ import org.tinspin.index.Index;
 import org.tinspin.index.rtree.RTree;
 import org.tinspin.index.rtree.RTree.RTreeStats;
 import org.tinspin.index.rtree.RTreeIterator;
-import org.tinspin.index.rtree.RTreeQueryKnn;
 
 import ch.ethz.globis.tinspin.TestStats;
 import org.tinspin.index.rtree.RTreeQueryKnn2;
 
 public class PointRStarZ extends Candidate {
 	
-	private final RTree<double[]> phc;
+	private final RTree<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private RTreeIterator<double[]> it;
-	private RTreeQueryKnn2<double[]> itKnn;
+	private RTreeIterator<Integer> it;
+	private RTreeQueryKnn2<Integer> itKnn;
 
 	
 	/**
@@ -45,7 +44,7 @@ public class PointRStarZ extends Candidate {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			phc.insert(buf, buf);
+			phc.insert(buf, i);
 		}
 		this.data = data;
 	}
@@ -62,7 +61,6 @@ public class PointRStarZ extends Candidate {
 			if (phc.queryExact(q, q) != null) {
 				n++;
 			}
-			//log("q=" + Arrays.toString(q));
 		}
 		return n;
 	}
@@ -101,18 +99,16 @@ public class PointRStarZ extends Candidate {
 			it.next();
 			n++;
 		}
-//		int n = ((PhTree7)phc).queryAll(min2, max2).size();
-		//log("q=" + Arrays.toString(q));
 		return n;
 	}
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
 		if (k == 1) {
-			return phc.query1NN(center).dist();
+			return phc.query1nn(center).dist();
 		}
 		if (itKnn == null) {
-			itKnn = phc.queryKNN(center, k);
+			itKnn = phc.queryKnn(center, k);
 		} else {
 			itKnn.reset(center, k);
 		}
@@ -138,7 +134,7 @@ public class PointRStarZ extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public Index<double[]> getNative() {
+	public Index getNative() {
 		return phc;
 	}
 

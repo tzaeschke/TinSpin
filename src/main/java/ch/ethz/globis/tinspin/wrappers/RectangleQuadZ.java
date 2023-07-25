@@ -7,10 +7,8 @@
 package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.Arrays;
-import java.util.List;
 
-import org.tinspin.index.qthypercube.QREntryDist;
-import org.tinspin.index.qthypercube.QRIterator;
+import org.tinspin.index.Index;
 import org.tinspin.index.qthypercube.QuadTreeRKD;
 import org.tinspin.index.qthypercube.QuadTreeKD.QStats;
 
@@ -18,12 +16,12 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class RectangleQuadZ extends Candidate {
 	
-	private QuadTreeRKD<Object> phc;
+	private QuadTreeRKD<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private static final Object O = new Object();
-	private QRIterator<Object> query = null;
+	private Index.BoxIteratorKnn<Integer> queryKnn = null;
+	private Index.BoxIterator<Integer> query = null;
 	private final int maxNodeSize = 10;
 	
 	/**
@@ -65,7 +63,7 @@ public class RectangleQuadZ extends Candidate {
 			pos += dims;
 			System.arraycopy(data, pos, hi, 0, dims);
 			pos += dims;
-			phc.insert(lo, hi, O);
+			phc.insert(lo, hi, n);
 		}
 		this.data = data;
 	}
@@ -133,11 +131,17 @@ public class RectangleQuadZ extends Candidate {
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
-		List<QREntryDist<Object>> result = phc.knnQuery(center, k);
+		if (k == 1) {
+			return phc.query1nn(center).dist();
+		}
+		if (queryKnn == null) {
+			queryKnn = phc.queryKnn(center, k);
+		} else {
+			queryKnn.reset(center, k);
+		}
 		double ret = 0;
-		for (int i = 0; i < k; i++) {
-			QREntryDist<Object> e = result.get(i);
-			ret += e.dist();
+		while (queryKnn.hasNext()) {
+			ret += queryKnn.next().dist();
 		}
 		return ret;
 	}
@@ -153,7 +157,7 @@ public class RectangleQuadZ extends Candidate {
 	}
 
 	@Override
-	public QuadTreeRKD<Object> getNative() {
+	public QuadTreeRKD<Integer> getNative() {
 		return phc;
 	}
 

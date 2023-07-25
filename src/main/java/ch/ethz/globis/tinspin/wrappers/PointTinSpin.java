@@ -6,55 +6,69 @@
  */
 package ch.ethz.globis.tinspin.wrappers;
 
+import ch.ethz.globis.tinspin.IndexHandle;
+import ch.ethz.globis.tinspin.TestInstances;
+import ch.ethz.globis.tinspin.TestStats;
+import org.tinspin.index.Index;
+import org.tinspin.index.PointMap;
+import org.tinspin.index.Stats;
+import org.tinspin.index.kdtree.KDTree;
+import org.tinspin.index.qthypercube.QuadTreeKD;
+import org.tinspin.index.qthypercube2.QuadTreeKD2;
+import org.tinspin.index.qtplain.QuadTreeKD0;
+import org.tinspin.index.rtree.RTree;
+import org.tinspin.index.util.PointMapWrapper;
+
 import java.util.Arrays;
 
-import org.tinspin.index.Index;
-import org.tinspin.index.rtree.*;
-import org.tinspin.index.rtree.RTree.RTreeStats;
-
-import ch.ethz.globis.tinspin.TestStats;
-
 /**
- * R-Tree with sort tile recursive bulk loading.
+ * KD-Tree.
+ * 
+ * @author Tilmann Zäschke
  *
  */
-public class PointSTRZ extends Candidate {
-	
-	private final RTree<Integer> phc;
+public class PointTinSpin extends Candidate {
+
+	private PointMap<Integer> phc;
 	private final int dims;
+	private final IndexHandle indexHandle;
 	private final int N;
 	private double[] data;
-	private RTreeIterator<Integer> it;
-	private RTreeQueryKnn2<Integer> itKnn;
+	private Index.PointIteratorKnn<Integer> itKnn;
+	private Index.PointIterator<Integer> pit;
 
-	
 	/**
 	 * Setup of a native PH tree
-	 * 
+	 *
 	 * @param ts test stats
 	 */
-	public PointSTRZ(TestStats ts) {
+	public PointTinSpin(TestStats ts) {
 		this.N = ts.cfgNEntries;
 		this.dims = ts.cfgNDims;
-		phc = RTree.createRStar(dims);
+		this.indexHandle = ts.INDEX;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void load(double[] data, int dims) {
-		int pos = 0;
-		@SuppressWarnings("rawtype")
-		Entry<Integer>[] list = (Entry<Integer>[]) new Entry[N];
-		for (int n = 0; n < N; n++) {
-			double[] lo = new double[dims];
-			double[] hi = new double[dims];
-			System.arraycopy(data, pos, lo, 0, dims);
-			System.arraycopy(data, pos, hi, 0, dims);
-			pos += dims;
-			Entry<Integer> e = new Entry<>(lo, hi, n);
-			list[n] = e;
+		switch ((TestInstances.IDX)indexHandle) {
+			// case CBZ: phc = CritBit.create(dims, 10); break;
+			// case CTZ: phc = CoverTree.create(dims); break;  // -> in separate class because it doesn't support all operations // TODO use sub-class?
+			case KDZ: phc = KDTree.create(dims); break;
+			case QT0Z: phc = QuadTreeKD0.create(dims, 10); break;
+			case QTZ: phc = QuadTreeKD.create(dims, 10); break;
+			case QT2Z: phc = QuadTreeKD2.create(dims, 10); break;
+			case RSZ:
+			case STRZ: phc = PointMapWrapper.create(RTree.createRStar(dims)); break;
+			default: throw new UnsupportedOperationException("Not supported: " + indexHandle.name());
 		}
-		phc.load(list);
+
+		for (int i = 0; i < N; i++) {
+			double[] buf = new double[dims];
+			for (int d = 0; d < dims; d++) {
+				buf[d] = data[i*dims+d]; 
+			}
+			phc.insert(buf, i);
+		}
 		this.data = data;
 	}
 
@@ -67,7 +81,7 @@ public class PointSTRZ extends Candidate {
 	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
 		for (double[] q: (double[][])qA) {
-			if (phc.queryExact(q, q) != null) {
+			if (phc.queryExact(q) != null) {
 				n++;
 			}
 		}
@@ -98,14 +112,14 @@ public class PointSTRZ extends Candidate {
 	
 	@Override
 	public int query(double[] min, double[] max) {
-		if (it == null) {
-			it = phc.queryIntersect(min, max);
+		if (pit == null) {
+			pit = phc.query(min, max);
 		} else {
-			it.reset(min, max);
+			pit.reset(min, max);
 		}
 		int n = 0;
-		while (it.hasNext()) {
-			it.next();
+		while (pit.hasNext()) {
+			pit.next();
 			n++;
 		}
 		return n;
@@ -143,17 +157,18 @@ public class PointSTRZ extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public Index getNative() {
+	public PointMap<Integer> getNative() {
 		return phc;
 	}
 
 	@Override
 	public void getStats(TestStats s) {
-		RTreeStats qs = phc.getStats();
+		Stats qs = phc.getStats();
 		s.statNnodes = qs.getNodeCount();
 		s.statNpostlen = qs.getMaxDepth();
 		s.statNDistCalc = qs.getNDistCalc();
 		s.statNDistCalc1NN = qs.getNDistCalc1NN();
+		s.statNDistCalcKNN = qs.getNDistCalcKNN();
 	}
 	
 	@Override
@@ -162,26 +177,11 @@ public class PointSTRZ extends Candidate {
 		for (int i = 0; i < updateTable.length; ) {
 			double[] p1 = updateTable[i++];
 			double[] p2 = Arrays.copyOf(updateTable[i++], dims);
-			if (phc.update(p1, p1, p2, p2) != null) {
+			if (phc.update(p1, p2) != null) {
 				n++;
 			}
 		}
 		return n;
-	}
-	
-	@Override
-	public boolean supportsPointQuery() {
-		return dims <= 16;
-	}
-	
-	@Override
-	public boolean supportsUpdate() {
-		return dims <= 16;
-	}
-
-	@Override
-	public boolean supportsUnload() {
-		return dims <= 16;
 	}
 	
 	@Override

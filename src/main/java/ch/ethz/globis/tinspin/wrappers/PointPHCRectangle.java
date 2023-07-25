@@ -17,16 +17,14 @@ import ch.ethz.globis.tinspin.TestStats;
  */
 public class PointPHCRectangle extends CandidatePHC {
 	
-	private static final Object O = new Object();
-	
-	private final PhTreeSolid<Object> phc;
+	private final PhTreeSolid<Integer> phc;
 	private final int dims;
 	private int N;
 	private double[] data;
-	private PhQueryS<Object> query;
+	private PhQueryS<Integer> query;
 	private long[] qMin;
 	private long[] qMax;
-//	private PhKnnQuery<Object> knnQuery;
+//	private PhKnnQuery<Integer> knnQuery;
 //	private long[] knnCenter;
 	private TestStats S;
 	
@@ -36,7 +34,7 @@ public class PointPHCRectangle extends CandidatePHC {
 	 * @param ts TestStats
 	 */
 	public PointPHCRectangle(TestStats ts) {
-//		phc = new PhTree8<Object>(ts.cfgNDims);
+//		phc = new PhTree8<Integer>(ts.cfgNDims);
 		phc = PhTreeSolid.create(ts.cfgNDims);
 //		Node.AHC_LHC_BIAS = 1*1000*1000;
 //		Node.NT_THRESHOLD = 2*1000*1000;
@@ -60,7 +58,7 @@ public class PointPHCRectangle extends CandidatePHC {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = f2l(data[i*dims+d]); 
 			}
-			if (phc.put(buf, buf, O) != null) {
+			if (phc.put(buf, buf, i) != null) {
 				//throw new IllegalArgumentException("i=" + i + " " + Arrays.toString(buf));
 				skipped++;
 			}
@@ -131,7 +129,7 @@ public class PointPHCRectangle extends CandidatePHC {
 			query.nextValue();
 			n++;
 		}
-//		List<PhEntry<Object>> it = phc.queryAll(min2, max2);
+//		List<PhEntry<Integer>> it = phc.queryAll(min2, max2);
 //		int n = it.size();
 		//log("q=" + Arrays.toString(q));
 		return n;
@@ -162,7 +160,7 @@ public class PointPHCRectangle extends CandidatePHC {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public PhTreeSolid<Object> getNative() {
+	public PhTreeSolid<Integer> getNative() {
 		return phc;
 	}
 

@@ -7,13 +7,8 @@
 package ch.ethz.globis.tinspin.wrappers;
 
 import java.util.Arrays;
-import java.util.List;
 
-import org.tinspin.index.PointEntry;
-import org.tinspin.index.PointEntryDist;
-import org.tinspin.index.QueryIterator;
-import org.tinspin.index.QueryIteratorKNN;
-import org.tinspin.index.qtplain.QEntryDist;
+import org.tinspin.index.Index;
 import org.tinspin.index.qtplain.QuadTreeKD0;
 import org.tinspin.index.qtplain.QuadTreeKD0.QStats;
 
@@ -22,17 +17,18 @@ import ch.ethz.globis.tinspin.TestStats;
 /**
  * Plain MX-CIF quadtree
  * 
- * @author Tilmann Z�schke
+ * @author Tilmann Zäschke
  *
  */
 public class PointQuad0Z extends Candidate {
 	
-	private QuadTreeKD0<double[]> phc;
+	private QuadTreeKD0<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
 	private final int maxNodeSize = 10;
-	private QueryIteratorKNN<PointEntryDist<double[]>> itKnn;
+	private Index.PointIteratorKnn<Integer> itKnn;
+	private Index.PointIterator<Integer> pit;
 
 	/**
 	 * Setup of a native PH tree
@@ -80,7 +76,7 @@ public class PointQuad0Z extends Candidate {
 			for (int d = 0; d < dims; d++) {
 				buf[d] = data[i*dims+d]; 
 			}
-			phc.insert(buf, buf);
+			phc.insert(buf, i);
 		}
 		this.data = data;
 	}
@@ -93,11 +89,11 @@ public class PointQuad0Z extends Candidate {
 	@Override
 	public int pointQuery(Object qA, int[] ids) {
 		int n = 0;
-		for (double[] q: (double[][])qA) {
-			if (phc.containsExact(q)) {
+		double[][] q = (double[][])qA;
+		for (int i = 0; i < q.length; i++) {
+			if (phc.contains(q[i], ids[i])) {
 				n++;
 			}
-			//log("q=" + Arrays.toString(q));
 		}
 		return n;
 	}
@@ -134,8 +130,6 @@ public class PointQuad0Z extends Candidate {
 		return dims <= 12;
 	}
 	
-	private QueryIterator<PointEntry<double[]>> pit;
-	
 	@Override
 	public int query(double[] min, double[] max) {
 		if (pit == null) {
@@ -148,18 +142,16 @@ public class PointQuad0Z extends Candidate {
 			pit.next();
 			n++;
 		}
-//		int n = ((PhTree7)phc).queryAll(min2, max2).size();
-		//log("q=" + Arrays.toString(q));
 		return n;
 	}
 	
 	@Override
 	public double knnQuery(int k, double[] center) {
 		if (k == 1) {
-			return phc.query1NN(center).dist();
+			return phc.query1nn(center).dist();
 		}
 		if (itKnn == null) {
-			itKnn = phc.queryKNN(center, k);
+			itKnn = phc.queryKnn(center, k);
 		} else {
 			itKnn.reset(center, k);
 		}
@@ -168,12 +160,6 @@ public class PointQuad0Z extends Candidate {
 			ret += itKnn.next().dist();
 		}
 		return ret;
-//		List<QEntryDist<double[]>> nn = phc.knnQuery(center, k);
-//		double ret = 0;
-//		for (int i = 0; i < k; i++) {
-//			ret += nn.get(i).dist();
-//		}
-//		return ret;
 	}
 
 	@Override
@@ -191,7 +177,7 @@ public class PointQuad0Z extends Candidate {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public QuadTreeKD0<double[]> getNative() {
+	public QuadTreeKD0<Integer> getNative() {
 		return phc;
 	}
 
@@ -200,11 +186,6 @@ public class PointQuad0Z extends Candidate {
 		QStats qs = phc.getStats();
 		s.statNnodes = qs.getNodeCount();
 		s.statNpostlen = qs.getMaxDepth();
-		//phc.printStats(N);
-		//phc.printQuality();
-		//PhTreeStats q = phc.getStats();
-		//S.setStats(q);
-		//System.out.println(phc.getQuality());
 	}
 	
 	@Override

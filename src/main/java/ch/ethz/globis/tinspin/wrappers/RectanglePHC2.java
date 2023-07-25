@@ -22,19 +22,18 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class RectanglePHC2 extends CandidatePHC {
 	
-	private final PhTree<Object> phc;
+	private final PhTree<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private static final Object O = new Object();
 	private final long[] buffer;
 	private final long[] bufLow;
 	private final long[] bufUpp;
 	private final double[] qMIN;
 	private final double[] qMAX;
 	private final PreProcessorRangeF pre;
-	private PhQuery<Object> q = null;
-	private PhKnnQuery<Object> qKNN = null;
+	private PhQuery<Integer> q = null;
+	private PhKnnQuery<Integer> qKNN = null;
 	private final PhDistanceSF distFn;
 	
 	/**
@@ -68,7 +67,7 @@ public class RectanglePHC2 extends CandidatePHC {
 		for (int n = 0; n < N; n++) {
 			pre.pre(data, pos, data, pos+dims, lVal);
 			pos += 2*dims;
-			if (phc.put(lVal, O) != null) {
+			if (phc.put(lVal, n) != null) {
 				d++;
 				n--;
 				//throw new IllegalArgumentException();
@@ -140,7 +139,7 @@ public class RectanglePHC2 extends CandidatePHC {
 	}
 	
 	@Override
-	public List<PhEntrySF<Object>> queryToList(double[] min, double[] max) {
+	public List<PhEntrySF<Integer>> queryToList(double[] min, double[] max) {
 		throw new UnsupportedOperationException();
 		//return phc.queryIntersectAll(min, max);
 	}
@@ -156,7 +155,7 @@ public class RectanglePHC2 extends CandidatePHC {
 		double ret = 0;
 		int n = 0;
 		while (qKNN.hasNext()) {
-			PhEntryDist<Object> e = qKNN.nextEntryReuse();
+			PhEntryDist<Integer> e = qKNN.nextEntryReuse();
 			ret += e.dist();
 			if (++n == k) {
 				break;
@@ -176,7 +175,7 @@ public class RectanglePHC2 extends CandidatePHC {
 	}
 
 	@Override
-	public PhTree<Object> getNative() {
+	public PhTree<Integer> getNative() {
 		return phc;
 	}
 

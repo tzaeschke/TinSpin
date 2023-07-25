@@ -15,12 +15,12 @@ import ch.ethz.globis.tinspin.TestStats;
 
 public class PointPHCMMF2 extends CandidatePHC {
 
-	private final PhTreeMultiMapF2<Object> phc;
+	private final PhTreeMultiMapF2<Integer> phc;
 	private final int dims;
 	private final int N;
 	private double[] data;
-	private PhKnnQueryF<Object> knnQuery;
-    private PhQueryF<Object> pit;
+	private PhKnnQueryF<Integer> knnQuery;
+    private PhQueryF<Integer> pit;
 
 	/**
 	 * Setup of a native PH tree
@@ -132,7 +132,7 @@ public class PointPHCMMF2 extends CandidatePHC {
 	 * Used to test the native code during development process
 	 */
 	@Override
-	public PhTreeMultiMapF2<Object> getNative() {
+	public PhTreeMultiMapF2<Integer> getNative() {
 		return phc;
 	}
 

@@ -595,11 +595,11 @@ public class TestRunnerOV {
 	}
 	
 	private int calcOverlap() {
-		PhTreeSolidF<Object> pht = ((RectanglePHCF)tree).getNative();
-		PhIteratorSF<Object> it = pht.iterator();
+		PhTreeSolidF<Integer> pht = ((RectanglePHCF)tree).getNative();
+		PhIteratorSF<Integer> it = pht.iterator();
 		double[] lower = new double[S.cfgNDims];
 		double[] upper = new double[S.cfgNDims];
-		PhQuerySF<Object> q = pht.queryIntersect(lower, upper);
+		PhQuerySF<Integer> q = pht.queryIntersect(lower, upper);
 		int nChecked = 0;
 		int nOverlap = 0;
 		double dOverlap = 0;
@@ -617,12 +617,12 @@ public class TestRunnerOV {
 				continue;
 			}
 			nChecked++;
-			PhEntrySF<Object> e = it.nextEntryReuse();
+			PhEntrySF<Integer> e = it.nextEntryReuse();
 			q.reset(e.lower(), e.upper());
 			double myVolume = calcVolume(e);
 			dVolume += myVolume;
 			while (q.hasNext()) {
-				PhEntrySF<Object> e2 = q.nextEntryReuse();
+				PhEntrySF<Integer> e2 = q.nextEntryReuse();
 				double myOverlap = calcOverlap(e, e2);
 				//check if we have the original box here
 				if (myOverlap < myVolume) {
