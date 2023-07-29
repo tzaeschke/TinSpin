@@ -36,16 +36,16 @@ public class Logging {
 	 * Prints all results to console.
 	 */
 	public void printSummary() {
-		System.out.println("Summary-Avg OLD:");
-		System.out.println("================");
-		for (TestStats s: avgStats) {
-			System.out.println(s.toStringOld());
-		}
-		System.out.println("Summary OLD:");
-		System.out.println("============");
-		for (TestStats s: stats) {
-			System.out.println(s.toStringOld());
-		}
+		//		System.out.println("Summary-Avg OLD:");
+		//		System.out.println("================");
+		//		for (TestStats s: avgStats) {
+		//			System.out.println(s.toStringOld());
+		//		}
+		//		System.out.println("Summary OLD:");
+		//		System.out.println("============");
+		//		for (TestStats s: stats) {
+		//			System.out.println(s.toStringOld());
+		//		}
 		System.out.println("Summary-Avg:");
 		System.out.println("============");
 		for (TestStats s: avgStats) {
