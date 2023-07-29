@@ -8,13 +8,10 @@ package ch.ethz.globis.tinspin.wrappers;
 
 import ch.ethz.globis.phtree.PhDistance;
 import ch.ethz.globis.phtree.PhDistanceF;
-import ch.ethz.globis.phtree.PhDistanceF_L1;
 import ch.ethz.globis.phtree.PhTree;
 import ch.ethz.globis.phtree.PhTree.PhKnnQuery;
 import ch.ethz.globis.phtree.PhTree.PhQuery;
 import ch.ethz.globis.phtree.util.PhTreeStats;
-import ch.ethz.globis.phtree.v11.PhTree11;
-import ch.ethz.globis.phtree.v13.PhTree13;
 import ch.ethz.globis.phtree.v16.PhTree16;
 import ch.ethz.globis.phtree.v16hd.PhTree16HD;
 import ch.ethz.globis.tinspin.TestStats;
@@ -26,31 +23,30 @@ public class PointPHC2 extends CandidatePHC {
 
     private final PhTree<Integer> phc;
     private final int dims;
+    private final PhDistance distanceKnn;
     private int N;
     private double[] data;
-    private PhQuery<Integer> query;
-    private final PhDistance distanceKnn;
-    private long[] qMin;
-    private long[] qMax;
-    private PhKnnQuery<Integer> knnQuery;
-    private long[] knnCenter;
-	private TestStats S;
+    private final PhQuery<Integer> query;
+    private final long[] qMin;
+    private final long[] qMax;
+    private final PhKnnQuery<Integer> knnQuery;
+    private final long[] knnCenter;
+    private final TestStats S;
 
     /**
      * Setup of a native PH tree
      *
-	 * @param ts TestStats
+     * @param ts TestStats
      */
     public PointPHC2(TestStats ts) {
         this.N = ts.cfgNEntries;
         this.dims = ts.cfgNDims;
-		this.S = ts;
-        //phc = new PhTree8b<>(dims);
-        //phc = new PhTree16HD<>(dims);
+        this.S = ts;
         distanceKnn = PhDistanceF.THIS;
         //distanceKnn = PhDistanceF_L1.THIS;
 //		phc = new PhTree11<Integer>(ts.cfgNDims);
-		phc = PhTree.create(ts.cfgNDims);
+        // phc = PhTree.create(ts.cfgNDims);
+        phc = new PhTree16<>(ts.cfgNDims);
 //		Node.AHC_LHC_BIAS = 1*1000*1000;
 //		Node.NT_THRESHOLD = 2*1000*1000;
 //		PhTree11.HCI_ENABLED = true;
@@ -71,14 +67,14 @@ public class PointPHC2 extends CandidatePHC {
                 buf[d] = f2l(data[i * dims + d]);
             }
             if (phc.put(buf, i) != null) {
-				//throw new IllegalArgumentException("i=" + i + " " + Arrays.toString(buf));
+                //throw new IllegalArgumentException("i=" + i + " " + Arrays.toString(buf));
                 nDuplicates++;
             }
         }
         if (nDuplicates > 0) {
             System.err.println("**************************   DUPLICATES FOUND: " + nDuplicates);
-			N -= nDuplicates;
-			S.cfgNEntries -= nDuplicates;
+            N -= nDuplicates;
+            S.cfgNEntries -= nDuplicates;
         }
         this.data = data;
     }
@@ -100,7 +96,6 @@ public class PointPHC2 extends CandidatePHC {
             if (phc.contains(q)) {
                 n++;
             }
-            //log("q=" + Arrays.toString(q));
         }
         return n;
     }
@@ -109,7 +104,7 @@ public class PointPHC2 extends CandidatePHC {
     public int unload() {
         int n = 0;
         long[] l = new long[dims];
-		//Simulate semi-random removal
+        //Simulate semi-random removal
         for (int i = 0; i < N >> 1; i++) {
             n += phc.remove(getEntry(l, i)) != null ? 1 : 0;
             n += phc.remove(getEntry(l, N - i - 1)) != null ? 1 : 0;
@@ -138,7 +133,6 @@ public class PointPHC2 extends CandidatePHC {
             query.nextValue();
             n++;
         }
-        //log("q=" + Arrays.toString(q));
         return n;
     }
 
@@ -183,7 +177,7 @@ public class PointPHC2 extends CandidatePHC {
     public void getStats(TestStats S) {
         PhTreeStats q = phc.getStats();
         setStats(S, q);
-		System.out.println(q);
+        System.out.println(q);
         System.out.println(q.toStringHist());
     }
 
