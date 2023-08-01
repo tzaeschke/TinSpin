@@ -14,7 +14,7 @@ import org.tinspin.index.rtree.RTree.RTreeStats;
 import org.tinspin.index.rtree.RTreeIterator;
 
 import ch.ethz.globis.tinspin.TestStats;
-import org.tinspin.index.rtree.RTreeQueryKnn2;
+import org.tinspin.index.rtree.RTreeQueryKnn;
 
 public class PointRStarZ extends Candidate {
 	
@@ -23,7 +23,7 @@ public class PointRStarZ extends Candidate {
 	private final int N;
 	private double[] data;
 	private RTreeIterator<Integer> it;
-	private RTreeQueryKnn2<Integer> itKnn;
+	private RTreeQueryKnn<Integer> itKnn;
 
 	
 	/**

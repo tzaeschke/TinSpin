@@ -25,7 +25,7 @@ public class PointSTRZ extends Candidate {
 	private final int N;
 	private double[] data;
 	private RTreeIterator<Integer> it;
-	private RTreeQueryKnn2<Integer> itKnn;
+	private RTreeQueryKnn<Integer> itKnn;
 
 	
 	/**

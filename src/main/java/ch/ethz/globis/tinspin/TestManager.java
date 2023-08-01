@@ -23,23 +23,23 @@ public class TestManager {
 		long t1 = System.currentTimeMillis();
 		try {
 	
-	        TestManagerRMI.PROCESS_OPTIONS = "-Xmx24G -XX:+UseConcMarkSweepGC";
+	        TestManagerRMI.PROCESS_OPTIONS = "-Xmx24G";
 
 	        int[] sizesQuery = {1, 10, 100, 1000};//, 10000};
 			double[] sizesData = new double[]{0.5, 1};//, 2.5, 5, 10, 25, 50};
 			//double[] sizesData = new double[]{0.001, 0.005, 0.01, 0.05};
 
-			sizesData = new double[]{0.1, 0.5, 1, 2.5, 5, 10, 25, 50};
-			testSeries(TST.CLUSTER_P, IDX.CBZ, 3, 5.0, sizesData);
-			testSeries(TST.CLUSTER_P, IDX.RSZ, 3, 5.0, sizesData);
-			testSeries(TST.CLUSTER_P, IDX.STRZ, 3, 5.0, sizesData);
+			sizesData = new double[]{0.1, 1};
+//			testSeries(TST.CLUSTER_P, IDX.CBZ, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.RSZ, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.STRZ, 3, 5.0, sizesData);
 			testSeries(TST.CLUSTER_P, IDX.PHC, 3, 5.0, sizesData);
 			testSeries(TST.CLUSTER_P, IDX.PHC2, 3, 5.0, sizesData);
-			testSeries(TST.CLUSTER_P, IDX.PHC_IPP, 3, 5.0, sizesData);
-			testSeries(TST.CLUSTER_P, IDX.QTZ, 3, 5.0, sizesData);
-			testSeries(TST.CLUSTER_P, IDX.QT2Z, 3, 5.0, sizesData);
-			testSeries(TST.CLUSTER_P, IDX.KDZ, 3, 5.0, sizesData);
-			testSeries(TST.CLUSTER_P, IDX.XTS, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.PHC_IPP, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.QTZ, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.QT2Z, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.KDZ, 3, 5.0, sizesData);
+//			testSeries(TST.CLUSTER_P, IDX.XTS, 3, 5.0, sizesData);
 			
 //			double p1;
 //			p1 = 2.0; //25 dim

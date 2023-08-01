@@ -21,7 +21,7 @@ public class RectangleRStarZ extends Candidate {
 	private final int N;
 	private double[] data;
 	private RTreeIterator<Integer> query = null;
-	private RTreeQueryKnn2<Integer> queryKnn = null;
+	private RTreeQueryKnn<Integer> queryKnn = null;
 	
 	/**
 	 * Setup of a native PH tree
