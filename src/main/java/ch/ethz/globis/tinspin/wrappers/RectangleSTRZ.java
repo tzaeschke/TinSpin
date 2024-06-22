@@ -39,7 +39,7 @@ public class RectangleSTRZ extends Candidate {
 	public void load(double[] data, int dims) {
 		int pos = 0;
 		@SuppressWarnings("rawtype")
-		Entry<Integer>[] list = (Entry<Integer>[]) new Entry[N];
+		RTreeEntry<Integer>[] list = new RTreeEntry[N];
 		for (int n = 0; n < N; n++) {
 			double[] lo = new double[dims];
 			double[] hi = new double[dims];
@@ -47,7 +47,7 @@ public class RectangleSTRZ extends Candidate {
 			pos += dims;
 			System.arraycopy(data, pos, hi, 0, dims);
 			pos += dims;
-			Entry<Integer> e = new Entry<>(lo, hi, n);
+			RTreeEntry<Integer> e = RTreeEntry.createBox(lo, hi, n);
 			list[n] = e;
 		}
 		phc.load(list);
